@@ -29,6 +29,7 @@ public class CieloController {
 			
 	private FachadaCielo fachada = FachadaCielo.getInstancia();
 	
+	
 	//PARTE I - Compra não recorrente
 	
 	/**
@@ -296,13 +297,198 @@ public class CieloController {
 		return res;
 	}	
 	
-	//Restantes:
+	//Testar abaixo:
 	
-	//alterarVendaCreditoRecProgDataFinalPorRecurrentPaymentId
-	//alterarVendaCreditoRecProgDiaRecPorRecurrentPaymentId
+	//-> Não consigo consultar por recPayId usando o serviço da Cielo
+	//-> Usando o REST abaixo, me retorna: "Can not set EndDate to before next recurrency. (Can not set EndDate to before next recurrency.)"
+	/**
+	 * 
+	 * Chama [9-alterarVendaCreditoRecProgDataFinalPorRecurrentPaymentId]
+	 * 
+	 * */
+	@PUT
+	@Produces("application/json; charset=UTF-8")
+	@Path("/alterar_venda_cred_rec_prog_data_final_por_recpayid/{recPayId}")	
+	public RetornoHttp alterarVendaCreditoRecProgDataFinalPorRecurrentPaymentId(@PathParam("recPayId") String recPayId,
+			@QueryParam("idComercial") String idComercial, @QueryParam("dataFinal") String dataFinal) {
+		
+		RetornoHttp res = new RetornoHttp();
+		res.setResultado(RetornoHttp.SUCESSO);
+		
+		try {
+			
+			fachada.alterarVendaCreditoRecProgDataFinalPorRecurrentPaymentId(idComercial, recPayId, dataFinal);									
+												
+		} catch (FachadaCieloException e) {
+			
+			res.setResultado(e.getMensagem());							
+		}
+		
+		return res;
+	}
+		
+	//-> Não consigo consultar por recPayId usando o serviço da Cielo
+	//-> Usando o REST abaixo, me retorna: "Invalid Recurrency Day (Invalid Recurrency Day)"
+	/**
+	 * 
+	 * Chama [10-alterarVendaCreditoRecProgDiaRecPorRecurrentPaymentId]
+	 * 
+	 * */
+	@PUT
+	@Produces("application/json; charset=UTF-8")
+	@Path("/alterar_venda_cred_rec_prog_dia_rec_por_recpayid/{recPayId}")	
+	public RetornoHttp alterarVendaCreditoRecProgDiaRecPorRecurrentPaymentId(@PathParam("recPayId") String recPayId,
+			@QueryParam("idComercial") String idComercial, @QueryParam("diaRec") int diaRec) {
+		
+		RetornoHttp res = new RetornoHttp();
+		res.setResultado(RetornoHttp.SUCESSO);
+		
+		try {
+			
+			fachada.alterarVendaCreditoRecProgDiaRecPorRecurrentPaymentId(idComercial, recPayId, diaRec);									
+												
+		} catch (FachadaCieloException e) {
+			
+			res.setResultado(e.getMensagem());							
+		}
+		
+		return res;
+	}
+	
+	//Iniciar testes abaixo:
+	
 	//alterarVendaCreditoRecProgValorRecPorRecurrentPaymentId
+	/**
+	 * 
+	 * Chama [11-alterarVendaCreditoRecProgValorRecPorRecurrentPaymentId]
+	 * 
+	 * */
+	@PUT
+	@Produces("application/json; charset=UTF-8")
+	@Path("/alterar_venda_cred_rec_prog_valor_rec_por_recpayid/{recPayId}")	
+	public RetornoHttp alterarVendaCreditoRecProgValorRecPorRecurrentPaymentId(@PathParam("recPayId") String recPayId,
+			@QueryParam("idComercial") String idComercial, @QueryParam("valorRec") int valorRec) {
+		
+		RetornoHttp res = new RetornoHttp();
+		res.setResultado(RetornoHttp.SUCESSO);
+		
+		try {
+			
+			fachada.alterarVendaCreditoRecProgValorRecPorRecurrentPaymentId(idComercial, recPayId, valorRec);									
+												
+		} catch (FachadaCieloException e) {
+			
+			res.setResultado(e.getMensagem());							
+		}
+		
+		return res;
+	}
+		
 	//alterarVendaCreditoRecProgDataProxRecPorRecurrentPaymentId
+	/**
+	 * 
+	 * Chama [12-alterarVendaCreditoRecProgDataProxRecPorRecurrentPaymentId]
+	 * 
+	 * */
+	@PUT
+	@Produces("application/json; charset=UTF-8")
+	@Path("/alterar_venda_cred_rec_prog_data_prox_rec_por_recpayid/{recPayId}")	
+	public RetornoHttp alterarVendaCreditoRecProgDataProxRecPorRecurrentPaymentId(@PathParam("recPayId") String recPayId,
+			@QueryParam("idComercial") String idComercial, @QueryParam("dataProxRec") String dataProxRec) {
+		
+		RetornoHttp res = new RetornoHttp();
+		res.setResultado(RetornoHttp.SUCESSO);
+		
+		try {
+			
+			fachada.alterarVendaCreditoRecProgDataProxRecPorRecurrentPaymentId(idComercial, recPayId, dataProxRec);									
+												
+		} catch (FachadaCieloException e) {
+			
+			res.setResultado(e.getMensagem());							
+		}
+		
+		return res;
+	}
+	
 	//alterarVendaCreditoRecProgIntervaloPorRecurrentPaymentId
+	/**
+	 * 
+	 * Chama [13-alterarVendaCreditoRecProgIntervaloPorRecurrentPaymentId]
+	 * 
+	 * */
+	@PUT
+	@Produces("application/json; charset=UTF-8")
+	@Path("/alterar_venda_cred_rec_prog_intervalo_por_recpayid/{recPayId}")	
+	public RetornoHttp alterarVendaCreditoRecProgIntervaloPorRecurrentPaymentId(@PathParam("recPayId") String recPayId,
+			@QueryParam("idComercial") String idComercial, @QueryParam("intervalo") String intervalo) {
+		
+		RetornoHttp res = new RetornoHttp();
+		res.setResultado(RetornoHttp.SUCESSO);
+		
+		try {
+			
+			fachada.alterarVendaCreditoRecProgIntervaloPorRecurrentPaymentId(idComercial, recPayId, intervalo);									
+												
+		} catch (FachadaCieloException e) {
+			
+			res.setResultado(e.getMensagem());							
+		}
+		
+		return res;
+	}
+	
 	//desabilitarVendaCreditoRecProgPorRecurrentPaymentId
+	/**
+	 * 
+	 * Chama [14-desabilitarVendaCreditoRecProgPorRecurrentPaymentId]
+	 * 
+	 * */
+	@PUT
+	@Produces("application/json; charset=UTF-8")
+	@Path("/desabilitar_venda_cred_rec_prog_por_recpayid/{recPayId}")	
+	public RetornoHttp desabilitarVendaCreditoRecProgPorRecurrentPaymentId(@PathParam("recPayId") String recPayId,
+			@QueryParam("idComercial") String idComercial) {
+		
+		RetornoHttp res = new RetornoHttp();
+		res.setResultado(RetornoHttp.SUCESSO);
+		
+		try {
+			
+			fachada.desabilitarVendaCreditoRecProgPorRecurrentPaymentId(idComercial, recPayId);									
+												
+		} catch (FachadaCieloException e) {
+			
+			res.setResultado(e.getMensagem());							
+		}
+		
+		return res;
+	}
+	
 	//reabilitarVendaCreditoRecProgPorRecurrentPaymentId
+	/**
+	 * 
+	 * Chama [15-reabilitarVendaCreditoRecProgPorRecurrentPaymentId]
+	 * 
+	 * */
+	@PUT
+	@Produces("application/json; charset=UTF-8")
+	@Path("/reabilitar_venda_cred_rec_prog_por_recpayid/{recPayId}")	
+	public RetornoHttp reabilitarVendaCreditoRecProgPorRecurrentPaymentId(@PathParam("recPayId") String recPayId,
+			@QueryParam("idComercial") String idComercial) {
+		
+		RetornoHttp res = new RetornoHttp();
+		res.setResultado(RetornoHttp.SUCESSO);
+		
+		try {
+			
+			fachada.reabilitarVendaCreditoRecProgPorRecurrentPaymentId(idComercial, recPayId);									
+												
+		} catch (FachadaCieloException e) {
+			
+			res.setResultado(e.getMensagem());							
+		}
+		
+		return res;
+	}
 }
