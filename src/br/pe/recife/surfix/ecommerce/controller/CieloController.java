@@ -29,6 +29,7 @@ public class CieloController {
 			
 	private FachadaCielo fachada = FachadaCielo.getInstancia();
 	
+	//RESOLVER OS 4 IdComercial abaixo e testá-los
 	
 	//PARTE I - Compra não recorrente
 	
@@ -69,6 +70,7 @@ public class CieloController {
 		return res;				
 	}	
 	
+	//-> RESOLVER idComercial
 	/**
 	 * 
 	 * Chama [2-consultarVendaCreditoAVistaPorPaymentId]
@@ -97,6 +99,7 @@ public class CieloController {
 		return res;
 	}
 	
+	//-> RESOLVER idComercial
 	/**
 	 * 
 	 * Chama [3-consultarVendasPorNumPedidoVirtual]
@@ -125,6 +128,7 @@ public class CieloController {
 		return res;
 	}
 	
+	//-> RESOLVER idComercial
 	/**
 	 * 
 	 * Chama [4-cancelarPagamentoTotalCreditoAVista]
@@ -234,6 +238,7 @@ public class CieloController {
 		return res;				
 	}	
 		
+	//-> RESOLVER idComercial
 	/**
 	 * 
 	 * Chama [7-consultarVendaCreditoRecProgPorRecurrentPaymentId]
@@ -299,8 +304,7 @@ public class CieloController {
 	
 	//Testar abaixo:
 	
-	//-> Não consigo consultar por recPayId usando o serviço da Cielo
-	//-> Usando o REST abaixo, me retorna: "Can not set EndDate to before next recurrency. (Can not set EndDate to before next recurrency.)"
+	//-> OK
 	/**
 	 * 
 	 * Chama [9-alterarVendaCreditoRecProgDataFinalPorRecurrentPaymentId]
@@ -308,9 +312,9 @@ public class CieloController {
 	 * */
 	@PUT
 	@Produces("application/json; charset=UTF-8")
-	@Path("/alterar_venda_cred_rec_prog_data_final_por_recpayid/{recPayId}")	
-	public RetornoHttp alterarVendaCreditoRecProgDataFinalPorRecurrentPaymentId(@PathParam("recPayId") String recPayId,
-			@QueryParam("idComercial") String idComercial, @QueryParam("dataFinal") String dataFinal) {
+	@Path("/alterar_venda_cred_rec_prog_data_final_por_recpayid/{idComercial}/{recPayId}/{dataFinal}")	
+	public RetornoHttp alterarVendaCreditoRecProgDataFinalPorRecurrentPaymentId(@PathParam("idComercial") 
+		String idComercial, @PathParam("recPayId") String recPayId, @PathParam("dataFinal") String dataFinal) {
 		
 		RetornoHttp res = new RetornoHttp();
 		res.setResultado(RetornoHttp.SUCESSO);
@@ -327,8 +331,7 @@ public class CieloController {
 		return res;
 	}
 		
-	//-> Não consigo consultar por recPayId usando o serviço da Cielo
-	//-> Usando o REST abaixo, me retorna: "Invalid Recurrency Day (Invalid Recurrency Day)"
+	//-> Testar
 	/**
 	 * 
 	 * Chama [10-alterarVendaCreditoRecProgDiaRecPorRecurrentPaymentId]
@@ -336,9 +339,9 @@ public class CieloController {
 	 * */
 	@PUT
 	@Produces("application/json; charset=UTF-8")
-	@Path("/alterar_venda_cred_rec_prog_dia_rec_por_recpayid/{recPayId}")	
-	public RetornoHttp alterarVendaCreditoRecProgDiaRecPorRecurrentPaymentId(@PathParam("recPayId") String recPayId,
-			@QueryParam("idComercial") String idComercial, @QueryParam("diaRec") int diaRec) {
+	@Path("/alterar_venda_cred_rec_prog_dia_rec_por_recpayid/{idComercial}/{recPayId}/{diaRec}")	
+	public RetornoHttp alterarVendaCreditoRecProgDiaRecPorRecurrentPaymentId(@PathParam("idComercial") String idComercial, 
+			@PathParam("recPayId") String recPayId,@PathParam("diaRec") int diaRec) {
 		
 		RetornoHttp res = new RetornoHttp();
 		res.setResultado(RetornoHttp.SUCESSO);
@@ -365,9 +368,9 @@ public class CieloController {
 	 * */
 	@PUT
 	@Produces("application/json; charset=UTF-8")
-	@Path("/alterar_venda_cred_rec_prog_valor_rec_por_recpayid/{recPayId}")	
-	public RetornoHttp alterarVendaCreditoRecProgValorRecPorRecurrentPaymentId(@PathParam("recPayId") String recPayId,
-			@QueryParam("idComercial") String idComercial, @QueryParam("valorRec") int valorRec) {
+	@Path("/alterar_venda_cred_rec_prog_valor_rec_por_recpayid/{idComercial}/{recPayId}/{valorRec}")	
+	public RetornoHttp alterarVendaCreditoRecProgValorRecPorRecurrentPaymentId(@PathParam("idComercial") String idComercial,
+			@PathParam("recPayId") String recPayId, @PathParam("valorRec") int valorRec) {
 		
 		RetornoHttp res = new RetornoHttp();
 		res.setResultado(RetornoHttp.SUCESSO);
@@ -392,9 +395,9 @@ public class CieloController {
 	 * */
 	@PUT
 	@Produces("application/json; charset=UTF-8")
-	@Path("/alterar_venda_cred_rec_prog_data_prox_rec_por_recpayid/{recPayId}")	
-	public RetornoHttp alterarVendaCreditoRecProgDataProxRecPorRecurrentPaymentId(@PathParam("recPayId") String recPayId,
-			@QueryParam("idComercial") String idComercial, @QueryParam("dataProxRec") String dataProxRec) {
+	@Path("/alterar_venda_cred_rec_prog_data_prox_rec_por_recpayid/{idComercial}/{recPayId}/{dataProxRec}")	
+	public RetornoHttp alterarVendaCreditoRecProgDataProxRecPorRecurrentPaymentId(@PathParam("idComercial") String idComercial,
+			@PathParam("recPayId") String recPayId, @PathParam("dataProxRec") String dataProxRec) {
 		
 		RetornoHttp res = new RetornoHttp();
 		res.setResultado(RetornoHttp.SUCESSO);
@@ -419,9 +422,9 @@ public class CieloController {
 	 * */
 	@PUT
 	@Produces("application/json; charset=UTF-8")
-	@Path("/alterar_venda_cred_rec_prog_intervalo_por_recpayid/{recPayId}")	
-	public RetornoHttp alterarVendaCreditoRecProgIntervaloPorRecurrentPaymentId(@PathParam("recPayId") String recPayId,
-			@QueryParam("idComercial") String idComercial, @QueryParam("intervalo") String intervalo) {
+	@Path("/alterar_venda_cred_rec_prog_intervalo_por_recpayid/{idComercial}/{recPayId}/{intervalo}")	
+	public RetornoHttp alterarVendaCreditoRecProgIntervaloPorRecurrentPaymentId(@PathParam("idComercial") String idComercial,
+			@PathParam("recPayId") String recPayId, @PathParam("intervalo") String intervalo) {
 		
 		RetornoHttp res = new RetornoHttp();
 		res.setResultado(RetornoHttp.SUCESSO);
@@ -446,9 +449,9 @@ public class CieloController {
 	 * */
 	@PUT
 	@Produces("application/json; charset=UTF-8")
-	@Path("/desabilitar_venda_cred_rec_prog_por_recpayid/{recPayId}")	
-	public RetornoHttp desabilitarVendaCreditoRecProgPorRecurrentPaymentId(@PathParam("recPayId") String recPayId,
-			@QueryParam("idComercial") String idComercial) {
+	@Path("/desabilitar_venda_cred_rec_prog_por_recpayid/{idComercial}/{recPayId}")	
+	public RetornoHttp desabilitarVendaCreditoRecProgPorRecurrentPaymentId(@PathParam("idComercial") 
+		String idComercial,	@PathParam("recPayId") String recPayId) {
 		
 		RetornoHttp res = new RetornoHttp();
 		res.setResultado(RetornoHttp.SUCESSO);
@@ -473,9 +476,9 @@ public class CieloController {
 	 * */
 	@PUT
 	@Produces("application/json; charset=UTF-8")
-	@Path("/reabilitar_venda_cred_rec_prog_por_recpayid/{recPayId}")	
-	public RetornoHttp reabilitarVendaCreditoRecProgPorRecurrentPaymentId(@PathParam("recPayId") String recPayId,
-			@QueryParam("idComercial") String idComercial) {
+	@Path("/reabilitar_venda_cred_rec_prog_por_recpayid/{idComercial}/{recPayId}")	
+	public RetornoHttp reabilitarVendaCreditoRecProgPorRecurrentPaymentId(@PathParam("idComercial") String idComercial, 
+			@PathParam("recPayId") String recPayId) {
 		
 		RetornoHttp res = new RetornoHttp();
 		res.setResultado(RetornoHttp.SUCESSO);
