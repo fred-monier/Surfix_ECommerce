@@ -7,7 +7,6 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
 
 import br.pe.recife.surfix.ecommerce.http.RetornoHttp;
 import br.pe.recife.surfix.ecommerce.http.RetornoPaymentHttp;
@@ -29,7 +28,6 @@ public class CieloController {
 			
 	private FachadaCielo fachada = FachadaCielo.getInstancia();
 	
-	//RESOLVER OS 4 IdComercial abaixo e testá-los
 	
 	//PARTE I - Compra não recorrente
 	
@@ -70,7 +68,6 @@ public class CieloController {
 		return res;				
 	}	
 	
-	//-> RESOLVER idComercial
 	/**
 	 * 
 	 * Chama [2-consultarVendaCreditoAVistaPorPaymentId]
@@ -78,9 +75,9 @@ public class CieloController {
 	 * */
 	@GET
 	@Produces("application/json; charset=UTF-8")
-	@Path("/consultar_vend_cred_a_vista_por_payid/{payId}")
-	public RetornoSaleHttp consultarVendaCreditoAVistaPorPaymentId(@PathParam("payId") String payId,
-			@QueryParam("idComercial") String idComercial) {
+	@Path("/consultar_vend_cred_a_vista_por_payid/{idComercial}/{payId}")
+	public RetornoSaleHttp consultarVendaCreditoAVistaPorPaymentId(@PathParam("idComercial") String idComercial,
+			@PathParam("payId") String payId) {
  
 		RetornoSaleHttp res = new RetornoSaleHttp();
 		res.setResultado(RetornoSaleHttp.SUCESSO);
@@ -99,7 +96,6 @@ public class CieloController {
 		return res;
 	}
 	
-	//-> RESOLVER idComercial
 	/**
 	 * 
 	 * Chama [3-consultarVendasPorNumPedidoVirtual]
@@ -107,9 +103,9 @@ public class CieloController {
 	 * */
 	@GET
 	@Produces("application/json; charset=UTF-8")
-	@Path("/consultar_vendas_por_pednum/{pedNum}")
-	public RetornoPaymentsHttp consultarVendasPorNumPedidoVirtual(@PathParam("pedNum") String pedNum,
-			@QueryParam("idComercial") String idComercial) {
+	@Path("/consultar_vendas_por_pednum/{idComercial}/{pedNum}")
+	public RetornoPaymentsHttp consultarVendasPorNumPedidoVirtual(@PathParam("idComercial") String idComercial,
+			@PathParam("pedNum") String pedNum) {
 		
 		RetornoPaymentsHttp res = new RetornoPaymentsHttp();
 		res.setResultado(RetornoPaymentsHttp.SUCESSO);
@@ -128,7 +124,6 @@ public class CieloController {
 		return res;
 	}
 	
-	//-> RESOLVER idComercial
 	/**
 	 * 
 	 * Chama [4-cancelarPagamentoTotalCreditoAVista]
@@ -136,9 +131,9 @@ public class CieloController {
 	 * */
 	@PUT
 	@Produces("application/json; charset=UTF-8")
-	@Path("/cancelar_pag_total_cred_a_vista/{payId}")
-	public RetornoSaleResponseHttp cancelarPagamentoTotalCreditoAVista(@PathParam("payId") String payId,
-			@QueryParam("idComercial") String idComercial) {
+	@Path("/cancelar_pag_total_cred_a_vista/{idComercial}/{payId}")
+	public RetornoSaleResponseHttp cancelarPagamentoTotalCreditoAVista(@PathParam("idComercial") String idComercial, 
+			@PathParam("payId") String payId) {
 		
 		RetornoSaleResponseHttp res = new RetornoSaleResponseHttp();
 		res.setResultado(RetornoSaleResponseHttp.SUCESSO);
@@ -238,7 +233,6 @@ public class CieloController {
 		return res;				
 	}	
 		
-	//-> RESOLVER idComercial
 	/**
 	 * 
 	 * Chama [7-consultarVendaCreditoRecProgPorRecurrentPaymentId]
@@ -246,9 +240,9 @@ public class CieloController {
 	 * */
 	@GET
 	@Produces("application/json; charset=UTF-8")
-	@Path("/consultar_vend_cred_rec_prog_por_recpayid/{recPayId}")
-	public RetornoRecurrentSaleHttp consultarVendaCreditoRecProgPorRecurrentPaymentId(@PathParam("recPayId") String recPayId,
-			@QueryParam("idComercial") String idComercial) {
+	@Path("/consultar_vend_cred_rec_prog_por_recpayid/{idComercial}/{recPayId}")
+	public RetornoRecurrentSaleHttp consultarVendaCreditoRecProgPorRecurrentPaymentId(@PathParam("idComercial") String idComercial,
+			@PathParam("recPayId") String recPayId) {
 		
 		RetornoRecurrentSaleHttp res = new RetornoRecurrentSaleHttp();
 		res.setResultado(RetornoRecurrentSaleHttp.SUCESSO);
@@ -302,9 +296,6 @@ public class CieloController {
 		return res;
 	}	
 	
-	//Testar abaixo:
-	
-	//-> OK
 	/**
 	 * 
 	 * Chama [9-alterarVendaCreditoRecProgDataFinalPorRecurrentPaymentId]
@@ -331,7 +322,6 @@ public class CieloController {
 		return res;
 	}
 		
-	//-> Testar
 	/**
 	 * 
 	 * Chama [10-alterarVendaCreditoRecProgDiaRecPorRecurrentPaymentId]
@@ -341,7 +331,7 @@ public class CieloController {
 	@Produces("application/json; charset=UTF-8")
 	@Path("/alterar_venda_cred_rec_prog_dia_rec_por_recpayid/{idComercial}/{recPayId}/{diaRec}")	
 	public RetornoHttp alterarVendaCreditoRecProgDiaRecPorRecurrentPaymentId(@PathParam("idComercial") String idComercial, 
-			@PathParam("recPayId") String recPayId,@PathParam("diaRec") int diaRec) {
+			@PathParam("recPayId") String recPayId, @PathParam("diaRec") int diaRec) {
 		
 		RetornoHttp res = new RetornoHttp();
 		res.setResultado(RetornoHttp.SUCESSO);
@@ -357,10 +347,7 @@ public class CieloController {
 		
 		return res;
 	}
-	
-	//Iniciar testes abaixo:
-	
-	//alterarVendaCreditoRecProgValorRecPorRecurrentPaymentId
+		
 	/**
 	 * 
 	 * Chama [11-alterarVendaCreditoRecProgValorRecPorRecurrentPaymentId]
@@ -387,7 +374,6 @@ public class CieloController {
 		return res;
 	}
 		
-	//alterarVendaCreditoRecProgDataProxRecPorRecurrentPaymentId
 	/**
 	 * 
 	 * Chama [12-alterarVendaCreditoRecProgDataProxRecPorRecurrentPaymentId]
@@ -414,7 +400,6 @@ public class CieloController {
 		return res;
 	}
 	
-	//alterarVendaCreditoRecProgIntervaloPorRecurrentPaymentId
 	/**
 	 * 
 	 * Chama [13-alterarVendaCreditoRecProgIntervaloPorRecurrentPaymentId]
@@ -441,7 +426,6 @@ public class CieloController {
 		return res;
 	}
 	
-	//desabilitarVendaCreditoRecProgPorRecurrentPaymentId
 	/**
 	 * 
 	 * Chama [14-desabilitarVendaCreditoRecProgPorRecurrentPaymentId]
@@ -468,7 +452,6 @@ public class CieloController {
 		return res;
 	}
 	
-	//reabilitarVendaCreditoRecProgPorRecurrentPaymentId
 	/**
 	 * 
 	 * Chama [15-reabilitarVendaCreditoRecProgPorRecurrentPaymentId]
