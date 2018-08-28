@@ -1,5 +1,7 @@
 package br.pe.recife.surfix.ecommerce.controller;
 
+import javax.annotation.security.PermitAll;
+import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -35,11 +37,12 @@ public class CieloController {
 	 * 
 	 * Chama [1-gerarPagamentoCreditoAVista]
 	 * 
-	 * */
+	 * */		
 	@POST	
 	@Consumes("application/json; charset=UTF-8")
 	@Produces("application/json; charset=UTF-8")
 	@Path("/gerar_pag_cred_a_vista")
+	@RolesAllowed("ADMIN")	
 	public RetornoPaymentHttp gerarPagamentoCreditoAVista(VendaCreditoAVistaHttp vendaCreditoAVistaHttp) {
 		
 		RetornoPaymentHttp res = new RetornoPaymentHttp();
@@ -72,10 +75,11 @@ public class CieloController {
 	 * 
 	 * Chama [2-consultarVendaCreditoAVistaPorPaymentId]
 	 * 
-	 * */
+	 * */	
 	@GET
 	@Produces("application/json; charset=UTF-8")
 	@Path("/consultar_vend_cred_a_vista_por_payid/{idComercial}/{payId}")
+	@PermitAll
 	public RetornoSaleHttp consultarVendaCreditoAVistaPorPaymentId(@PathParam("idComercial") String idComercial,
 			@PathParam("payId") String payId) {
  
@@ -103,7 +107,8 @@ public class CieloController {
 	 * */
 	@GET
 	@Produces("application/json; charset=UTF-8")
-	@Path("/consultar_vendas_por_pednum/{idComercial}/{pedNum}")
+	@Path("/consultar_vendas_por_pednum/{idComercial}/{pedNum}")	
+	@PermitAll
 	public RetornoPaymentsHttp consultarVendasPorNumPedidoVirtual(@PathParam("idComercial") String idComercial,
 			@PathParam("pedNum") String pedNum) {
 		
@@ -132,6 +137,7 @@ public class CieloController {
 	@PUT
 	@Produces("application/json; charset=UTF-8")
 	@Path("/cancelar_pag_total_cred_a_vista/{idComercial}/{payId}")
+	@PermitAll
 	public RetornoSaleResponseHttp cancelarPagamentoTotalCreditoAVista(@PathParam("idComercial") String idComercial, 
 			@PathParam("payId") String payId) {
 		
@@ -163,6 +169,7 @@ public class CieloController {
 	@Consumes("application/json; charset=UTF-8")
 	@Produces("application/json; charset=UTF-8")
 	@Path("/gerar_pag_cred_a_vista_rec_prog")
+	@PermitAll
 	public RetornoPaymentHttp gerarPagamentoCreditoAVistaRecProg(VendaCreditoRecProgHttp vendaCreditoAVistaRecProgHttp) {
 		
 		RetornoPaymentHttp res = new RetornoPaymentHttp();
@@ -202,6 +209,7 @@ public class CieloController {
 	@Consumes("application/json; charset=UTF-8")
 	@Produces("application/json; charset=UTF-8")
 	@Path("/gerar_pag_cred_agend_rec_prog")
+	@PermitAll
 	public RetornoPaymentHttp gerarPagamentoCreditoAgendadoRecProg(VendaCreditoRecProgHttp vendaCreditoAVistaRecProgHttp) {
 		
 		RetornoPaymentHttp res = new RetornoPaymentHttp();
@@ -241,6 +249,7 @@ public class CieloController {
 	@GET
 	@Produces("application/json; charset=UTF-8")
 	@Path("/consultar_vend_cred_rec_prog_por_recpayid/{idComercial}/{recPayId}")
+	@PermitAll
 	public RetornoRecurrentSaleHttp consultarVendaCreditoRecProgPorRecurrentPaymentId(@PathParam("idComercial") String idComercial,
 			@PathParam("recPayId") String recPayId) {
 		
@@ -270,6 +279,7 @@ public class CieloController {
 	@Consumes("application/json; charset=UTF-8")
 	@Produces("application/json; charset=UTF-8")
 	@Path("/alterar_pag_cred_rec_prog_por_recpayid/{recPayId}")
+	@PermitAll
 	public RetornoHttp alterarPagamentoCreditoRecProgPorRecurrentPaymentId(@PathParam("recPayId") String recPayId,
 			VendaCreditoRecProgHttp vendaCreditoRecProgHttp) {
 		
@@ -304,6 +314,7 @@ public class CieloController {
 	@PUT
 	@Produces("application/json; charset=UTF-8")
 	@Path("/alterar_venda_cred_rec_prog_data_final_por_recpayid/{idComercial}/{recPayId}/{dataFinal}")	
+	@PermitAll
 	public RetornoHttp alterarVendaCreditoRecProgDataFinalPorRecurrentPaymentId(@PathParam("idComercial") 
 		String idComercial, @PathParam("recPayId") String recPayId, @PathParam("dataFinal") String dataFinal) {
 		
@@ -330,6 +341,7 @@ public class CieloController {
 	@PUT
 	@Produces("application/json; charset=UTF-8")
 	@Path("/alterar_venda_cred_rec_prog_dia_rec_por_recpayid/{idComercial}/{recPayId}/{diaRec}")	
+	@PermitAll
 	public RetornoHttp alterarVendaCreditoRecProgDiaRecPorRecurrentPaymentId(@PathParam("idComercial") String idComercial, 
 			@PathParam("recPayId") String recPayId, @PathParam("diaRec") int diaRec) {
 		
@@ -356,6 +368,7 @@ public class CieloController {
 	@PUT
 	@Produces("application/json; charset=UTF-8")
 	@Path("/alterar_venda_cred_rec_prog_valor_rec_por_recpayid/{idComercial}/{recPayId}/{valorRec}")	
+	@PermitAll
 	public RetornoHttp alterarVendaCreditoRecProgValorRecPorRecurrentPaymentId(@PathParam("idComercial") String idComercial,
 			@PathParam("recPayId") String recPayId, @PathParam("valorRec") int valorRec) {
 		
@@ -382,6 +395,7 @@ public class CieloController {
 	@PUT
 	@Produces("application/json; charset=UTF-8")
 	@Path("/alterar_venda_cred_rec_prog_data_prox_rec_por_recpayid/{idComercial}/{recPayId}/{dataProxRec}")	
+	@PermitAll
 	public RetornoHttp alterarVendaCreditoRecProgDataProxRecPorRecurrentPaymentId(@PathParam("idComercial") String idComercial,
 			@PathParam("recPayId") String recPayId, @PathParam("dataProxRec") String dataProxRec) {
 		
@@ -408,6 +422,7 @@ public class CieloController {
 	@PUT
 	@Produces("application/json; charset=UTF-8")
 	@Path("/alterar_venda_cred_rec_prog_intervalo_por_recpayid/{idComercial}/{recPayId}/{intervalo}")	
+	@PermitAll
 	public RetornoHttp alterarVendaCreditoRecProgIntervaloPorRecurrentPaymentId(@PathParam("idComercial") String idComercial,
 			@PathParam("recPayId") String recPayId, @PathParam("intervalo") String intervalo) {
 		
@@ -434,6 +449,7 @@ public class CieloController {
 	@PUT
 	@Produces("application/json; charset=UTF-8")
 	@Path("/desabilitar_venda_cred_rec_prog_por_recpayid/{idComercial}/{recPayId}")	
+	@PermitAll
 	public RetornoHttp desabilitarVendaCreditoRecProgPorRecurrentPaymentId(@PathParam("idComercial") 
 		String idComercial,	@PathParam("recPayId") String recPayId) {
 		
@@ -460,6 +476,7 @@ public class CieloController {
 	@PUT
 	@Produces("application/json; charset=UTF-8")
 	@Path("/reabilitar_venda_cred_rec_prog_por_recpayid/{idComercial}/{recPayId}")	
+	@PermitAll
 	public RetornoHttp reabilitarVendaCreditoRecProgPorRecurrentPaymentId(@PathParam("idComercial") String idComercial, 
 			@PathParam("recPayId") String recPayId) {
 		
