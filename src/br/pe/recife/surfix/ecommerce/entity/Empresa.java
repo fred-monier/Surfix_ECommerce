@@ -2,44 +2,45 @@ package br.pe.recife.surfix.ecommerce.entity;
 
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="EMPRESA")
-public class Empresa {
+@Table(name="\"EMPRESA\"")
+public class Empresa implements EntidadeBase {
 	
 	@Id
     @GeneratedValue
-    @Column(name = "ID", nullable = false)
-	private int id;
-		
-	/*
+    @Column(name = "\"ID\"", nullable = false)
+	private Integer id;
+			
 	@OneToMany(mappedBy = "empresa", targetEntity = EmpresaAdquirente.class, 
-			fetch =	FetchType.LAZY, cascade = CascadeType.ALL)
-	*/
+			fetch =	FetchType.LAZY, cascade = CascadeType.ALL)	
     private Set<EmpresaAdquirente> empresaAdquirentes;
 	
-	@Column(name = "CNPJ", nullable = false)
+	@Column(name = "\"CNPJ\"", nullable = false)
 	private String cnpj;
 	
-	@Column(name = "NOME", nullable = false)
+	@Column(name = "\"NOME\"", nullable = false)
 	private String nome;
 	
-	@Column(name = "USUARIO", nullable = false)
+	@Column(name = "\"USUARIO\"", nullable = false)
 	private String usuario;
 	
-	@Column(name = "SENHA", nullable = false)
+	@Column(name = "\"SENHA\"", nullable = false)
 	private String senha;
 
-	public int getId() {
+	public Integer getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 

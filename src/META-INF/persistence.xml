@@ -5,13 +5,11 @@
 	     <!-- provedor/implementacao do JPA -->
 	    <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
 	    
-	    <class>br.pe.recife.surfix.ecommerce.entity.Empresa</class>
-	    <!-- 
+	    <class>br.pe.recife.surfix.ecommerce.entity.Empresa</class>	    
 	    <class>br.pe.recife.surfix.ecommerce.entity.Adquirente</class>
 	    <class>br.pe.recife.surfix.ecommerce.entity.EmpresaAdquirente</class>
 	    <class>br.pe.recife.surfix.ecommerce.entity.Transacao</class>
-	     -->
-
+	    
         <properties>
             <property name="hibernate.show_sql" value="true" />
             <property name="javax.persistence.jdbc.driver" value="org.postgresql.Driver" />

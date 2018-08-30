@@ -141,8 +141,7 @@ ALTER SEQUENCE "EMPRESA_ID_seq" OWNED BY "EMPRESA"."ID";
 
 CREATE TABLE "TRANSACAO" (
     "ID" integer NOT NULL,
-    "ID_EMPRESA" integer NOT NULL,
-    "ID_ADQUIRENTE" integer NOT NULL,
+    "ID_EMPRESA_ADQUIRENTE" integer NOT NULL,
     "JSON_IN" character varying(1000) NOT NULL,
     "JSON_OUT" character varying(1000) NOT NULL
 );
@@ -219,6 +218,7 @@ SELECT pg_catalog.setval('"ADQUIRENTE_ID_seq"', 1, false);
 --
 
 COPY "EMPRESA" ("ID", "CNPJ", "NOME", "USUARIO", "SENHA") FROM stdin;
+1	11111111111112	Monier	usuario	senha
 \.
 
 
@@ -241,14 +241,14 @@ SELECT pg_catalog.setval('"EMPRESA_ADQUIRENTE_ID_seq"', 1, false);
 -- Name: EMPRESA_ID_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('"EMPRESA_ID_seq"', 1, false);
+SELECT pg_catalog.setval('"EMPRESA_ID_seq"', 1, true);
 
 
 --
 -- Data for Name: TRANSACAO; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY "TRANSACAO" ("ID", "ID_EMPRESA", "ID_ADQUIRENTE", "JSON_IN", "JSON_OUT") FROM stdin;
+COPY "TRANSACAO" ("ID", "ID_EMPRESA_ADQUIRENTE", "JSON_IN", "JSON_OUT") FROM stdin;
 \.
 
 
@@ -314,17 +314,10 @@ CREATE INDEX "fki_EMPRESA_ADQUIRENTE_ID_EMPRESA_fkey -> EMPRESA" ON "EMPRESA_ADQ
 
 
 --
--- Name: fki_TRANSACAO_ID_ADQUIRENTE_fkey -> ADQUIRENTE; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
+-- Name: fki_TRANSACAO_ID_EMPRESA_ADQUIRENTE_fkey -> EMPRESA_ADQUIRENTE; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
 --
 
-CREATE INDEX "fki_TRANSACAO_ID_ADQUIRENTE_fkey -> ADQUIRENTE" ON "TRANSACAO" USING btree ("ID_ADQUIRENTE");
-
-
---
--- Name: fki_TRANSACAO_ID_EMPRESA_fkey -> EMPRESA; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
---
-
-CREATE INDEX "fki_TRANSACAO_ID_EMPRESA_fkey -> EMPRESA" ON "TRANSACAO" USING btree ("ID_EMPRESA");
+CREATE INDEX "fki_TRANSACAO_ID_EMPRESA_ADQUIRENTE_fkey -> EMPRESA_ADQUIRENTE" ON "TRANSACAO" USING btree ("ID_EMPRESA_ADQUIRENTE");
 
 
 --
@@ -344,19 +337,11 @@ ALTER TABLE ONLY "EMPRESA_ADQUIRENTE"
 
 
 --
--- Name: TRANSACAO_ID_ADQUIRENTE_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+-- Name: TRANSACAO_ID_EMPRESA_ADQUIRENTE_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY "TRANSACAO"
-    ADD CONSTRAINT "TRANSACAO_ID_ADQUIRENTE_fkey" FOREIGN KEY ("ID_ADQUIRENTE") REFERENCES "ADQUIRENTE"("ID");
-
-
---
--- Name: TRANSACAO_ID_EMPRESA_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY "TRANSACAO"
-    ADD CONSTRAINT "TRANSACAO_ID_EMPRESA_fkey" FOREIGN KEY ("ID_EMPRESA") REFERENCES "EMPRESA"("ID");
+    ADD CONSTRAINT "TRANSACAO_ID_EMPRESA_ADQUIRENTE_fkey" FOREIGN KEY ("ID_EMPRESA_ADQUIRENTE") REFERENCES "EMPRESA_ADQUIRENTE"("ID");
 
 
 --

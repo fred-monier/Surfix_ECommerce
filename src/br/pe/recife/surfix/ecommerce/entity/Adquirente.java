@@ -2,38 +2,39 @@ package br.pe.recife.surfix.ecommerce.entity;
 
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="ADQUIRENTE")
-public class Adquirente {
+@Table(name="\"ADQUIRENTE\"")
+public class Adquirente implements EntidadeBase {
 	
 	@Id
     @GeneratedValue
-    @Column(name = "ID", nullable = false)
-	private int id;
-	
-	/*
+    @Column(name = "\"ID\"", nullable = false)
+	private Integer id;
+		
 	@OneToMany(mappedBy = "adquirente", targetEntity = EmpresaAdquirente.class, 
-			fetch =	FetchType.LAZY, cascade = CascadeType.ALL)
-	*/
+			fetch =	FetchType.LAZY, cascade = CascadeType.ALL)	
     private Set<EmpresaAdquirente> empresaAdquirentes;
 	
-	@Column(name = "NOME", nullable = false)
+	@Column(name = "\"NOME\"", nullable = false)
 	private String nome;
 	
-	@Column(name = "DESCRICAO", nullable = true)
+	@Column(name = "\"DESCRICAO\"", nullable = true)
 	private String descricao;
 
-	public int getId() {
+	public Integer getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 

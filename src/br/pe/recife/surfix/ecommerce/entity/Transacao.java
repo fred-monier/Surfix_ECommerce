@@ -4,41 +4,35 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="TRANSACAO")
-public class Transacao {
+@Table(name="\"TRANSACAO\"")
+public class Transacao implements EntidadeBase {
 	
 	@Id
     @GeneratedValue
-    @Column(name = "ID", nullable = false)
-	private int id;
-	
-	/*
+    @Column(name = "\"ID\"", nullable = false)
+	private Integer id;
+			
 	@ManyToOne
-	   @JoinColumns({
-	       @JoinColumn(
-	           name = "ID_EMPRESA",
-	           nullable = false),
-	       @JoinColumn(
-	           name = "ID_ADQUIRENTE",
-	           nullable = false)
-	   })
-	*/
+    //@JoinColumn(name = "\"ID_EMPRESA_ADQUIRENTE\"",  referencedColumnName="ID", nullable = false) 
+	@JoinColumn(name = "\"ID_EMPRESA_ADQUIRENTE\"", nullable = false)
 	private EmpresaAdquirente empresaAdquirente;
 		
-	@Column(name = "JSON_IN", nullable = false)
+	@Column(name = "\"JSON_IN\"", nullable = false)
 	private String jSonIn;
 	
-	@Column(name = "JSON_OUT", nullable = false)
+	@Column(name = "\"JSON_OUT\"", nullable = false)
 	private String jSonOut;
 
-	public int getId() {
+	public Integer getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 

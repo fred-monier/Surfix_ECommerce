@@ -22,6 +22,11 @@ import javax.ws.rs.ext.Provider;
 
 import org.glassfish.jersey.internal.util.Base64;
 
+import br.pe.recife.surfix.ecommerce.entity.Empresa;
+import br.pe.recife.surfix.ecommerce.exception.InfraException;
+import br.pe.recife.surfix.ecommerce.exception.NegocioException;
+import br.pe.recife.surfix.ecommerce.fachada.FachadaDB;
+
 /**
  * Este filtro verifica as permissões de acesso para um usuário
  * baseado no login e senha informados no request
@@ -37,6 +42,8 @@ public class AuthenticationFilter implements ContainerRequestFilter {
     private static final String AUTHORIZATION_PROPERTY = "Authorization";
     private static final String AUTHENTICATION_SCHEME = "Basic";
     private static final String ID_COMERCIAL_PROPERTY = "IdComercial";
+    
+    private FachadaDB fachadaDB = FachadaDB.getInstancia();
       
     @Override
     public void filter(ContainerRequestContext requestContext) {
@@ -61,7 +68,7 @@ public class AuthenticationFilter implements ContainerRequestFilter {
             final List<String> authorization = headers.get(AUTHORIZATION_PROPERTY);
             
             final List<String> idComercial = headers.get(ID_COMERCIAL_PROPERTY);
-            System.out.println(idComercial);
+            final String id = idComercial.get(0);            
               
             //If no authorization information present; block access
             if (authorization == null || authorization.isEmpty()) {                            
@@ -80,11 +87,7 @@ public class AuthenticationFilter implements ContainerRequestFilter {
             //Split username and password tokens
             final StringTokenizer tokenizer = new StringTokenizer(usernameAndPassword, ":");
             final String username = tokenizer.nextToken();
-            final String password = tokenizer.nextToken();
-              
-            //Verifying Username and password
-            //System.out.println(username);
-            //System.out.println(password);
+            final String password = tokenizer.nextToken();              
               
             //Verify user access
             if (method.isAnnotationPresent(RolesAllowed.class)) {
@@ -92,33 +95,57 @@ public class AuthenticationFilter implements ContainerRequestFilter {
                 RolesAllowed rolesAnnotation = method.getAnnotation(RolesAllowed.class);
                 Set<String> rolesSet = new HashSet<String>(Arrays.asList(rolesAnnotation.value()));
                   
-                //Is user valid?
-                if (!isUserAllowed(username, password, rolesSet)) {                
-                    requestContext.abortWith(Response.status(Response.Status.UNAUTHORIZED)
-                            .entity("Acesso não autorizado").build());
-                    return;
+                try {
+	                //Is user valid?
+	                if (!isUserAllowed(id, username, password, rolesSet)) {                
+	                    requestContext.abortWith(Response.status(Response.Status.UNAUTHORIZED)
+	                            .entity("Acesso não autorizado").build());
+	                    return;
+	                }
+                } catch (NegocioException e) {
+                	requestContext.abortWith(Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                            .entity("ID Empresa inválido").build());
+                } catch (Exception e) {
+                	requestContext.abortWith(Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                            .entity("Erro acessando BD").build());
                 }
             }
         }
     }
     
-    private boolean isUserAllowed(final String username, final String password, final Set<String> rolesSet) {
+    private boolean isUserAllowed(final String id, final String username, 
+    		final String password, final Set<String> rolesSet) 
+    				throws InfraException, NegocioException {
     
         boolean isAllowed = false;
           
         //Step 1. Fetch password from database and match with password in argument
-        //If both match then get the defined role for user from database and continue; else return isAllowed [false]
+        //If both match then get the defined role for user from database and continue; 
+        //else return isAllowed [false]
         //Access the database and do this part yourself
         //String userRole = userMgr.getUserRole(username);
-         
-        if(username.equals("usuario") && password.equals("senha")) {
         
-            String userRole = "ADMIN";
-             
-            //Step 2. Verify user role
-            if(rolesSet.contains(userRole)) {            
-                isAllowed = true;
-            }
+        Integer idEmpresa;
+        
+        try {
+        	idEmpresa = Integer.valueOf(id);
+        } catch (Exception e) {
+        	throw new NegocioException();
+        }
+        
+        Empresa empresa = fachadaDB.empresaConsultarPorId(idEmpresa);
+        
+        if (empresa != null) {         
+	        if(empresa.getUsuario().equals("usuario") 
+	        		&& empresa.getSenha().equals("senha")) {
+	        
+	            String userRole = "ADMIN";
+	             
+	            //Step 2. Verify user role
+	            if(rolesSet.contains(userRole)) {            
+	                isAllowed = true;
+	            }
+	        }        
         }
         
         return isAllowed;

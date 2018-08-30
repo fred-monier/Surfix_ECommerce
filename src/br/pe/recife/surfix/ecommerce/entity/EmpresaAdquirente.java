@@ -2,50 +2,51 @@ package br.pe.recife.surfix.ecommerce.entity;
 
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="EMPRESA_ADQUIRENTE")
-public class EmpresaAdquirente {
+@Table(name="\"EMPRESA_ADQUIRENTE\"")
+public class EmpresaAdquirente implements EntidadeBase {
 	
 	@Id
     @GeneratedValue
-    @Column(name = "ID", nullable = false)
-	private int id;
-	
-	/*
+    @Column(name = "\"ID\"", nullable = false)
+	private Integer id;
+		
     @ManyToOne
-    @JoinColumn(name = "ID_EMPRESA",  referencedColumnName="ID", nullable = false)
-    */
+    //@JoinColumn(name = "\"ID_EMPRESA\"",  referencedColumnName="ID", nullable = false)    
+    @JoinColumn(name = "\"ID_EMPRESA\"", nullable = false)
     private Empresa empresa;
-    
-    /*
+        
     @ManyToOne
-    @JoinColumn(name = "ID_ADQUIRENTE", referencedColumnName="ID", nullable = false)
-    */
+    //@JoinColumn(name = "\"ID_ADQUIRENTE\"", referencedColumnName="ID", nullable = false)
+    @JoinColumn(name = "\"ID_ADQUIRENTE\"", nullable = false)
     private Adquirente adquirente;
-    
-    /*
+        
     @OneToMany(mappedBy = "empresaAdquirente", targetEntity = Transacao.class, 
-			fetch =	FetchType.LAZY, cascade = CascadeType.ALL)
-    */
+			fetch =	FetchType.LAZY, cascade = CascadeType.ALL)    
     private Set<Transacao> transacoes;
     
-    @Column(name = "MEC_ID", nullable = false)
+    @Column(name = "\"MEC_ID\"", nullable = false)
     private String mecId;
     
-    @Column(name = "MEC_KEY", nullable = false)
+    @Column(name = "\"MEC_KEY\"", nullable = false)
     private String mecKey;
 
-	public int getId() {
+	public Integer getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 
