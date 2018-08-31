@@ -2,17 +2,10 @@ package br.pe.recife.surfix.ecommerce.http;
 
 public class VendaCreditoRecProgHttp {
 	
-	private String idComercial;
 	private PedidoVirtualHttp pedidoVirtualHttp;
 	private CartaoCreditoHttp cartaoCreditoHttp;
 	private RecProgHttp recProgHttp;
 	
-	public String getIdComercial() {
-		return idComercial;
-	}
-	public void setIdComercial(String idComercial) {
-		this.idComercial = idComercial;
-	}
 	public PedidoVirtualHttp getPedidoVirtualHttp() {
 		return pedidoVirtualHttp;
 	}

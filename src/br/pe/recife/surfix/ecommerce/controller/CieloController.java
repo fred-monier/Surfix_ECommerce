@@ -1,13 +1,12 @@
 package br.pe.recife.surfix.ecommerce.controller;
 
-import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
+import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 
 import br.pe.recife.surfix.ecommerce.http.RetornoHttp;
@@ -43,14 +42,15 @@ public class CieloController {
 	@Produces("application/json; charset=UTF-8")
 	@Path("/gerar_pag_cred_a_vista")
 	@RolesAllowed("ADMIN")	
-	public RetornoPaymentHttp gerarPagamentoCreditoAVista(VendaCreditoAVistaHttp vendaCreditoAVistaHttp) {
+	public RetornoPaymentHttp gerarPagamentoCreditoAVista(@HeaderParam("idComercial") String idComercial, 
+			VendaCreditoAVistaHttp vendaCreditoAVistaHttp) {
 		
 		RetornoPaymentHttp res = new RetornoPaymentHttp();
 		res.setResultado(RetornoPaymentHttp.SUCESSO);
 		
 		try {
 			
-			Payment payment = fachada.gerarPagamentoCreditoAVista(vendaCreditoAVistaHttp.getIdComercial(), 
+			Payment payment = fachada.gerarPagamentoCreditoAVista(idComercial, 
 					vendaCreditoAVistaHttp.getPedidoVirtualHttp().getNumPedidoVirtual(), 
 					vendaCreditoAVistaHttp.getPedidoVirtualHttp().getValor(), 
 					vendaCreditoAVistaHttp.getCartaoCreditoHttp().getBandeiraCartao(),
@@ -78,17 +78,17 @@ public class CieloController {
 	 * */	
 	@GET
 	@Produces("application/json; charset=UTF-8")
-	@Path("/consultar_vend_cred_a_vista_por_payid/{idComercial}/{payId}")
-	@PermitAll
-	public RetornoSaleHttp consultarVendaCreditoAVistaPorPaymentId(@PathParam("idComercial") String idComercial,
-			@PathParam("payId") String payId) {
+	@Path("/consultar_vend_cred_a_vista_por_payid")
+	@RolesAllowed("ADMIN")
+	public RetornoSaleHttp consultarVendaCreditoAVistaPorPaymentId(@HeaderParam("idComercial") String idComercial,
+			@HeaderParam("idPayment") String idPayment) {
  
 		RetornoSaleHttp res = new RetornoSaleHttp();
 		res.setResultado(RetornoSaleHttp.SUCESSO);
 		
 		try {
 			
-			Sale sale = fachada.consultarVendaCreditoAVistaPorPaymentId(idComercial, payId);					
+			Sale sale = fachada.consultarVendaCreditoAVistaPorPaymentId(idComercial, idPayment);					
 			
 			res.setSale(sale);
 												
@@ -107,10 +107,10 @@ public class CieloController {
 	 * */
 	@GET
 	@Produces("application/json; charset=UTF-8")
-	@Path("/consultar_vendas_por_pednum/{idComercial}/{pedNum}")	
-	@PermitAll
-	public RetornoPaymentsHttp consultarVendasPorNumPedidoVirtual(@PathParam("idComercial") String idComercial,
-			@PathParam("pedNum") String pedNum) {
+	@Path("/consultar_vendas_por_pednum")	
+	@RolesAllowed("ADMIN")
+	public RetornoPaymentsHttp consultarVendasPorNumPedidoVirtual(@HeaderParam("idComercial") String idComercial,
+			@HeaderParam("pedNum") String pedNum) {
 		
 		RetornoPaymentsHttp res = new RetornoPaymentsHttp();
 		res.setResultado(RetornoPaymentsHttp.SUCESSO);
@@ -136,17 +136,17 @@ public class CieloController {
 	 * */
 	@PUT
 	@Produces("application/json; charset=UTF-8")
-	@Path("/cancelar_pag_total_cred_a_vista/{idComercial}/{payId}")
-	@PermitAll
-	public RetornoSaleResponseHttp cancelarPagamentoTotalCreditoAVista(@PathParam("idComercial") String idComercial, 
-			@PathParam("payId") String payId) {
+	@Path("/cancelar_pag_total_cred_a_vista")
+	@RolesAllowed("ADMIN")
+	public RetornoSaleResponseHttp cancelarPagamentoTotalCreditoAVista(@HeaderParam("idComercial") String idComercial, 
+			@HeaderParam("idPayment") String idPayment) {
 		
 		RetornoSaleResponseHttp res = new RetornoSaleResponseHttp();
 		res.setResultado(RetornoSaleResponseHttp.SUCESSO);
 		
 		try {
 			
-			SaleResponse saleResponse = fachada.cancelarPagamentoTotalCreditoAVista(idComercial, payId);					
+			SaleResponse saleResponse = fachada.cancelarPagamentoTotalCreditoAVista(idComercial, idPayment);					
 			
 			res.setSaleResponse(saleResponse);
 												
@@ -169,15 +169,16 @@ public class CieloController {
 	@Consumes("application/json; charset=UTF-8")
 	@Produces("application/json; charset=UTF-8")
 	@Path("/gerar_pag_cred_a_vista_rec_prog")
-	@PermitAll
-	public RetornoPaymentHttp gerarPagamentoCreditoAVistaRecProg(VendaCreditoRecProgHttp vendaCreditoAVistaRecProgHttp) {
+	@RolesAllowed("ADMIN")
+	public RetornoPaymentHttp gerarPagamentoCreditoAVistaRecProg(@HeaderParam("idComercial") String idComercial,
+			VendaCreditoRecProgHttp vendaCreditoAVistaRecProgHttp) {
 		
 		RetornoPaymentHttp res = new RetornoPaymentHttp();
 		res.setResultado(RetornoPaymentHttp.SUCESSO);
 		
 		try {
 			
-			Payment payment = fachada.gerarPagamentoCreditoAVistaRecProg(vendaCreditoAVistaRecProgHttp.getIdComercial(), 
+			Payment payment = fachada.gerarPagamentoCreditoAVistaRecProg(idComercial, 
 					vendaCreditoAVistaRecProgHttp.getPedidoVirtualHttp().getNumPedidoVirtual(), 
 					vendaCreditoAVistaRecProgHttp.getPedidoVirtualHttp().getValor(), 
 					vendaCreditoAVistaRecProgHttp.getCartaoCreditoHttp().getBandeiraCartao(),
@@ -209,15 +210,16 @@ public class CieloController {
 	@Consumes("application/json; charset=UTF-8")
 	@Produces("application/json; charset=UTF-8")
 	@Path("/gerar_pag_cred_agend_rec_prog")
-	@PermitAll
-	public RetornoPaymentHttp gerarPagamentoCreditoAgendadoRecProg(VendaCreditoRecProgHttp vendaCreditoAVistaRecProgHttp) {
+	@RolesAllowed("ADMIN")
+	public RetornoPaymentHttp gerarPagamentoCreditoAgendadoRecProg(@HeaderParam("idComercial") String idComercial,
+			VendaCreditoRecProgHttp vendaCreditoAVistaRecProgHttp) {
 		
 		RetornoPaymentHttp res = new RetornoPaymentHttp();
 		res.setResultado(RetornoPaymentHttp.SUCESSO);
 		
 		try {
 			
-			Payment payment = fachada.gerarPagamentoCreditoAgendadoRecProg(vendaCreditoAVistaRecProgHttp.getIdComercial(), 
+			Payment payment = fachada.gerarPagamentoCreditoAgendadoRecProg(idComercial, 
 					vendaCreditoAVistaRecProgHttp.getPedidoVirtualHttp().getNumPedidoVirtual(), 
 					vendaCreditoAVistaRecProgHttp.getPedidoVirtualHttp().getValor(), 
 					vendaCreditoAVistaRecProgHttp.getCartaoCreditoHttp().getBandeiraCartao(),
@@ -248,17 +250,17 @@ public class CieloController {
 	 * */
 	@GET
 	@Produces("application/json; charset=UTF-8")
-	@Path("/consultar_vend_cred_rec_prog_por_recpayid/{idComercial}/{recPayId}")
-	@PermitAll
-	public RetornoRecurrentSaleHttp consultarVendaCreditoRecProgPorRecurrentPaymentId(@PathParam("idComercial") String idComercial,
-			@PathParam("recPayId") String recPayId) {
+	@Path("/consultar_vend_cred_rec_prog_por_recpayid")
+	@RolesAllowed("ADMIN")
+	public RetornoRecurrentSaleHttp consultarVendaCreditoRecProgPorRecurrentPaymentId(@HeaderParam("idComercial") String idComercial,
+			@HeaderParam("idRecPayment") String idRecPayment) {
 		
 		RetornoRecurrentSaleHttp res = new RetornoRecurrentSaleHttp();
 		res.setResultado(RetornoRecurrentSaleHttp.SUCESSO);
 		
 		try {
 			
-			RecurrentSale recSale = fachada.consultarVendaCreditoRecProgPorRecurrentPaymentId(idComercial, recPayId);					
+			RecurrentSale recSale = fachada.consultarVendaCreditoRecProgPorRecurrentPaymentId(idComercial, idRecPayment);					
 			
 			res.setRecurrentSale(recSale);
 												
@@ -278,18 +280,17 @@ public class CieloController {
 	@PUT
 	@Consumes("application/json; charset=UTF-8")
 	@Produces("application/json; charset=UTF-8")
-	@Path("/alterar_pag_cred_rec_prog_por_recpayid/{recPayId}")
-	@PermitAll
-	public RetornoHttp alterarPagamentoCreditoRecProgPorRecurrentPaymentId(@PathParam("recPayId") String recPayId,
-			VendaCreditoRecProgHttp vendaCreditoRecProgHttp) {
+	@Path("/alterar_pag_cred_rec_prog_por_recpayid")
+	@RolesAllowed("ADMIN")
+	public RetornoHttp alterarPagamentoCreditoRecProgPorRecurrentPaymentId(@HeaderParam("idComercial") String idComercial,
+			@HeaderParam("idRecPayment") String idRecPayment, VendaCreditoRecProgHttp vendaCreditoRecProgHttp) {
 		
 		RetornoHttp res = new RetornoHttp();
 		res.setResultado(RetornoHttp.SUCESSO);
 		
 		try {
 			
-			fachada.alterarPagamentoCreditoRecProgPorRecurrentPaymentId(vendaCreditoRecProgHttp.getIdComercial(),
-					recPayId,
+			fachada.alterarPagamentoCreditoRecProgPorRecurrentPaymentId(idComercial, idRecPayment,
 					vendaCreditoRecProgHttp.getPedidoVirtualHttp().getValor(),
 					vendaCreditoRecProgHttp.getCartaoCreditoHttp().getBandeiraCartao(),
 					vendaCreditoRecProgHttp.getCartaoCreditoHttp().getNumCartao(),					
@@ -313,17 +314,18 @@ public class CieloController {
 	 * */
 	@PUT
 	@Produces("application/json; charset=UTF-8")
-	@Path("/alterar_venda_cred_rec_prog_data_final_por_recpayid/{idComercial}/{recPayId}/{dataFinal}")	
-	@PermitAll
-	public RetornoHttp alterarVendaCreditoRecProgDataFinalPorRecurrentPaymentId(@PathParam("idComercial") 
-		String idComercial, @PathParam("recPayId") String recPayId, @PathParam("dataFinal") String dataFinal) {
+	@Path("/alterar_venda_cred_rec_prog_data_final_por_recpayid")	
+	@RolesAllowed("ADMIN")
+	public RetornoHttp alterarVendaCreditoRecProgDataFinalPorRecurrentPaymentId(@HeaderParam("idComercial") 
+		String idComercial, @HeaderParam("idRecPayment") String idRecPayment, 
+		@HeaderParam("dataFinal") String dataFinal) {
 		
 		RetornoHttp res = new RetornoHttp();
 		res.setResultado(RetornoHttp.SUCESSO);
 		
 		try {
 			
-			fachada.alterarVendaCreditoRecProgDataFinalPorRecurrentPaymentId(idComercial, recPayId, dataFinal);									
+			fachada.alterarVendaCreditoRecProgDataFinalPorRecurrentPaymentId(idComercial, idRecPayment, dataFinal);									
 												
 		} catch (FachadaCieloException e) {
 			
@@ -340,17 +342,18 @@ public class CieloController {
 	 * */
 	@PUT
 	@Produces("application/json; charset=UTF-8")
-	@Path("/alterar_venda_cred_rec_prog_dia_rec_por_recpayid/{idComercial}/{recPayId}/{diaRec}")	
-	@PermitAll
-	public RetornoHttp alterarVendaCreditoRecProgDiaRecPorRecurrentPaymentId(@PathParam("idComercial") String idComercial, 
-			@PathParam("recPayId") String recPayId, @PathParam("diaRec") int diaRec) {
+	@Path("/alterar_venda_cred_rec_prog_dia_rec_por_recpayid")	
+	@RolesAllowed("ADMIN")
+	public RetornoHttp alterarVendaCreditoRecProgDiaRecPorRecurrentPaymentId(@HeaderParam("idComercial") 
+		String idComercial,	@HeaderParam("idRecPayment") String idRecPayment, 
+		@HeaderParam("diaRec") int diaRec) {
 		
 		RetornoHttp res = new RetornoHttp();
 		res.setResultado(RetornoHttp.SUCESSO);
 		
 		try {
 			
-			fachada.alterarVendaCreditoRecProgDiaRecPorRecurrentPaymentId(idComercial, recPayId, diaRec);									
+			fachada.alterarVendaCreditoRecProgDiaRecPorRecurrentPaymentId(idComercial, idRecPayment, diaRec);									
 												
 		} catch (FachadaCieloException e) {
 			
@@ -367,17 +370,18 @@ public class CieloController {
 	 * */
 	@PUT
 	@Produces("application/json; charset=UTF-8")
-	@Path("/alterar_venda_cred_rec_prog_valor_rec_por_recpayid/{idComercial}/{recPayId}/{valorRec}")	
-	@PermitAll
-	public RetornoHttp alterarVendaCreditoRecProgValorRecPorRecurrentPaymentId(@PathParam("idComercial") String idComercial,
-			@PathParam("recPayId") String recPayId, @PathParam("valorRec") int valorRec) {
+	@Path("/alterar_venda_cred_rec_prog_valor_rec_por_recpayid")	
+	@RolesAllowed("ADMIN")
+	public RetornoHttp alterarVendaCreditoRecProgValorRecPorRecurrentPaymentId(@HeaderParam("idComercial") 
+		String idComercial,	@HeaderParam("idRecPayment") String idRecPayment, 
+		@HeaderParam("valorRec") int valorRec) {
 		
 		RetornoHttp res = new RetornoHttp();
 		res.setResultado(RetornoHttp.SUCESSO);
 		
 		try {
 			
-			fachada.alterarVendaCreditoRecProgValorRecPorRecurrentPaymentId(idComercial, recPayId, valorRec);									
+			fachada.alterarVendaCreditoRecProgValorRecPorRecurrentPaymentId(idComercial, idRecPayment, valorRec);									
 												
 		} catch (FachadaCieloException e) {
 			
@@ -394,17 +398,17 @@ public class CieloController {
 	 * */
 	@PUT
 	@Produces("application/json; charset=UTF-8")
-	@Path("/alterar_venda_cred_rec_prog_data_prox_rec_por_recpayid/{idComercial}/{recPayId}/{dataProxRec}")	
-	@PermitAll
-	public RetornoHttp alterarVendaCreditoRecProgDataProxRecPorRecurrentPaymentId(@PathParam("idComercial") String idComercial,
-			@PathParam("recPayId") String recPayId, @PathParam("dataProxRec") String dataProxRec) {
+	@Path("/alterar_venda_cred_rec_prog_data_prox_rec_por_recpayid")	
+	@RolesAllowed("ADMIN")
+	public RetornoHttp alterarVendaCreditoRecProgDataProxRecPorRecurrentPaymentId(@HeaderParam("idComercial") 
+		String idComercial,	@HeaderParam("idRecPayment") String idRecPayment, @HeaderParam("dataProxRec") String dataProxRec) {
 		
 		RetornoHttp res = new RetornoHttp();
 		res.setResultado(RetornoHttp.SUCESSO);
 		
 		try {
 			
-			fachada.alterarVendaCreditoRecProgDataProxRecPorRecurrentPaymentId(idComercial, recPayId, dataProxRec);									
+			fachada.alterarVendaCreditoRecProgDataProxRecPorRecurrentPaymentId(idComercial, idRecPayment, dataProxRec);									
 												
 		} catch (FachadaCieloException e) {
 			
@@ -421,17 +425,18 @@ public class CieloController {
 	 * */
 	@PUT
 	@Produces("application/json; charset=UTF-8")
-	@Path("/alterar_venda_cred_rec_prog_intervalo_por_recpayid/{idComercial}/{recPayId}/{intervalo}")	
-	@PermitAll
-	public RetornoHttp alterarVendaCreditoRecProgIntervaloPorRecurrentPaymentId(@PathParam("idComercial") String idComercial,
-			@PathParam("recPayId") String recPayId, @PathParam("intervalo") String intervalo) {
+	@Path("/alterar_venda_cred_rec_prog_intervalo_por_recpayid")	
+	@RolesAllowed("ADMIN")
+	public RetornoHttp alterarVendaCreditoRecProgIntervaloPorRecurrentPaymentId(@HeaderParam("idComercial") 
+		String idComercial,	@HeaderParam("idRecPayment") String idRecPayment, 
+		@HeaderParam("intervalo") String intervalo) {
 		
 		RetornoHttp res = new RetornoHttp();
 		res.setResultado(RetornoHttp.SUCESSO);
 		
 		try {
 			
-			fachada.alterarVendaCreditoRecProgIntervaloPorRecurrentPaymentId(idComercial, recPayId, intervalo);									
+			fachada.alterarVendaCreditoRecProgIntervaloPorRecurrentPaymentId(idComercial, idRecPayment, intervalo);									
 												
 		} catch (FachadaCieloException e) {
 			
@@ -448,17 +453,17 @@ public class CieloController {
 	 * */
 	@PUT
 	@Produces("application/json; charset=UTF-8")
-	@Path("/desabilitar_venda_cred_rec_prog_por_recpayid/{idComercial}/{recPayId}")	
-	@PermitAll
-	public RetornoHttp desabilitarVendaCreditoRecProgPorRecurrentPaymentId(@PathParam("idComercial") 
-		String idComercial,	@PathParam("recPayId") String recPayId) {
+	@Path("/desabilitar_venda_cred_rec_prog_por_recpayid")	
+	@RolesAllowed("ADMIN")
+	public RetornoHttp desabilitarVendaCreditoRecProgPorRecurrentPaymentId(@HeaderParam("idComercial") 
+		String idComercial,	@HeaderParam("idRecPayment") String idRecPayment) {
 		
 		RetornoHttp res = new RetornoHttp();
 		res.setResultado(RetornoHttp.SUCESSO);
 		
 		try {
 			
-			fachada.desabilitarVendaCreditoRecProgPorRecurrentPaymentId(idComercial, recPayId);									
+			fachada.desabilitarVendaCreditoRecProgPorRecurrentPaymentId(idComercial, idRecPayment);									
 												
 		} catch (FachadaCieloException e) {
 			
@@ -475,17 +480,17 @@ public class CieloController {
 	 * */
 	@PUT
 	@Produces("application/json; charset=UTF-8")
-	@Path("/reabilitar_venda_cred_rec_prog_por_recpayid/{idComercial}/{recPayId}")	
-	@PermitAll
-	public RetornoHttp reabilitarVendaCreditoRecProgPorRecurrentPaymentId(@PathParam("idComercial") String idComercial, 
-			@PathParam("recPayId") String recPayId) {
+	@Path("/reabilitar_venda_cred_rec_prog_por_recpayid")	
+	@RolesAllowed("ADMIN")
+	public RetornoHttp reabilitarVendaCreditoRecProgPorRecurrentPaymentId(@HeaderParam("idComercial") String idComercial, 
+			@HeaderParam("idRecPayment") String idRecPayment) {
 		
 		RetornoHttp res = new RetornoHttp();
 		res.setResultado(RetornoHttp.SUCESSO);
 		
 		try {
 			
-			fachada.reabilitarVendaCreditoRecProgPorRecurrentPaymentId(idComercial, recPayId);									
+			fachada.reabilitarVendaCreditoRecProgPorRecurrentPaymentId(idComercial, idRecPayment);									
 												
 		} catch (FachadaCieloException e) {
 			
