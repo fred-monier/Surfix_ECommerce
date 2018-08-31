@@ -87,7 +87,9 @@ CREATE TABLE "EMPRESA_ADQUIRENTE" (
     "ID_EMPRESA" integer NOT NULL,
     "ID_ADQUIRENTE" integer NOT NULL,
     "MEC_ID" character varying(50) NOT NULL,
-    "MEC_KEY" character varying(50) NOT NULL
+    "MEC_KEY" character varying(50) NOT NULL,
+    "MEC_ID_TESTE" character varying(50) NOT NULL,
+    "MEC_KEY_TESTE" character varying(50) NOT NULL
 );
 
 
@@ -203,6 +205,7 @@ ALTER TABLE ONLY "TRANSACAO" ALTER COLUMN "ID" SET DEFAULT nextval('"TRANSACAO_I
 --
 
 COPY "ADQUIRENTE" ("ID", "NOME", "DESCRICAO") FROM stdin;
+1	Cielo	Cielo Ecommerce
 \.
 
 
@@ -210,7 +213,7 @@ COPY "ADQUIRENTE" ("ID", "NOME", "DESCRICAO") FROM stdin;
 -- Name: ADQUIRENTE_ID_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('"ADQUIRENTE_ID_seq"', 1, false);
+SELECT pg_catalog.setval('"ADQUIRENTE_ID_seq"', 1, true);
 
 
 --
@@ -226,7 +229,8 @@ COPY "EMPRESA" ("ID", "CNPJ", "NOME", "USUARIO", "SENHA") FROM stdin;
 -- Data for Name: EMPRESA_ADQUIRENTE; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY "EMPRESA_ADQUIRENTE" ("ID", "ID_EMPRESA", "ID_ADQUIRENTE", "MEC_ID", "MEC_KEY") FROM stdin;
+COPY "EMPRESA_ADQUIRENTE" ("ID", "ID_EMPRESA", "ID_ADQUIRENTE", "MEC_ID", "MEC_KEY", "MEC_ID_TESTE", "MEC_KEY_TESTE") FROM stdin;
+1	1	1	7e326012-288a-4acb-a961-c71e545b32bc	UQR7HP9VrTGwoo0dFx8SRCKaUvfLi9gb47xMtnro	5da83acc-6fd6-48ec-b22a-f7e9b5de8bef	ILWIORZCPKQUYZCYNSSJGXPDUAOPCODLGGAOFDGH
 \.
 
 
@@ -234,7 +238,7 @@ COPY "EMPRESA_ADQUIRENTE" ("ID", "ID_EMPRESA", "ID_ADQUIRENTE", "MEC_ID", "MEC_K
 -- Name: EMPRESA_ADQUIRENTE_ID_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('"EMPRESA_ADQUIRENTE_ID_seq"', 1, false);
+SELECT pg_catalog.setval('"EMPRESA_ADQUIRENTE_ID_seq"', 1, true);
 
 
 --
