@@ -50,7 +50,6 @@
 	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/osgi-resource-locator-1.0.1.jar"/>
 	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/validation-api-1.1.0.Final.jar"/>
 	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/yasson-1.0.jar"/>
-	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/surfix-cielo-3.0.jar"/>
 	<classpathentry kind="con" path="org.eclipse.datatools.connectivity.jdt.DRIVERLIBRARY/PostgreSQL JDBC Driver"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/hibernate">
 		<attributes>
@@ -59,5 +58,6 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/postgresql-42.1.4.jar"/>
+	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/surfix-cielo-4.0.jar"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>

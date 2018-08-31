@@ -41,6 +41,12 @@ public class EmpresaAdquirente implements EntidadeBase {
     
     @Column(name = "\"MEC_KEY\"", nullable = false)
     private String mecKey;
+    
+    @Column(name = "\"MEC_ID_TESTE\"", nullable = false)
+    private String mecIdTeste;
+    
+    @Column(name = "\"MEC_KEY_TESTE\"", nullable = false)
+    private String mecKeyTeste;
 
 	public Integer getId() {
 		return id;
@@ -88,6 +94,22 @@ public class EmpresaAdquirente implements EntidadeBase {
 
 	public void setMecKey(String mecKey) {
 		this.mecKey = mecKey;
-	}        
+	}
 
+	public String getMecIdTeste() {
+		return mecIdTeste;
+	}
+
+	public void setMecIdTeste(String mecIdTeste) {
+		this.mecIdTeste = mecIdTeste;
+	}
+
+	public String getMecKeyTeste() {
+		return mecKeyTeste;
+	}
+
+	public void setMecKeyTeste(String mecKeyTeste) {
+		this.mecKeyTeste = mecKeyTeste;
+	}      
+		
 }
