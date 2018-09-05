@@ -27,6 +27,7 @@ public class TransacaoHttp {
 	private String recPaymentNextRecurrency;
 	private String recPaymentReasonCode;
 	private String recPaymentReasonMessage;
+	private String numPedidoVirtual;
 	
 	public Integer getId() {
 		return id;
@@ -165,6 +166,12 @@ public class TransacaoHttp {
 	}
 	public void setRecPaymentReasonMessage(String recPaymentReasonMessage) {
 		this.recPaymentReasonMessage = recPaymentReasonMessage;
+	}
+	public String getNumPedidoVirtual() {
+		return numPedidoVirtual;
+	}
+	public void setNumPedidoVirtual(String numPedidoVirtual) {
+		this.numPedidoVirtual = numPedidoVirtual;
 	}		
-
+	
 }

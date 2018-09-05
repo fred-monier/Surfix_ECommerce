@@ -30,7 +30,6 @@ public class EmpresaAdquirente implements EntidadeBase {
     private Empresa empresa;
         
     @ManyToOne
-    //@JoinColumn(name = "\"ID_ADQUIRENTE\"", referencedColumnName="ID", nullable = false)
     @JoinColumn(name = "\"ID_ADQUIRENTE\"", nullable = false)
     private Adquirente adquirente;
         

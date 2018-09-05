@@ -12,7 +12,6 @@ import br.pe.recife.surfix.ecommerce.entity.http.EmpresaHttp;
 import br.pe.recife.surfix.ecommerce.entity.http.RetornoEmpresasHttp;
 import br.pe.recife.surfix.ecommerce.exception.InfraException;
 import br.pe.recife.surfix.ecommerce.fachada.FachadaDB;
-import br.pe.recife.surfix.ecommerce.http.RetornoPaymentsHttp;
 
 @Path("/empresa")
 public class EntidadeEmpresaController {
@@ -26,13 +25,13 @@ public class EntidadeEmpresaController {
 	public RetornoEmpresasHttp listar() {
 	
 		RetornoEmpresasHttp res = new RetornoEmpresasHttp();
-		res.setResultado(RetornoPaymentsHttp.SUCESSO);
+		res.setResultado(RetornoEmpresasHttp.SUCESSO);
 		
 		try { 
 		
 			List<Empresa> empresas = fachadaDB.empresaListar();
 			
-			EmpresaHttp[] empresasHttp = gerarListaEmpresasHttp(empresas);	
+			EmpresaHttp[] empresasHttp = gerarArrayEmpresasHttp(empresas);	
 			
 			res.setEmpresas(empresasHttp);
 			
@@ -48,7 +47,7 @@ public class EntidadeEmpresaController {
 		return res;
 	}
 
-	private EmpresaHttp[] gerarListaEmpresasHttp(List<Empresa> empresas) {
+	private EmpresaHttp[] gerarArrayEmpresasHttp(List<Empresa> empresas) {
 		
 		EmpresaHttp[] empresasHttp = new EmpresaHttp[empresas.size()];			
 		

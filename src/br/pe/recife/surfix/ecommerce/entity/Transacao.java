@@ -26,10 +26,10 @@ public class Transacao implements EntidadeBase {
 	@JoinColumn(name = "\"ID_EMPRESA_ADQUIRENTE\"", nullable = false)
 	private EmpresaAdquirente empresaAdquirente;
 		
-	@Column(name = "\"JSON_IN\"", nullable = false)
+	@Column(name = "\"JSON_IN\"")
 	private String jSonIn;
 	
-	@Column(name = "\"JSON_OUT\"", nullable = false)
+	@Column(name = "\"JSON_OUT\"")
 	private String jSonOut;
 	
 	@Column(name = "\"OPERACAO\"", nullable = false)
@@ -94,6 +94,9 @@ public class Transacao implements EntidadeBase {
 	
 	@Column(name = "\"REC_PAYMENT_REASON_MESSAGE\"")
 	private String recPaymentReasonMessage;		
+	
+	@Column(name = "\"NUM_PEDIDO_VIRTUAL\"")
+	private String numPedidoVirtual;
 
 	public Integer getId() {
 		return id;
@@ -294,5 +297,13 @@ public class Transacao implements EntidadeBase {
 	public void setRecPaymentReasonMessage(String recPaymentReasonMessage) {
 		this.recPaymentReasonMessage = recPaymentReasonMessage;
 	}
-				
+
+	public String getNumPedidoVirtual() {
+		return numPedidoVirtual;
+	}
+
+	public void setNumPedidoVirtual(String numPedidoVirtual) {
+		this.numPedidoVirtual = numPedidoVirtual;
+	}
+						
 }

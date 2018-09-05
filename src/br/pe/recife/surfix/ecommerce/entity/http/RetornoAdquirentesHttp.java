@@ -1,11 +1,11 @@
 package br.pe.recife.surfix.ecommerce.entity.http;
 
-public class RetornoEmpresasHttp {
-
+public class RetornoAdquirentesHttp {
+	
 	public static final String SUCESSO = "SUCESSO";
 	
 	private String resultado;
-	private EmpresaHttp[] empresas;
+	private AdquirenteHttp[] adquirentes;
 	
 	public String getResultado() {
 		return resultado;
@@ -13,13 +13,11 @@ public class RetornoEmpresasHttp {
 	public void setResultado(String resultado) {
 		this.resultado = resultado;
 	}
-	public EmpresaHttp[] getEmpresas() {
-		return empresas;
+	public AdquirenteHttp[] getAdquirentes() {
+		return adquirentes;
 	}
-	public void setEmpresas(EmpresaHttp[] empresas) {
-		this.empresas = empresas;
-	}
-	
-	
-	
+	public void setAdquirentes(AdquirenteHttp[] adquirentes) {
+		this.adquirentes = adquirentes;
+	}	
+
 }

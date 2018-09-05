@@ -789,6 +789,7 @@ public class CieloController {
 		res.setjSonOut(gson.toJson(payment));
 		res.setOperacao(CieloController.OPERACAO_POST_1);
 		res.setDataHora(LocalDateTime.now());
+		res.setNumPedidoVirtual(vendaCreditoAVistaHttp.getPedidoVirtualHttp().getNumPedidoVirtual());
 		res.setProvider(payment.getProvider().name());
 		res.setAmount(payment.getAmount());
 		res.setCreditCardBrand(payment.getCreditCard().getBrand());
@@ -838,6 +839,7 @@ public class CieloController {
 		res.setjSonOut(gson.toJson(payment));				
 		res.setOperacao((operacao == 2) ? CieloController.OPERACAO_POST_2 : CieloController.OPERACAO_POST_3);	
 		res.setDataHora(LocalDateTime.now());
+		res.setNumPedidoVirtual(vendaCreditoRecProgHttp.getPedidoVirtualHttp().getNumPedidoVirtual());
 		res.setProvider(payment.getProvider().name());
 		res.setAmount(payment.getAmount());
 		res.setCreditCardBrand(payment.getCreditCard().getBrand());
@@ -883,6 +885,7 @@ public class CieloController {
 		transacaoHttp.setIdEmpresaAdquirente(transacao.getEmpresaAdquirente().getId());
 		transacaoHttp.setOperacao(transacao.getOperacao());
 		transacaoHttp.setDataHora(transacao.getDataHora());
+		transacaoHttp.setNumPedidoVirtual(transacao.getNumPedidoVirtual());
 		transacaoHttp.setProvider(transacao.getProvider());
 		transacaoHttp.setAmount(transacao.getAmount());
 		transacaoHttp.setCreditCardBrand(transacao.getCreditCardBrand());
