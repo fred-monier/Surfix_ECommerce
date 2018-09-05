@@ -145,7 +145,28 @@ CREATE TABLE "TRANSACAO" (
     "ID" integer NOT NULL,
     "ID_EMPRESA_ADQUIRENTE" integer NOT NULL,
     "JSON_IN" character varying(1000) NOT NULL,
-    "JSON_OUT" character varying(1000) NOT NULL
+    "JSON_OUT" character varying(5000) NOT NULL,
+    "OPERACAO" character varying(100) NOT NULL,
+    "DATA_HORA" timestamp without time zone NOT NULL,
+    "PROVIDER" character varying(20),
+    "AMOUNT" integer,
+    "CREDITCARD_BRAND" character varying(20),
+    "CREDITCARD_NUMBER" character varying(20),
+    "STATUS" character varying(10),
+    "PAYMENT_ID" character varying(50),
+    "PAYMENT_AUTHCODE" character varying(20),
+    "PAYMENT_PROOF_OF_SALE" character varying(20),
+    "PAYMENT_TID" character varying(20),
+    "PAYMENT_RECEIVED_DATE" character varying(20),
+    "PAYMENT_RETURN_CODE" character varying(20),
+    "PAYMENT_RETURN_MESSAGE" character varying(100),
+    "REC_PAYMENT_ID" character varying(50),
+    "REC_PAYMENT_AUTH_NOW" boolean,
+    "REC_PAYMENT_START_DATE" character varying(10),
+    "REC_PAYMENT_END_DATE" character varying(10),
+    "REC_PAYMENT_NEXT_RECURRENCY" character varying(10),
+    "REC_PAYMENT_REASON_CODE" character varying(20),
+    "REC_PAYMENT_REASON_MESSAGE" character varying(100)
 );
 
 
@@ -252,7 +273,8 @@ SELECT pg_catalog.setval('"EMPRESA_ID_seq"', 1, true);
 -- Data for Name: TRANSACAO; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY "TRANSACAO" ("ID", "ID_EMPRESA_ADQUIRENTE", "JSON_IN", "JSON_OUT") FROM stdin;
+COPY "TRANSACAO" ("ID", "ID_EMPRESA_ADQUIRENTE", "JSON_IN", "JSON_OUT", "OPERACAO", "DATA_HORA", "PROVIDER", "AMOUNT", "CREDITCARD_BRAND", "CREDITCARD_NUMBER", "STATUS", "PAYMENT_ID", "PAYMENT_AUTHCODE", "PAYMENT_PROOF_OF_SALE", "PAYMENT_TID", "PAYMENT_RECEIVED_DATE", "PAYMENT_RETURN_CODE", "PAYMENT_RETURN_MESSAGE", "REC_PAYMENT_ID", "REC_PAYMENT_AUTH_NOW", "REC_PAYMENT_START_DATE", "REC_PAYMENT_END_DATE", "REC_PAYMENT_NEXT_RECURRENCY", "REC_PAYMENT_REASON_CODE", "REC_PAYMENT_REASON_MESSAGE") FROM stdin;
+200	1	{"pedidoVirtualHttp":{"numPedidoVirtual":"20180966","descricaoVenda":"Sistema Orion","valor":18880},"cartaoCreditoHttp":{"bandeiraCartao":"Visa","numCartao":"0000000000000001","mesAnoExpDate":"12/2030","nomeClienteCartao":"Fulano de Tal","cvv":"123"}}	{"ServiceTaxAmount":0,"Installments":1,"Interest":"0","Capture":false,"Authenticate":false,"Recurrent":false,"CreditCard":{"CardNumber":"000000******0001","Holder":"Fulano de Tal","ExpirationDate":"12/2030","SaveCard":false,"Brand":"Visa"},"Tid":"0905123811229","ProofOfSale":"3811229","AuthorizationCode":"361639","SoftDescriptor":"Sistema Orion","Provider":"Simulado","PaymentId":"26df8453-e45a-4202-ad15-95fd908ac289","Type":"CreditCard","Amount":18880,"ReceivedDate":"2018-09-05 12:38:11","Currency":"BRL","Country":"BRA","ReturnCode":"4","ReturnMessage":"Operation Successful","Status":1,"Links":[{"Method":"GET","Rel":"self","Href":"https://apiquerysandbox.cieloecommerce.cielo.com.br/1/sales/26df8453-e45a-4202-ad15-95fd908ac289"},{"Method":"PUT","Rel":"capture","Href":"https://apisandbox.cieloecommerce.cielo.com.br/1/sales/26df8453-e45a-4202-ad15-95fd908ac289/capture"},{"Method":"PUT","Rel":"void","Href":"https://apisandbox.cieloecommerce.cielo.com.br/1/sales/26df8453-e45a-4202-ad15-95fd908ac289/void"}]}	CREDITO_AVISTA	2018-09-05 12:38:28.024	Simulado	18880	Visa	000000******0001	1	26df8453-e45a-4202-ad15-95fd908ac289	361639	3811229	0905123811229	2018-09-05 12:38:11	4	Operation Successful	\N	\N	\N	\N	\N	\N	\N
 \.
 
 
@@ -260,7 +282,7 @@ COPY "TRANSACAO" ("ID", "ID_EMPRESA_ADQUIRENTE", "JSON_IN", "JSON_OUT") FROM std
 -- Name: TRANSACAO_ID_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('"TRANSACAO_ID_seq"', 1, false);
+SELECT pg_catalog.setval('"TRANSACAO_ID_seq"', 4, true);
 
 
 --
