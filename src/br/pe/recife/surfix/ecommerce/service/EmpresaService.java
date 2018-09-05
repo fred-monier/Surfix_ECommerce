@@ -1,5 +1,7 @@
 package br.pe.recife.surfix.ecommerce.service;
 
+import java.util.List;
+
 import br.pe.recife.surfix.ecommerce.dao.EntidadeBaseDAO;
 import br.pe.recife.surfix.ecommerce.entity.Empresa;
 import br.pe.recife.surfix.ecommerce.exception.InfraException;
@@ -10,7 +12,7 @@ public class EmpresaService {
 	
 	private EmpresaService() {		
 	}
-	
+		
 	public static EmpresaService getInstancia() {
 		
 		if (instancia == null) {
@@ -19,6 +21,13 @@ public class EmpresaService {
 		
 		return instancia;
 		
+	}
+	
+	public List<Empresa> listar() throws InfraException {
+		
+		EntidadeBaseDAO<Empresa> dao = new EntidadeBaseDAO<Empresa>();
+		
+		return dao.listar(Empresa.class);
 	}
 	
 	public Empresa consultarPorId(Integer id) throws InfraException {

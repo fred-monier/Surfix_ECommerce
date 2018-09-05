@@ -7,8 +7,10 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 @Entity
@@ -16,7 +18,8 @@ import javax.persistence.Table;
 public class Adquirente implements EntidadeBase {
 	
 	@Id
-    @GeneratedValue
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator="adquirente_sequence")
+	@SequenceGenerator(name = "adquirente_sequence", sequenceName = "\"ADQUIRENTE_ID_seq\"")
     @Column(name = "\"ID\"", nullable = false)
 	private Integer id;
 		

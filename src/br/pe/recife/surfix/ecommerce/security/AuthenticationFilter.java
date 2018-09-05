@@ -23,6 +23,7 @@ import javax.ws.rs.ext.Provider;
 import org.glassfish.jersey.internal.util.Base64;
 
 import br.pe.recife.surfix.ecommerce.entity.Empresa;
+import br.pe.recife.surfix.ecommerce.entity.EmpresaAdquirente;
 import br.pe.recife.surfix.ecommerce.exception.InfraException;
 import br.pe.recife.surfix.ecommerce.exception.NegocioException;
 import br.pe.recife.surfix.ecommerce.fachada.FachadaDB;
@@ -41,8 +42,8 @@ public class AuthenticationFilter implements ContainerRequestFilter {
      
     private static final String AUTHORIZATION_PROPERTY = "Authorization";
     private static final String AUTHENTICATION_SCHEME = "Basic";
-    private static final String ID_COMERCIAL_PROPERTY = "IdComercial";
-    
+    private static final String ID_COMERCIAL_ADQUIRENTE_PROPERTY =  "idComAdq";
+        
     private FachadaDB fachadaDB = FachadaDB.getInstancia();
       
     @Override
@@ -66,9 +67,9 @@ public class AuthenticationFilter implements ContainerRequestFilter {
               
             //Fetch authorization header
             final List<String> authorization = headers.get(AUTHORIZATION_PROPERTY);
-            
-            final List<String> idComercial = headers.get(ID_COMERCIAL_PROPERTY);
-            final String id = idComercial.get(0);            
+               
+            final List<String> idComAdq = headers.get(ID_COMERCIAL_ADQUIRENTE_PROPERTY);
+            final String id = idComAdq.get(0);
               
             //If no authorization information present; block access
             if (authorization == null || authorization.isEmpty()) {                            
@@ -125,17 +126,18 @@ public class AuthenticationFilter implements ContainerRequestFilter {
         //Access the database and do this part yourself
         //String userRole = userMgr.getUserRole(username);
         
-        Integer idEmpresa;
+        Integer idEmpAdq;
         
         try {
-        	idEmpresa = Integer.valueOf(id);
+        	idEmpAdq = Integer.valueOf(id);
         } catch (Exception e) {
         	throw new NegocioException();
         }
         
-        Empresa empresa = fachadaDB.empresaConsultarPorId(idEmpresa);
+        EmpresaAdquirente empresaAdq = fachadaDB.empresaAdquirenteConsultarPorId(idEmpAdq);
         
-        if (empresa != null) {         
+        if (empresaAdq != null && empresaAdq.getEmpresa() != null) {
+        	Empresa empresa = empresaAdq.getEmpresa();
 	        if(empresa.getUsuario().equals("usuario") 
 	        		&& empresa.getSenha().equals("senha")) {
 	        
