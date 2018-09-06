@@ -38,11 +38,11 @@ public class TransacaoService {
 		
 	}
 	
-	public void salvar(Transacao empresa) throws InfraException {
+	public void salvar(Transacao transacao) throws InfraException {
 		
 		EntidadeBaseDAO<Transacao> dao = new EntidadeBaseDAO<Transacao>();
 		
-		dao.salvar(empresa);
+		dao.salvar(transacao);
 		
 	}
 	

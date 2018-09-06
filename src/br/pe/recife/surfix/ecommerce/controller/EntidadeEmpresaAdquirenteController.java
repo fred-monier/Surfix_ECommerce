@@ -12,6 +12,7 @@ import br.pe.recife.surfix.ecommerce.entity.http.EmpresaAdquirenteHttp;
 import br.pe.recife.surfix.ecommerce.entity.http.RetornoEmpresasAdquirentesHttp;
 import br.pe.recife.surfix.ecommerce.exception.InfraException;
 import br.pe.recife.surfix.ecommerce.fachada.FachadaDB;
+import br.pe.recife.surfix.ecommerce.http.RetornoHttp;
 
 @Path("/empresaAdquirente")
 public class EntidadeEmpresaAdquirenteController {
@@ -25,14 +26,14 @@ public class EntidadeEmpresaAdquirenteController {
 	public RetornoEmpresasAdquirentesHttp listar() {
 	
 		RetornoEmpresasAdquirentesHttp res = new RetornoEmpresasAdquirentesHttp();
-		res.setResultado(RetornoEmpresasAdquirentesHttp.SUCESSO);
+		res.setResultado(RetornoHttp.SUCESSO);
 		
 		try { 
 		
 			List<EmpresaAdquirente> empresasAdquirentes = fachadaDB.empresaAdquirenteListar();
 			
 			EmpresaAdquirenteHttp[] empresasAdquirentesHttp = 
-					gerarArrayEmpresasAdquirentesHttp(empresasAdquirentes);	
+					EmpresaAdquirenteHttp.gerarArrayEmpresasAdquirentesHttp(empresasAdquirentes);	
 			
 			res.setEmpresasAdquirentes(empresasAdquirentesHttp);
 			
@@ -46,31 +47,6 @@ public class EntidadeEmpresaAdquirenteController {
 		}
 		
 		return res;
-	}
-	
-	private EmpresaAdquirenteHttp[] gerarArrayEmpresasAdquirentesHttp
-		(List<EmpresaAdquirente> empresasAdquirentes) {
-		
-		EmpresaAdquirenteHttp[] empresasAdquirentesHttp = 
-				new EmpresaAdquirenteHttp[empresasAdquirentes.size()];			
-		
-		for (int i=0; i < empresasAdquirentes.size(); i++) {
-			
-			EmpresaAdquirente empresaAdquirente = empresasAdquirentes.get(i);
-			
-			EmpresaAdquirenteHttp empresaAdquirenteHttp = new EmpresaAdquirenteHttp();
-			empresaAdquirenteHttp.setId(empresaAdquirente.getId());
-			empresaAdquirenteHttp.setIdEmpresa(empresaAdquirente.getEmpresa().getId());
-			empresaAdquirenteHttp.setIdAdquirente(empresaAdquirente.getAdquirente().getId());
-			empresaAdquirenteHttp.setMecId(empresaAdquirente.getMecId());
-			empresaAdquirenteHttp.setMecKey(empresaAdquirente.getMecKey());
-			empresaAdquirenteHttp.setMecIdTeste(empresaAdquirente.getMecIdTeste());
-			empresaAdquirenteHttp.setMecKeyTeste(empresaAdquirente.getMecKeyTeste());
-			
-			empresasAdquirentesHttp[i] = empresaAdquirenteHttp;
-		}
-		
-		return empresasAdquirentesHttp;
-	}
+	}	
 
 }

@@ -1,5 +1,9 @@
 package br.pe.recife.surfix.ecommerce.entity.http;
 
+import java.util.List;
+
+import br.pe.recife.surfix.ecommerce.entity.Empresa;
+
 public class EmpresaHttp {
 	
 	private Integer id;
@@ -37,6 +41,27 @@ public class EmpresaHttp {
 	}
 	public void setSenha(String senha) {
 		this.senha = senha;
+	}
+	
+	public static EmpresaHttp[] gerarArrayEmpresasHttp(List<Empresa> empresas) {
+		
+		EmpresaHttp[] empresasHttp = new EmpresaHttp[empresas.size()];			
+		
+		for (int i=0; i < empresas.size(); i++) {
+			
+			Empresa empresa = empresas.get(i);
+			
+			EmpresaHttp empresaHttp = new EmpresaHttp();
+			empresaHttp.setId(empresa.getId());
+			empresaHttp.setNome(empresa.getNome());
+			empresaHttp.setCnpj(empresa.getCnpj());
+			empresaHttp.setUsuario(empresa.getUsuario());
+			empresaHttp.setSenha(empresa.getSenha());
+			
+			empresasHttp[i] = empresaHttp;
+		}
+		
+		return empresasHttp;
 	}
 	
 }

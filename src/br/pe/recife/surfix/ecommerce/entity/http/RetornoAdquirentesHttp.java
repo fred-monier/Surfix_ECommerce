@@ -1,18 +1,11 @@
 package br.pe.recife.surfix.ecommerce.entity.http;
 
-public class RetornoAdquirentesHttp {
+import br.pe.recife.surfix.ecommerce.http.RetornoHttp;
+
+public class RetornoAdquirentesHttp extends RetornoHttp {
 	
-	public static final String SUCESSO = "SUCESSO";
-	
-	private String resultado;
 	private AdquirenteHttp[] adquirentes;
 	
-	public String getResultado() {
-		return resultado;
-	}
-	public void setResultado(String resultado) {
-		this.resultado = resultado;
-	}
 	public AdquirenteHttp[] getAdquirentes() {
 		return adquirentes;
 	}

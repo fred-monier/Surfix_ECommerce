@@ -1,5 +1,9 @@
 package br.pe.recife.surfix.ecommerce.entity.http;
 
+import java.util.List;
+
+import br.pe.recife.surfix.ecommerce.entity.EmpresaAdquirente;
+
 public class EmpresaAdquirenteHttp {
 	
 	private Integer id;
@@ -51,6 +55,31 @@ public class EmpresaAdquirenteHttp {
 	}
 	public void setMecKeyTeste(String mecKeyTeste) {
 		this.mecKeyTeste = mecKeyTeste;
+	}
+	
+	public static EmpresaAdquirenteHttp[] gerarArrayEmpresasAdquirentesHttp
+		(List<EmpresaAdquirente> empresasAdquirentes) {
+		
+		EmpresaAdquirenteHttp[] empresasAdquirentesHttp = 
+				new EmpresaAdquirenteHttp[empresasAdquirentes.size()];			
+		
+		for (int i=0; i < empresasAdquirentes.size(); i++) {
+			
+			EmpresaAdquirente empresaAdquirente = empresasAdquirentes.get(i);
+			
+			EmpresaAdquirenteHttp empresaAdquirenteHttp = new EmpresaAdquirenteHttp();
+			empresaAdquirenteHttp.setId(empresaAdquirente.getId());
+			empresaAdquirenteHttp.setIdEmpresa(empresaAdquirente.getEmpresa().getId());
+			empresaAdquirenteHttp.setIdAdquirente(empresaAdquirente.getAdquirente().getId());
+			empresaAdquirenteHttp.setMecId(empresaAdquirente.getMecId());
+			empresaAdquirenteHttp.setMecKey(empresaAdquirente.getMecKey());
+			empresaAdquirenteHttp.setMecIdTeste(empresaAdquirente.getMecIdTeste());
+			empresaAdquirenteHttp.setMecKeyTeste(empresaAdquirente.getMecKeyTeste());
+			
+			empresasAdquirentesHttp[i] = empresaAdquirenteHttp;
+		}
+	
+		return empresasAdquirentesHttp;
 	}
         
 }

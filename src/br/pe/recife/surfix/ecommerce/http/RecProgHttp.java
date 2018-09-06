@@ -1,5 +1,8 @@
 package br.pe.recife.surfix.ecommerce.http;
 
+import javax.xml.bind.annotation.XmlRootElement;
+
+@XmlRootElement
 public class RecProgHttp {
 	
 	private String intervalo;

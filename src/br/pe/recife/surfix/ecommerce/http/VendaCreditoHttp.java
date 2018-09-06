@@ -1,6 +1,9 @@
 package br.pe.recife.surfix.ecommerce.http;
 
-public class VendaCreditoRecProgHttp {
+import javax.xml.bind.annotation.XmlRootElement;
+
+@XmlRootElement
+public class VendaCreditoHttp {
 	
 	private PedidoVirtualHttp pedidoVirtualHttp;
 	private CartaoCreditoHttp cartaoCreditoHttp;
@@ -17,12 +20,12 @@ public class VendaCreditoRecProgHttp {
 	}
 	public void setCartaoCreditoHttp(CartaoCreditoHttp cartaoCreditoHttp) {
 		this.cartaoCreditoHttp = cartaoCreditoHttp;
-	}
+	}		
 	public RecProgHttp getRecProgHttp() {
 		return recProgHttp;
 	}
 	public void setRecProgHttp(RecProgHttp recProgHttp) {
 		this.recProgHttp = recProgHttp;
-	}		
+	}	
 
 }

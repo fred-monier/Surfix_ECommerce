@@ -1,6 +1,9 @@
 package br.pe.recife.surfix.ecommerce.entity.http;
 
 import java.time.LocalDateTime;
+import java.util.List;
+
+import br.pe.recife.surfix.ecommerce.entity.Transacao;
 
 public class TransacaoHttp {
 		
@@ -20,6 +23,7 @@ public class TransacaoHttp {
 	private String paymentReceivedDate;
 	private String paymentReturnCode;
 	private String paymentReturnMessage;
+	private Boolean paymentCancelado;
 	private String recPaymentId;
 	private Boolean recPaymentAuthNow;
 	private String recPaymentStartDate;
@@ -27,6 +31,7 @@ public class TransacaoHttp {
 	private String recPaymentNextRecurrency;
 	private String recPaymentReasonCode;
 	private String recPaymentReasonMessage;
+	private Boolean recPaymentDisabilitado;
 	private String numPedidoVirtual;
 	
 	public Integer getId() {
@@ -124,6 +129,12 @@ public class TransacaoHttp {
 	}
 	public void setPaymentReturnMessage(String paymentReturnMessage) {
 		this.paymentReturnMessage = paymentReturnMessage;
+	}			
+	public Boolean getPaymentCancelado() {
+		return paymentCancelado;
+	}
+	public void setPaymentCancelado(Boolean paymentCancelado) {
+		this.paymentCancelado = paymentCancelado;
 	}
 	public String getRecPaymentId() {
 		return recPaymentId;
@@ -166,12 +177,79 @@ public class TransacaoHttp {
 	}
 	public void setRecPaymentReasonMessage(String recPaymentReasonMessage) {
 		this.recPaymentReasonMessage = recPaymentReasonMessage;
+	}	
+	public Boolean getRecPaymentDisabilitado() {
+		return recPaymentDisabilitado;
+	}
+	public void setRecPaymentDisabilitado(Boolean recPaymentDisabilitado) {
+		this.recPaymentDisabilitado = recPaymentDisabilitado;
 	}
 	public String getNumPedidoVirtual() {
 		return numPedidoVirtual;
 	}
 	public void setNumPedidoVirtual(String numPedidoVirtual) {
 		this.numPedidoVirtual = numPedidoVirtual;
-	}		
+	}
+	
+	public static TransacaoHttp gerarTransacaoHttp(Transacao transacao) {
+		
+		TransacaoHttp transacaoHttp = new TransacaoHttp();
+		
+		if (transacao != null) {
+			transacaoHttp.setId(transacao.getId());
+			transacaoHttp.setIdEmpresaAdquirente(transacao.getEmpresaAdquirente().getId());
+			transacaoHttp.setOperacao(transacao.getOperacao());
+			transacaoHttp.setDataHora(transacao.getDataHora());
+			transacaoHttp.setNumPedidoVirtual(transacao.getNumPedidoVirtual());
+			transacaoHttp.setProvider(transacao.getProvider());
+			transacaoHttp.setAmount(transacao.getAmount());
+			transacaoHttp.setCreditCardBrand(transacao.getCreditCardBrand());
+			transacaoHttp.setCreditCardNumber(transacao.getCreditCardNumber());
+			transacaoHttp.setStatus(transacao.getStatus());
+			transacaoHttp.setPaymentId(transacao.getPaymentId());
+			transacaoHttp.setPaymentAuthCode(transacao.getPaymentAuthCode());
+			transacaoHttp.setPaymentProofOfSale(transacao.getPaymentProofOfSale());
+			transacaoHttp.setPaymentTid(transacao.getPaymentTid());
+			transacaoHttp.setPaymentReceivedDate(transacao.getPaymentReceivedDate());
+			transacaoHttp.setPaymentReturnCode(transacao.getPaymentReturnCode());
+			transacaoHttp.setPaymentReturnMessage(transacao.getPaymentReturnMessage());
+			transacaoHttp.setPaymentCancelado(transacao.getPaymentCancelado());
+			transacaoHttp.setRecPaymentId(transacao.getRecPaymentId());
+			transacaoHttp.setRecPaymentAuthNow(transacao.getRecPaymentAuthNow());
+			transacaoHttp.setRecPaymentStartDate(transacao.getRecPaymentStartDate());
+			transacaoHttp.setRecPaymentEndDate(transacao.getRecPaymentEndDate());
+			transacaoHttp.setRecPaymentNextRecurrency(transacao.getRecPaymentNextRecurrency());
+			transacaoHttp.setRecPaymentReasonCode(transacao.getRecPaymentReasonCode());
+			transacaoHttp.setRecPaymentReasonMessage(transacao.getRecPaymentReasonMessage());
+			transacaoHttp.setRecPaymentDisabilitado(transacao.getRecPaymentDesabilitado());
+		}
+		
+		return transacaoHttp;
+	}	
+	
+	public static TransacaoHttp[] gerarArrayTransacoesHttp(List<Transacao> transacoes) {
+		
+		TransacaoHttp[] transacoesHttp;
+		
+		if (transacoes != null) {
+			
+			transacoesHttp = new TransacaoHttp[transacoes.size()];			
+			
+			for (int i=0; i < transacoes.size(); i++) {
+				
+				Transacao transacao = transacoes.get(i);
+							
+				TransacaoHttp transacaoHttp = TransacaoHttp.gerarTransacaoHttp(transacao);
+													
+				transacoesHttp[i] = transacaoHttp;
+			}
+			
+		} else {
+			
+			transacoesHttp = new TransacaoHttp[0];	
+		}		
+		
+		return transacoesHttp;
+	}
 	
 }

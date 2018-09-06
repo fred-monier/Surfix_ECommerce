@@ -12,9 +12,18 @@ import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
+import com.google.gson.Gson;
+
+import br.pe.recife.surfix.ecommerce.http.VendaCreditoHttp;
+import cieloecommerce.sdk.ecommerce.Payment;
+import cieloecommerce.sdk.ecommerce.SaleResponse;
+
 @Entity
 @Table(name="\"TRANSACAO\"")
-public class Transacao implements EntidadeBase {
+public class Transacao implements EntidadeBase {	
+	
+	private static final Integer PAYMENT_STATUS_CANCELADO = 10;	
+	private static final Integer REC_PAYMENT_STATUS_DISABILITADO = 3;
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator="transacao_sequence")
@@ -74,6 +83,9 @@ public class Transacao implements EntidadeBase {
 	@Column(name = "\"PAYMENT_RETURN_MESSAGE\"")
 	private String paymentReturnMessage;
 	
+	@Column(name = "\"PAYMENT_CANCELADO\"")
+	private Boolean paymentCancelado;
+	
 	@Column(name = "\"REC_PAYMENT_ID\"")
 	private String recPaymentId;
 	
@@ -94,6 +106,9 @@ public class Transacao implements EntidadeBase {
 	
 	@Column(name = "\"REC_PAYMENT_REASON_MESSAGE\"")
 	private String recPaymentReasonMessage;		
+	
+	@Column(name = "\"REC_PAYMENT_DESABILITADO\"")
+	private Boolean recPaymentDesabilitado;
 	
 	@Column(name = "\"NUM_PEDIDO_VIRTUAL\"")
 	private String numPedidoVirtual;
@@ -242,6 +257,14 @@ public class Transacao implements EntidadeBase {
 		this.paymentReturnMessage = paymentReturnMessage;
 	}
 
+	public Boolean getPaymentCancelado() {
+		return paymentCancelado;
+	}
+
+	public void setPaymentCancelado(Boolean paymentCancelado) {
+		this.paymentCancelado = paymentCancelado;
+	}
+
 	public String getRecPaymentId() {
 		return recPaymentId;
 	}
@@ -297,6 +320,14 @@ public class Transacao implements EntidadeBase {
 	public void setRecPaymentReasonMessage(String recPaymentReasonMessage) {
 		this.recPaymentReasonMessage = recPaymentReasonMessage;
 	}
+		
+	public Boolean getRecPaymentDesabilitado() {
+		return recPaymentDesabilitado;
+	}
+
+	public void setRecPaymentDesabilitado(Boolean recPaymentDesabilitado) {
+		this.recPaymentDesabilitado = recPaymentDesabilitado;
+	}
 
 	public String getNumPedidoVirtual() {
 		return numPedidoVirtual;
@@ -305,5 +336,135 @@ public class Transacao implements EntidadeBase {
 	public void setNumPedidoVirtual(String numPedidoVirtual) {
 		this.numPedidoVirtual = numPedidoVirtual;
 	}
-						
+	
+	//TODO Incluir mais atributos
+	public static Transacao gerarTransacao(EmpresaAdquirente empresaAdquirente,
+			SaleResponse saleResponse, String operacao, String idPayment, boolean cancelar) {
+		
+		Transacao res = new Transacao();
+		
+		Gson gson = new Gson();
+		
+		res.setEmpresaAdquirente(empresaAdquirente);
+//		res.setjSonIn(gson.toJson(null));
+		res.setjSonOut(gson.toJson(saleResponse));				
+		res.setOperacao(operacao);	
+		res.setDataHora(LocalDateTime.now());		
+		res.setNumPedidoVirtual(saleResponse.getMerchantOrderId());
+//		res.setProvider(null);
+//		res.setAmount(null);
+//		res.setCreditCardBrand(null);
+//		res.setCreditCardNumber(null);	
+		res.setStatus(saleResponse.getStatus());		
+		res.setPaymentId(idPayment);		
+//		res.setPaymentAuthCode(null);
+//		res.setPaymentProofOfSale(null);
+//		res.setPaymentTid(null);
+//		res.setPaymentReceivedDate(null);
+		res.setPaymentReturnCode(saleResponse.getReturnCode());
+		res.setPaymentReturnMessage(saleResponse.getReturnMessage());
+		res.setPaymentCancelado(cancelar);				
+//		res.setRecPaymentId(payment.getRecurrentPayment().getRecurrentPaymentId());
+//		res.setRecPaymentAuthNow(payment.getRecurrentPayment().isAuthorizeNow());
+//		res.setRecPaymentStartDate(payment.getRecurrentPayment().getStartDate());
+//		res.setRecPaymentEndDate(payment.getRecurrentPayment().getEndDate());
+//		res.setRecPaymentNextRecurrency(payment.getRecurrentPayment().getNextRecurrency());
+//		res.setRecPaymentReasonCode(payment.getRecurrentPayment().getReasonCode() + "");
+//		res.setRecPaymentReasonMessage(payment.getRecurrentPayment().getReasonMessage());
+//		res.setRecPaymentDesabilitado(null);			
+		
+		//Faltam do SaleResponse, para pôr na TRANSACAO Entity
+		//ReasonCode
+		//ReasonMessage
+		//ProviderReturnCode
+		//ProviderReturnMessage
+					
+		return res;
+	}
+	
+	public static Transacao gerarTransacao(EmpresaAdquirente empresaAdquirente, String operacao,
+			String idRecPayment, boolean cancelar) {
+		
+		Transacao res = new Transacao();		
+		
+		res.setEmpresaAdquirente(empresaAdquirente);
+//		res.setjSonIn(null);
+//		res.setjSonOut(null);				
+		res.setOperacao(operacao);	
+		res.setDataHora(LocalDateTime.now());		
+//		res.setNumPedidoVirtual(null);
+//		res.setProvider(null);
+//		res.setAmount(null);
+//		res.setCreditCardBrand(null);
+//		res.setCreditCardNumber(null);		
+//		res.setStatus(null);		
+//		res.setPaymentId(null);		
+//		res.setPaymentAuthCode(null);
+//		res.setPaymentProofOfSale(null);
+//		res.setPaymentTid(null);
+//		res.setPaymentReceivedDate(null);
+//		res.setPaymentReturnCode(null);
+//		res.setPaymentReturnMessage(null);
+//		res.setPaymentCancelado(null);			
+		res.setRecPaymentId(idRecPayment);
+//		res.setRecPaymentAuthNow(null);
+//		res.setRecPaymentStartDate(null);
+//		res.setRecPaymentEndDate(null);
+//		res.setRecPaymentNextRecurrency(null);
+//		res.setRecPaymentReasonCode(null);
+//		res.setRecPaymentReasonMessage(null);
+		res.setRecPaymentDesabilitado(cancelar);				
+					
+		return res;
+	}
+	
+	public static Transacao gerarTransacao(VendaCreditoHttp vendaCreditoHttp, 
+			EmpresaAdquirente empresaAdquirente, Payment payment, String operacao) {
+	
+		Transacao res = new Transacao();
+		
+		Gson gson = new Gson();
+		
+		res.setEmpresaAdquirente(empresaAdquirente);
+		res.setjSonIn(gson.toJson(vendaCreditoHttp));
+		res.setjSonOut(gson.toJson(payment));				
+		res.setOperacao(operacao);	
+		res.setDataHora(LocalDateTime.now());
+		if (vendaCreditoHttp.getPedidoVirtualHttp() != null) {
+			res.setNumPedidoVirtual(vendaCreditoHttp.getPedidoVirtualHttp().getNumPedidoVirtual());
+		}
+		if (payment.getProvider() != null) {
+			res.setProvider(payment.getProvider().name());
+		}
+		res.setAmount(payment.getAmount());
+		if (payment.getCreditCard() != null) {
+			res.setCreditCardBrand(payment.getCreditCard().getBrand());
+			res.setCreditCardNumber(payment.getCreditCard().getCardNumber());
+		}		
+		res.setStatus(payment.getStatus() + "");
+		res.setPaymentId(payment.getPaymentId());
+		res.setPaymentAuthCode(payment.getAuthorizationCode());
+		res.setPaymentProofOfSale(payment.getProofOfSale());
+		res.setPaymentTid(payment.getTid());
+		res.setPaymentReceivedDate(payment.getReceivedDate());
+		res.setPaymentReturnCode(payment.getReturnCode());
+		res.setPaymentReturnMessage(payment.getReturnMessage());
+		res.setPaymentCancelado((Transacao.PAYMENT_STATUS_CANCELADO.
+				equals(payment.getStatus()) ? true : null));
+		
+		if (payment.getRecurrentPayment() != null) {				
+			res.setRecPaymentId(payment.getRecurrentPayment().getRecurrentPaymentId());
+			res.setRecPaymentAuthNow(payment.getRecurrentPayment().isAuthorizeNow());
+			res.setRecPaymentStartDate(payment.getRecurrentPayment().getStartDate());
+			res.setRecPaymentEndDate(payment.getRecurrentPayment().getEndDate());
+			res.setRecPaymentNextRecurrency(payment.getRecurrentPayment().getNextRecurrency());
+			res.setRecPaymentReasonCode(payment.getRecurrentPayment().getReasonCode() + "");
+			res.setRecPaymentReasonMessage(payment.getRecurrentPayment().getReasonMessage());
+			res.setRecPaymentDesabilitado((Transacao.REC_PAYMENT_STATUS_DISABILITADO.
+					equals(payment.getRecurrentPayment().getStatus()) ? true : null));			
+		}
+								
+		return res;		
+		
+	}						
 }

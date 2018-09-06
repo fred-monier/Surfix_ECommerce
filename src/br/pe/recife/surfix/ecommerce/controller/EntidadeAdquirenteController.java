@@ -12,6 +12,7 @@ import br.pe.recife.surfix.ecommerce.entity.http.AdquirenteHttp;
 import br.pe.recife.surfix.ecommerce.entity.http.RetornoAdquirentesHttp;
 import br.pe.recife.surfix.ecommerce.exception.InfraException;
 import br.pe.recife.surfix.ecommerce.fachada.FachadaDB;
+import br.pe.recife.surfix.ecommerce.http.RetornoHttp;
 
 @Path("/adquirente")
 public class EntidadeAdquirenteController {
@@ -25,13 +26,13 @@ public class EntidadeAdquirenteController {
 	public RetornoAdquirentesHttp listar() {
 	
 		RetornoAdquirentesHttp res = new RetornoAdquirentesHttp();
-		res.setResultado(RetornoAdquirentesHttp.SUCESSO);
+		res.setResultado(RetornoHttp.SUCESSO);
 		
 		try { 
 		
 			List<Adquirente> adquirentes = fachadaDB.adquirenteListar();
 			
-			AdquirenteHttp[] adquirentesHttp = gerarArranjoAdquirentesHttp(adquirentes);	
+			AdquirenteHttp[] adquirentesHttp = AdquirenteHttp.gerarArranjoAdquirentesHttp(adquirentes);	
 			
 			res.setAdquirentes(adquirentesHttp);
 			
@@ -45,25 +46,6 @@ public class EntidadeAdquirenteController {
 		}
 		
 		return res;
-	}
-	
-	private AdquirenteHttp[] gerarArranjoAdquirentesHttp(List<Adquirente> adquirentes) {
-		
-		AdquirenteHttp[] adquirentesHttp = new AdquirenteHttp[adquirentes.size()];			
-		
-		for (int i=0; i < adquirentes.size(); i++) {
-			
-			Adquirente adquirente = adquirentes.get(i);
-			
-			AdquirenteHttp adquirenteHttp = new AdquirenteHttp();
-			adquirenteHttp.setId(adquirente.getId());
-			adquirenteHttp.setNome(adquirente.getNome());
-			adquirenteHttp.setDescricao(adquirente.getDescricao());
-			
-			adquirentesHttp[i] = adquirenteHttp;
-		}
-		
-		return adquirentesHttp;
 	}
 	
 }

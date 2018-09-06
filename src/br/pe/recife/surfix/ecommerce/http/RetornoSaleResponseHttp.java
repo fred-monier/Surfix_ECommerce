@@ -1,27 +1,24 @@
 package br.pe.recife.surfix.ecommerce.http;
 
+import br.pe.recife.surfix.ecommerce.entity.http.TransacaoHttp;
 import cieloecommerce.sdk.ecommerce.SaleResponse;
 
-public class RetornoSaleResponseHttp {
+public class RetornoSaleResponseHttp extends RetornoHttp {
 	
-	public static final String SUCESSO = "SUCESSO";
-	
-	private String resultado;
 	private SaleResponse saleResponse;
+	private TransacaoHttp transacao;
 	
-	public String getResultado() {
-		return resultado;
-	}
-	public void setResultado(String resultado) {
-		this.resultado = resultado;
-	}
 	public SaleResponse getSaleResponse() {
 		return saleResponse;
 	}
 	public void setSaleResponse(SaleResponse saleResponse) {
 		this.saleResponse = saleResponse;
 	}
-	
-	
-
+	public TransacaoHttp getTransacao() {
+		return transacao;
+	}
+	public void setTransacao(TransacaoHttp transacao) {
+		this.transacao = transacao;
+	}	
+		
 }

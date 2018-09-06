@@ -1,7 +1,5 @@
 package br.pe.recife.surfix.ecommerce.controller;
 
-import java.time.LocalDateTime;
-
 import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -19,13 +17,13 @@ import br.pe.recife.surfix.ecommerce.entity.http.TransacaoHttp;
 import br.pe.recife.surfix.ecommerce.exception.InfraException;
 import br.pe.recife.surfix.ecommerce.fachada.FachadaDB;
 import br.pe.recife.surfix.ecommerce.http.RetornoHttp;
+import br.pe.recife.surfix.ecommerce.http.RetornoManutRecHttp;
 import br.pe.recife.surfix.ecommerce.http.RetornoPaymentHttp;
 import br.pe.recife.surfix.ecommerce.http.RetornoPaymentsHttp;
 import br.pe.recife.surfix.ecommerce.http.RetornoRecurrentSaleHttp;
 import br.pe.recife.surfix.ecommerce.http.RetornoSaleHttp;
 import br.pe.recife.surfix.ecommerce.http.RetornoSaleResponseHttp;
-import br.pe.recife.surfix.ecommerce.http.VendaCreditoAVistaHttp;
-import br.pe.recife.surfix.ecommerce.http.VendaCreditoRecProgHttp;
+import br.pe.recife.surfix.ecommerce.http.VendaCreditoHttp;
 import br.pe.recife.surfix.ecommerce.util.Configuracao;
 import cielo.environment.util.FachadaCielo;
 import cielo.environment.util.FachadaCieloException;
@@ -39,10 +37,13 @@ public class CieloController {
 	
 	private static final String TESTE_PROPERTY = "prod";
 	private static final String TESTE_VALUE = "true";
-	private static final String OPERACAO_POST_1 = "CREDITO_AVISTA";
-	private static final String OPERACAO_POST_2 = "CREDITO_AVISTA_RECORRENTE";
-	private static final String OPERACAO_POST_3 = "CREDITO_AGENDADO_RECORRENTE";
-		
+	private static final String OPERACAO_TRANSACAO_1 = "CREDITO_AVISTA";
+	private static final String OPERACAO_TRANSACAO_2 = "CREDITO_AVISTA_RECORRENTE";
+	private static final String OPERACAO_TRANSACAO_3 = "CREDITO_AGENDADO_RECORRENTE";	
+	private static final String OPERACAO_TRANSACAO_4 = "CREDITO_AVISTA_CANCELAMENTO";
+	private static final String OPERACAO_TRANSACAO_5 = "CREDITO_RECORRENTE_DESATIVACAO";
+	private static final String OPERACAO_TRANSACAO_6 = "CREDITO_RECORRENTE_REATIVACAO";
+			
 	private final Configuracao configuracao;	
 	private final boolean modoProd;
 			
@@ -74,10 +75,10 @@ public class CieloController {
 	@Path("/gerar_pag_cred_a_vista")
 	@RolesAllowed("ADMIN")	
 	public RetornoPaymentHttp gerarPagamentoCreditoAVista(@HeaderParam("idComAdq") String idComAdq,
-			VendaCreditoAVistaHttp vendaCreditoAVistaHttp) {
+			VendaCreditoHttp vendaCreditoHttp) {
 		
 		RetornoPaymentHttp res = new RetornoPaymentHttp();
-		res.setResultado(RetornoPaymentHttp.SUCESSO);
+		res.setResultado(RetornoHttp.SUCESSO);
 		
 		try {
 			
@@ -94,24 +95,19 @@ public class CieloController {
 			}
 			
 			Payment payment = fachada.gerarPagamentoCreditoAVista(this.modoProd, mecId, mecKey, 
-					vendaCreditoAVistaHttp.getPedidoVirtualHttp().getNumPedidoVirtual(), 
-					vendaCreditoAVistaHttp.getPedidoVirtualHttp().getValor(), 
-					vendaCreditoAVistaHttp.getCartaoCreditoHttp().getBandeiraCartao(),
-					vendaCreditoAVistaHttp.getCartaoCreditoHttp().getNumCartao(),					
-					vendaCreditoAVistaHttp.getCartaoCreditoHttp().getMesAnoExpDate(), 
-					vendaCreditoAVistaHttp.getCartaoCreditoHttp().getNomeClienteCartao(),
-					vendaCreditoAVistaHttp.getCartaoCreditoHttp().getCvv(),
-					vendaCreditoAVistaHttp.getPedidoVirtualHttp().getDescricaoVenda());					
+					vendaCreditoHttp.getPedidoVirtualHttp().getNumPedidoVirtual(), 
+					vendaCreditoHttp.getPedidoVirtualHttp().getValor(), 
+					vendaCreditoHttp.getCartaoCreditoHttp().getBandeiraCartao(),
+					vendaCreditoHttp.getCartaoCreditoHttp().getNumCartao(),					
+					vendaCreditoHttp.getCartaoCreditoHttp().getMesAnoExpDate(), 
+					vendaCreditoHttp.getCartaoCreditoHttp().getNomeClienteCartao(),
+					vendaCreditoHttp.getCartaoCreditoHttp().getCvv(),
+					vendaCreditoHttp.getPedidoVirtualHttp().getDescricaoVenda());					
 
-			//
-			Transacao transacao = this.salvarTransacao(vendaCreditoAVistaHttp, empresaAdquirente, payment);	
-			
-			if (transacao.getId() == null) {
-				res.setResultado(res.getResultado() + " - Aviso: transação não pôde ser salva.");
-			}
-			
-			TransacaoHttp transacaoHttp = gerarTransacaoHttp(transacao);
-			
+			//Registrar Transação
+			TransacaoHttp transacaoHttp = this.registrarTransacao(vendaCreditoHttp, empresaAdquirente, 
+					payment, res, OPERACAO_TRANSACAO_1);
+						
 			res.setTransacao(transacaoHttp);
 			//	
 			
@@ -139,7 +135,7 @@ public class CieloController {
 			@HeaderParam("idPayment") String idPayment) {
  
 		RetornoSaleHttp res = new RetornoSaleHttp();
-		res.setResultado(RetornoSaleHttp.SUCESSO);
+		res.setResultado(RetornoHttp.SUCESSO);
 		
 		try {
 			
@@ -180,7 +176,7 @@ public class CieloController {
 			@HeaderParam("pedNum") String pedNum) {
 		
 		RetornoPaymentsHttp res = new RetornoPaymentsHttp();
-		res.setResultado(RetornoPaymentsHttp.SUCESSO);
+		res.setResultado(RetornoHttp.SUCESSO);
 		
 		try {
 			
@@ -221,7 +217,7 @@ public class CieloController {
 			@HeaderParam("idPayment") String idPayment) {
 		
 		RetornoSaleResponseHttp res = new RetornoSaleResponseHttp();
-		res.setResultado(RetornoSaleResponseHttp.SUCESSO);
+		res.setResultado(RetornoHttp.SUCESSO);
 		
 		try {
 			
@@ -237,7 +233,14 @@ public class CieloController {
 				mecKey = empresaAdquirente.getMecKeyTeste();
 			}
 			
-			SaleResponse saleResponse = fachada.cancelarPagamentoTotalCreditoAVista(this.modoProd, mecId, mecKey, idPayment);					
+			SaleResponse saleResponse = fachada.cancelarPagamentoTotalCreditoAVista(this.modoProd, mecId, mecKey, idPayment);
+			
+			//Registrar Transação
+			TransacaoHttp transacaoHttp = this.registrarTransacao(empresaAdquirente, saleResponse, idPayment, 
+					res, OPERACAO_TRANSACAO_4);
+						
+			res.setTransacao(transacaoHttp);
+			//
 			
 			res.setSaleResponse(saleResponse);
 												
@@ -262,10 +265,10 @@ public class CieloController {
 	@Path("/gerar_pag_cred_a_vista_rec_prog")
 	@RolesAllowed("ADMIN")
 	public RetornoPaymentHttp gerarPagamentoCreditoAVistaRecProg(@HeaderParam("idComAdq") String idComAdq,
-			VendaCreditoRecProgHttp vendaCreditoRecProgHttp) {
+			VendaCreditoHttp vendaCreditoHttp) {
 		
 		RetornoPaymentHttp res = new RetornoPaymentHttp();
-		res.setResultado(RetornoPaymentHttp.SUCESSO);
+		res.setResultado(RetornoHttp.SUCESSO);
 		
 		try {
 			
@@ -282,28 +285,23 @@ public class CieloController {
 			}
 			
 			Payment payment = fachada.gerarPagamentoCreditoAVistaRecProg(this.modoProd, mecId, mecKey, 
-					vendaCreditoRecProgHttp.getPedidoVirtualHttp().getNumPedidoVirtual(), 
-					vendaCreditoRecProgHttp.getPedidoVirtualHttp().getValor(), 
-					vendaCreditoRecProgHttp.getCartaoCreditoHttp().getBandeiraCartao(),
-					vendaCreditoRecProgHttp.getCartaoCreditoHttp().getNumCartao(),					
-					vendaCreditoRecProgHttp.getCartaoCreditoHttp().getMesAnoExpDate(), 
-					vendaCreditoRecProgHttp.getCartaoCreditoHttp().getNomeClienteCartao(),
-					vendaCreditoRecProgHttp.getCartaoCreditoHttp().getCvv(),
-					vendaCreditoRecProgHttp.getPedidoVirtualHttp().getDescricaoVenda(),
-					vendaCreditoRecProgHttp.getRecProgHttp().getIntervalo(),
-					vendaCreditoRecProgHttp.getRecProgHttp().getDataFinal());					
+					vendaCreditoHttp.getPedidoVirtualHttp().getNumPedidoVirtual(), 
+					vendaCreditoHttp.getPedidoVirtualHttp().getValor(), 
+					vendaCreditoHttp.getCartaoCreditoHttp().getBandeiraCartao(),
+					vendaCreditoHttp.getCartaoCreditoHttp().getNumCartao(),					
+					vendaCreditoHttp.getCartaoCreditoHttp().getMesAnoExpDate(), 
+					vendaCreditoHttp.getCartaoCreditoHttp().getNomeClienteCartao(),
+					vendaCreditoHttp.getCartaoCreditoHttp().getCvv(),
+					vendaCreditoHttp.getPedidoVirtualHttp().getDescricaoVenda(),
+					vendaCreditoHttp.getRecProgHttp().getIntervalo(),
+					vendaCreditoHttp.getRecProgHttp().getDataFinal());					
 			
-			//
-			Transacao transacao = this.salvarTransacao(vendaCreditoRecProgHttp, empresaAdquirente, payment, 2);
-			
-			if (transacao.getId() == null) {
-				res.setResultado(res.getResultado() + " - Aviso: transação não pôde ser salva.");
-			}
-			
-			TransacaoHttp transacaoHttp = gerarTransacaoHttp(transacao);
-			
+			//Registrar Transação
+			TransacaoHttp transacaoHttp = this.registrarTransacao(vendaCreditoHttp, empresaAdquirente, 
+					payment, res, OPERACAO_TRANSACAO_2);
+						
 			res.setTransacao(transacaoHttp);
-			//
+			//	
 			
 			res.setPayment(payment);
 									
@@ -327,10 +325,10 @@ public class CieloController {
 	@Path("/gerar_pag_cred_agend_rec_prog")
 	@RolesAllowed("ADMIN")
 	public RetornoPaymentHttp gerarPagamentoCreditoAgendadoRecProg(@HeaderParam("idComAdq") String idComAdq,
-			VendaCreditoRecProgHttp vendaCreditoRecProgHttp) {
+			VendaCreditoHttp vendaCreditoHttp) {
 		
 		RetornoPaymentHttp res = new RetornoPaymentHttp();
-		res.setResultado(RetornoPaymentHttp.SUCESSO);
+		res.setResultado(RetornoHttp.SUCESSO);
 		
 		try {
 			
@@ -347,29 +345,24 @@ public class CieloController {
 			}
 			
 			Payment payment = fachada.gerarPagamentoCreditoAgendadoRecProg(this.modoProd, mecId, mecKey, 
-					vendaCreditoRecProgHttp.getPedidoVirtualHttp().getNumPedidoVirtual(), 
-					vendaCreditoRecProgHttp.getPedidoVirtualHttp().getValor(), 
-					vendaCreditoRecProgHttp.getCartaoCreditoHttp().getBandeiraCartao(),
-					vendaCreditoRecProgHttp.getCartaoCreditoHttp().getNumCartao(),					
-					vendaCreditoRecProgHttp.getCartaoCreditoHttp().getMesAnoExpDate(), 
-					vendaCreditoRecProgHttp.getCartaoCreditoHttp().getNomeClienteCartao(),
-					vendaCreditoRecProgHttp.getCartaoCreditoHttp().getCvv(),
-					vendaCreditoRecProgHttp.getPedidoVirtualHttp().getDescricaoVenda(),
-					vendaCreditoRecProgHttp.getRecProgHttp().getDataInicial(),
-					vendaCreditoRecProgHttp.getRecProgHttp().getIntervalo(),
-					vendaCreditoRecProgHttp.getRecProgHttp().getDataFinal());					
+					vendaCreditoHttp.getPedidoVirtualHttp().getNumPedidoVirtual(), 
+					vendaCreditoHttp.getPedidoVirtualHttp().getValor(), 
+					vendaCreditoHttp.getCartaoCreditoHttp().getBandeiraCartao(),
+					vendaCreditoHttp.getCartaoCreditoHttp().getNumCartao(),					
+					vendaCreditoHttp.getCartaoCreditoHttp().getMesAnoExpDate(), 
+					vendaCreditoHttp.getCartaoCreditoHttp().getNomeClienteCartao(),
+					vendaCreditoHttp.getCartaoCreditoHttp().getCvv(),
+					vendaCreditoHttp.getPedidoVirtualHttp().getDescricaoVenda(),
+					vendaCreditoHttp.getRecProgHttp().getDataInicial(),
+					vendaCreditoHttp.getRecProgHttp().getIntervalo(),
+					vendaCreditoHttp.getRecProgHttp().getDataFinal());					
 			
-			//
-			Transacao transacao = this.salvarTransacao(vendaCreditoRecProgHttp, empresaAdquirente, payment, 3);	
-			
-			if (transacao.getId() == null) {
-				res.setResultado(res.getResultado() + " - Aviso: transação não pôde ser salva.");
-			}
-			
-			TransacaoHttp transacaoHttp = gerarTransacaoHttp(transacao);
-			
+			//Registrar Transação
+			TransacaoHttp transacaoHttp = this.registrarTransacao(vendaCreditoHttp, empresaAdquirente, 
+					payment, res, OPERACAO_TRANSACAO_3);
+						
 			res.setTransacao(transacaoHttp);
-			//
+			//	
 			
 			res.setPayment(payment);
 									
@@ -395,7 +388,7 @@ public class CieloController {
 			@HeaderParam("idRecPayment") String idRecPayment) {
 		
 		RetornoRecurrentSaleHttp res = new RetornoRecurrentSaleHttp();
-		res.setResultado(RetornoRecurrentSaleHttp.SUCESSO);
+		res.setResultado(RetornoHttp.SUCESSO);
 		
 		try {
 			
@@ -435,7 +428,7 @@ public class CieloController {
 	@Path("/alterar_pag_cred_rec_prog_por_recpayid")
 	@RolesAllowed("ADMIN")
 	public RetornoHttp alterarPagamentoCreditoRecProgPorRecurrentPaymentId(@HeaderParam("idComAdq") String idComAdq,
-			@HeaderParam("idRecPayment") String idRecPayment, VendaCreditoRecProgHttp vendaCreditoRecProgHttp) {
+			@HeaderParam("idRecPayment") String idRecPayment, VendaCreditoHttp vendaCreditoHttp) {
 		
 		RetornoHttp res = new RetornoHttp();
 		res.setResultado(RetornoHttp.SUCESSO);
@@ -456,13 +449,13 @@ public class CieloController {
 			
 			fachada.alterarPagamentoCreditoRecProgPorRecurrentPaymentId(this.modoProd, mecId, mecKey, 
 					idRecPayment,
-					vendaCreditoRecProgHttp.getPedidoVirtualHttp().getValor(),
-					vendaCreditoRecProgHttp.getCartaoCreditoHttp().getBandeiraCartao(),
-					vendaCreditoRecProgHttp.getCartaoCreditoHttp().getNumCartao(),					
-					vendaCreditoRecProgHttp.getCartaoCreditoHttp().getMesAnoExpDate(), 
-					vendaCreditoRecProgHttp.getCartaoCreditoHttp().getNomeClienteCartao(),
-					vendaCreditoRecProgHttp.getCartaoCreditoHttp().getCvv(),
-					vendaCreditoRecProgHttp.getPedidoVirtualHttp().getDescricaoVenda());											
+					vendaCreditoHttp.getPedidoVirtualHttp().getValor(),
+					vendaCreditoHttp.getCartaoCreditoHttp().getBandeiraCartao(),
+					vendaCreditoHttp.getCartaoCreditoHttp().getNumCartao(),					
+					vendaCreditoHttp.getCartaoCreditoHttp().getMesAnoExpDate(), 
+					vendaCreditoHttp.getCartaoCreditoHttp().getNomeClienteCartao(),
+					vendaCreditoHttp.getCartaoCreditoHttp().getCvv(),
+					vendaCreditoHttp.getPedidoVirtualHttp().getDescricaoVenda());											
 												
 		} catch (FachadaCieloException e) {
 			
@@ -681,10 +674,10 @@ public class CieloController {
 	@Produces("application/json; charset=UTF-8")
 	@Path("/desabilitar_venda_cred_rec_prog_por_recpayid")	
 	@RolesAllowed("ADMIN")
-	public RetornoHttp desabilitarVendaCreditoRecProgPorRecurrentPaymentId(@HeaderParam("idRecPayment") String idRecPayment, 
+	public RetornoManutRecHttp desabilitarVendaCreditoRecProgPorRecurrentPaymentId(@HeaderParam("idRecPayment") String idRecPayment, 
 		@HeaderParam("idComAdq") String idComAdq) {
 		
-		RetornoHttp res = new RetornoHttp();
+		RetornoManutRecHttp res = new RetornoManutRecHttp();
 		res.setResultado(RetornoHttp.SUCESSO);
 		
 		try {
@@ -701,8 +694,15 @@ public class CieloController {
 				mecKey = empresaAdquirente.getMecKeyTeste();
 			}
 			
-			fachada.desabilitarVendaCreditoRecProgPorRecurrentPaymentId(this.modoProd, mecId, mecKey, idRecPayment);									
-												
+			fachada.desabilitarVendaCreditoRecProgPorRecurrentPaymentId(this.modoProd, mecId, mecKey, idRecPayment);
+			
+			//Registrar Transação
+			TransacaoHttp transacaoHttp = this.registrarTransacao(empresaAdquirente, idRecPayment, 
+					res, OPERACAO_TRANSACAO_5);
+						
+			res.setTransacao(transacaoHttp);
+			//
+															
 		} catch (FachadaCieloException e) {
 			
 			res.setResultado(e.getMensagem());							
@@ -720,10 +720,10 @@ public class CieloController {
 	@Produces("application/json; charset=UTF-8")
 	@Path("/reabilitar_venda_cred_rec_prog_por_recpayid")	
 	@RolesAllowed("ADMIN")
-	public RetornoHttp reabilitarVendaCreditoRecProgPorRecurrentPaymentId(@HeaderParam("idRecPayment") String idRecPayment, 
+	public RetornoManutRecHttp reabilitarVendaCreditoRecProgPorRecurrentPaymentId(@HeaderParam("idRecPayment") String idRecPayment, 
 			@HeaderParam("idComAdq") String idComAdq) {
 		
-		RetornoHttp res = new RetornoHttp();
+		RetornoManutRecHttp res = new RetornoManutRecHttp();
 		res.setResultado(RetornoHttp.SUCESSO);
 		
 		try {
@@ -740,7 +740,14 @@ public class CieloController {
 				mecKey = empresaAdquirente.getMecKeyTeste();
 			}
 			
-			fachada.reabilitarVendaCreditoRecProgPorRecurrentPaymentId(this.modoProd, mecId, mecKey, idRecPayment);									
+			fachada.reabilitarVendaCreditoRecProgPorRecurrentPaymentId(this.modoProd, mecId, mecKey, idRecPayment);
+			
+			//Registrar Transação
+			TransacaoHttp transacaoHttp = this.registrarTransacao(empresaAdquirente, idRecPayment, 
+					res, OPERACAO_TRANSACAO_6);
+						
+			res.setTransacao(transacaoHttp);
+			//
 												
 		} catch (FachadaCieloException e) {
 			
@@ -776,136 +783,76 @@ public class CieloController {
 			throw new FachadaCieloException(null, "Erro ao tentar recuperar credenciais de acesso");
 		}
 	}
-	
-	private Transacao salvarTransacao(VendaCreditoAVistaHttp vendaCreditoAVistaHttp, 
-			EmpresaAdquirente empresaAdquirente, Payment payment) {
+		
+	private TransacaoHttp registrarTransacao(VendaCreditoHttp vendaCreditoHttp, 
+			EmpresaAdquirente empresaAdquirente, Payment payment, RetornoPaymentHttp res, 
+			String operacao) {
+			
+		Transacao transacao = Transacao.gerarTransacao(vendaCreditoHttp, empresaAdquirente, 
+				payment, operacao);
+		
+		TransacaoHttp transacaoHttp = this.encaminharParaFachada(transacao, res);
 				
-		Transacao res = new Transacao();
+		return transacaoHttp;
 		
-		Gson gson = new Gson();
-		
-		res.setEmpresaAdquirente(empresaAdquirente);
-		res.setjSonIn(gson.toJson(vendaCreditoAVistaHttp));
-		res.setjSonOut(gson.toJson(payment));
-		res.setOperacao(CieloController.OPERACAO_POST_1);
-		res.setDataHora(LocalDateTime.now());
-		res.setNumPedidoVirtual(vendaCreditoAVistaHttp.getPedidoVirtualHttp().getNumPedidoVirtual());
-		res.setProvider(payment.getProvider().name());
-		res.setAmount(payment.getAmount());
-		res.setCreditCardBrand(payment.getCreditCard().getBrand());
-		res.setCreditCardNumber(payment.getCreditCard().getCardNumber());
-		res.setStatus(payment.getStatus() + "");
-		res.setPaymentId(payment.getPaymentId());
-		res.setPaymentAuthCode(payment.getAuthorizationCode());
-		res.setPaymentProofOfSale(payment.getProofOfSale());
-		res.setPaymentTid(payment.getTid());
-		res.setPaymentReceivedDate(payment.getReceivedDate());
-		res.setPaymentReturnCode(payment.getReturnCode());
-		res.setPaymentReturnMessage(payment.getReturnMessage());
-		
-		res.setRecPaymentId(null);
-		res.setRecPaymentAuthNow(null);
-		res.setRecPaymentStartDate(null);
-		res.setRecPaymentEndDate(null);
-		res.setRecPaymentNextRecurrency(null);
-		res.setRecPaymentReasonCode(null);
-		res.setRecPaymentReasonMessage(null);		
-				
-		try {
-			
-			this.fachadaDB.transacaoSalvar(res);
-							
-		} catch (InfraException e) {
-			
-			System.out.println("Erro ao tentar gravar transação: ");
-			System.out.println(gson.toJson(this.gerarTransacaoHttp(res)));
-			System.out.println(e.getExcecaoOriginal().getMessage());	
-			System.out.println("********************************");						
-			
-		}
-						
-		return res;
 	}
 	
-	private Transacao salvarTransacao(VendaCreditoRecProgHttp vendaCreditoRecProgHttp, 
-			EmpresaAdquirente empresaAdquirente, Payment payment, int operacao) {
+	private TransacaoHttp registrarTransacao(EmpresaAdquirente empresaAdquirente,
+			SaleResponse saleResponse, String idPayment, RetornoSaleResponseHttp res, 
+			String operacao) {
 		
-		Transacao res = new Transacao();
+		Transacao transacao = Transacao.gerarTransacao(empresaAdquirente, saleResponse, 
+				operacao, idPayment, true);
+					
+		TransacaoHttp transacaoHttp = this.encaminharParaFachada(transacao, res);
 		
-		Gson gson = new Gson();
-		
-		res.setEmpresaAdquirente(empresaAdquirente);
-		res.setjSonIn(gson.toJson(vendaCreditoRecProgHttp));
-		res.setjSonOut(gson.toJson(payment));				
-		res.setOperacao((operacao == 2) ? CieloController.OPERACAO_POST_2 : CieloController.OPERACAO_POST_3);	
-		res.setDataHora(LocalDateTime.now());
-		res.setNumPedidoVirtual(vendaCreditoRecProgHttp.getPedidoVirtualHttp().getNumPedidoVirtual());
-		res.setProvider(payment.getProvider().name());
-		res.setAmount(payment.getAmount());
-		res.setCreditCardBrand(payment.getCreditCard().getBrand());
-		res.setCreditCardNumber(payment.getCreditCard().getCardNumber());
-		res.setStatus(payment.getStatus() + "");
-		res.setPaymentId(payment.getPaymentId());
-		res.setPaymentAuthCode(payment.getAuthorizationCode());
-		res.setPaymentProofOfSale(payment.getProofOfSale());
-		res.setPaymentTid(payment.getTid());
-		res.setPaymentReceivedDate(payment.getReceivedDate());
-		res.setPaymentReturnCode(payment.getReturnCode());
-		res.setPaymentReturnMessage(payment.getReturnMessage());
-		
-		res.setRecPaymentId(payment.getRecurrentPayment().getRecurrentPaymentId());
-		res.setRecPaymentAuthNow(payment.getRecurrentPayment().isAuthorizeNow());
-		res.setRecPaymentStartDate(payment.getRecurrentPayment().getStartDate());
-		res.setRecPaymentEndDate(payment.getRecurrentPayment().getEndDate());
-		res.setRecPaymentNextRecurrency(payment.getRecurrentPayment().getNextRecurrency());
-		res.setRecPaymentReasonCode(payment.getRecurrentPayment().getReasonCode() + "");
-		res.setRecPaymentReasonMessage(payment.getRecurrentPayment().getReasonMessage());
-				
-		try {
-			
-			this.fachadaDB.transacaoSalvar(res);
-							
-		} catch (InfraException e) {
-			
-			System.out.println("********************************");
-			System.out.println("Erro ao tentar gravar transação: ");
-			System.out.println(gson.toJson(this.gerarTransacaoHttp(res)));
-			System.out.println(e.getExcecaoOriginal().getMessage());	
-			System.out.println("********************************");
-			
-		}
-						
-		return res;
+		return transacaoHttp;
 	}
 	
-	private TransacaoHttp gerarTransacaoHttp(Transacao transacao) {
+	private TransacaoHttp registrarTransacao(EmpresaAdquirente empresaAdquirente,
+			String idRecPayment, RetornoManutRecHttp res, String operacao) {
 		
-		TransacaoHttp transacaoHttp = new TransacaoHttp();
-		transacaoHttp.setId(transacao.getId());
-		transacaoHttp.setIdEmpresaAdquirente(transacao.getEmpresaAdquirente().getId());
-		transacaoHttp.setOperacao(transacao.getOperacao());
-		transacaoHttp.setDataHora(transacao.getDataHora());
-		transacaoHttp.setNumPedidoVirtual(transacao.getNumPedidoVirtual());
-		transacaoHttp.setProvider(transacao.getProvider());
-		transacaoHttp.setAmount(transacao.getAmount());
-		transacaoHttp.setCreditCardBrand(transacao.getCreditCardBrand());
-		transacaoHttp.setCreditCardNumber(transacao.getCreditCardNumber());
-		transacaoHttp.setStatus(transacao.getStatus());
-		transacaoHttp.setPaymentId(transacao.getPaymentId());
-		transacaoHttp.setPaymentAuthCode(transacao.getPaymentAuthCode());
-		transacaoHttp.setPaymentProofOfSale(transacao.getPaymentProofOfSale());
-		transacaoHttp.setPaymentTid(transacao.getPaymentTid());
-		transacaoHttp.setPaymentReceivedDate(transacao.getPaymentReceivedDate());
-		transacaoHttp.setPaymentReturnCode(transacao.getPaymentReturnCode());
-		transacaoHttp.setPaymentReturnMessage(transacao.getPaymentReturnMessage());
-		transacaoHttp.setRecPaymentId(transacao.getRecPaymentId());
-		transacaoHttp.setRecPaymentAuthNow(transacao.getRecPaymentAuthNow());
-		transacaoHttp.setRecPaymentStartDate(transacao.getRecPaymentStartDate());
-		transacaoHttp.setRecPaymentEndDate(transacao.getRecPaymentEndDate());
-		transacaoHttp.setRecPaymentNextRecurrency(transacao.getRecPaymentNextRecurrency());
-		transacaoHttp.setRecPaymentReasonCode(transacao.getRecPaymentReasonCode());
-		transacaoHttp.setRecPaymentReasonMessage(transacao.getRecPaymentReasonMessage());
+		Transacao transacao = null;
+		
+		if (CieloController.OPERACAO_TRANSACAO_5.equals(operacao)) {			
+			transacao = Transacao.gerarTransacao(empresaAdquirente, operacao, idRecPayment, true);
+			
+		} else if (CieloController.OPERACAO_TRANSACAO_6.equals(operacao)) {
+			transacao = Transacao.gerarTransacao(empresaAdquirente, operacao, idRecPayment, false);			
+		}
+							
+		TransacaoHttp transacaoHttp = this.encaminharParaFachada(transacao, res);
 		
 		return transacaoHttp;
 	}	
+	
+	private TransacaoHttp encaminharParaFachada(Transacao transacao, RetornoHttp res) {
+		
+		boolean erro = false;
+		InfraException exc = null;			
+		try {				
+			this.fachadaDB.transacaoSalvar(transacao);				
+		} catch (InfraException e) {				
+			erro = true;	
+			exc = e;
+		}			
+		
+		TransacaoHttp transacaoHttp = TransacaoHttp.gerarTransacaoHttp(transacao);
+		
+		if (erro) {
+			Gson gson = new Gson();
+			
+			res.setResultado(res.getResultado() + " - Aviso: transação não pôde ser salva.");
+			
+			System.out.println("********************************");
+			System.out.println("Erro ao tentar gravar transação: ");
+			System.out.println(gson.toJson(transacaoHttp));
+			System.out.println(exc.getExcecaoOriginal().getMessage());	
+			System.out.println("********************************");		
+		}
+		
+		return transacaoHttp;
+		
+	}
+	
 }
