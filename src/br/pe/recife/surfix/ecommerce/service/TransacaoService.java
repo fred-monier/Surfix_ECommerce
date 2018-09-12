@@ -2,57 +2,40 @@ package br.pe.recife.surfix.ecommerce.service;
 
 import java.util.List;
 
-import br.pe.recife.surfix.ecommerce.dao.EntidadeBaseDAO;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import br.pe.recife.surfix.ecommerce.dao.TransacaoDAOIntf;
 import br.pe.recife.surfix.ecommerce.entity.Transacao;
 import br.pe.recife.surfix.ecommerce.exception.InfraException;
 
+@Transactional
+@Service
 public class TransacaoService {
 	
-	private static TransacaoService instancia;
-	
-	private TransacaoService() {		
-	}
-	
-	public static TransacaoService getInstancia() {
+	@Autowired
+	//@Qualifier("transacaoDAO")
+	private TransacaoDAOIntf transacaoDao;
 		
-		if (instancia == null) {
-			instancia = new TransacaoService();			
-		}
-		
-		return instancia;
-		
-	}
-	
 	public List<Transacao> listar() throws InfraException {
-		
-		EntidadeBaseDAO<Transacao> dao = new EntidadeBaseDAO<Transacao>();
-		
-		return dao.listar(Transacao.class);
+			
+		return transacaoDao.listar();
 	}
 	
 	public Transacao consultarPorId(Integer id) throws InfraException {
-		
-		EntidadeBaseDAO<Transacao> dao = new EntidadeBaseDAO<Transacao>();
-		
-		return dao.consultarPorId(Transacao.class, id);
-		
+
+		return transacaoDao.consultarPorId(id);		
 	}
 	
 	public void salvar(Transacao transacao) throws InfraException {
-		
-		EntidadeBaseDAO<Transacao> dao = new EntidadeBaseDAO<Transacao>();
-		
-		dao.salvar(transacao);
-		
+
+		transacaoDao.salvar(transacao);		
 	}
 	
 	public void excluir(Integer id) throws InfraException {
-		
-		EntidadeBaseDAO<Transacao> dao = new EntidadeBaseDAO<Transacao>();
-		
-		dao.excluir(Transacao.class, id);
-		
+
+		transacaoDao.excluir(id);		
 	}
 		
-
 }

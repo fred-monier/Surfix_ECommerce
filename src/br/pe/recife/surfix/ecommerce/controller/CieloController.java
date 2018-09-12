@@ -9,13 +9,15 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import com.google.gson.Gson;
 
 import br.pe.recife.surfix.ecommerce.entity.EmpresaAdquirente;
 import br.pe.recife.surfix.ecommerce.entity.Transacao;
 import br.pe.recife.surfix.ecommerce.entity.http.TransacaoHttp;
 import br.pe.recife.surfix.ecommerce.exception.InfraException;
-import br.pe.recife.surfix.ecommerce.fachada.FachadaDB;
 import br.pe.recife.surfix.ecommerce.http.RetornoHttp;
 import br.pe.recife.surfix.ecommerce.http.RetornoManutRecHttp;
 import br.pe.recife.surfix.ecommerce.http.RetornoPaymentHttp;
@@ -24,6 +26,8 @@ import br.pe.recife.surfix.ecommerce.http.RetornoRecurrentSaleHttp;
 import br.pe.recife.surfix.ecommerce.http.RetornoSaleHttp;
 import br.pe.recife.surfix.ecommerce.http.RetornoSaleResponseHttp;
 import br.pe.recife.surfix.ecommerce.http.VendaCreditoHttp;
+import br.pe.recife.surfix.ecommerce.service.EmpresaAdquirenteService;
+import br.pe.recife.surfix.ecommerce.service.TransacaoService;
 import br.pe.recife.surfix.ecommerce.util.Configuracao;
 import cielo.environment.util.FachadaCielo;
 import cielo.environment.util.FachadaCieloException;
@@ -32,6 +36,7 @@ import cieloecommerce.sdk.ecommerce.RecurrentSale;
 import cieloecommerce.sdk.ecommerce.Sale;
 import cieloecommerce.sdk.ecommerce.SaleResponse;
 
+@Component
 @Path("/cielo")
 public class CieloController {
 	
@@ -47,8 +52,13 @@ public class CieloController {
 	private final Configuracao configuracao;	
 	private final boolean modoProd;
 			
-	private FachadaDB fachadaDB = FachadaDB.getInstancia();
 	private FachadaCielo fachada = FachadaCielo.getInstancia();
+	
+	@Autowired
+	private EmpresaAdquirenteService empresaAdquirenteService;
+	
+	@Autowired
+	private TransacaoService transacaoService;
 	
 	public CieloController() {
 	
@@ -766,7 +776,7 @@ public class CieloController {
 		try {
 			Integer idEmpresaAquirente = Integer.valueOf(id);		
 			
-			empresaAdquirente = fachadaDB.empresaAdquirenteConsultarPorId(idEmpresaAquirente);
+			empresaAdquirente = empresaAdquirenteService.consultarPorId(idEmpresaAquirente);
 									
 		} catch (InfraException e) {
 			
@@ -831,7 +841,7 @@ public class CieloController {
 		boolean erro = false;
 		InfraException exc = null;			
 		try {				
-			this.fachadaDB.transacaoSalvar(transacao);				
+			transacaoService.salvar(transacao);				
 		} catch (InfraException e) {				
 			erro = true;	
 			exc = e;
@@ -849,6 +859,8 @@ public class CieloController {
 			System.out.println(gson.toJson(transacaoHttp));
 			System.out.println(exc.getExcecaoOriginal().getMessage());	
 			System.out.println("********************************");		
+			
+			//TODO Salvar em arquivo texto no servidor
 		}
 		
 		return transacaoHttp;

@@ -21,17 +21,20 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.Provider;
 
 import org.glassfish.jersey.internal.util.Base64;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import br.pe.recife.surfix.ecommerce.entity.Empresa;
 import br.pe.recife.surfix.ecommerce.entity.EmpresaAdquirente;
 import br.pe.recife.surfix.ecommerce.exception.InfraException;
 import br.pe.recife.surfix.ecommerce.exception.NegocioException;
-import br.pe.recife.surfix.ecommerce.fachada.FachadaDB;
+import br.pe.recife.surfix.ecommerce.service.EmpresaAdquirenteService;
 
 /**
  * Este filtro verifica as permissões de acesso para um usuário
  * baseado no login e senha informados no request
  * */
+@Component
 @Provider
 @Priority(Priorities.AUTHENTICATION)
 public class AuthenticationFilter implements ContainerRequestFilter {
@@ -44,7 +47,8 @@ public class AuthenticationFilter implements ContainerRequestFilter {
     private static final String AUTHENTICATION_SCHEME = "Basic";
     private static final String ID_COMERCIAL_ADQUIRENTE_PROPERTY =  "idComAdq";
         
-    private FachadaDB fachadaDB = FachadaDB.getInstancia();
+	@Autowired
+	private EmpresaAdquirenteService empresaAdquirenteService;   
       
     @Override
     public void filter(ContainerRequestContext requestContext) {
@@ -134,7 +138,7 @@ public class AuthenticationFilter implements ContainerRequestFilter {
         	throw new NegocioException();
         }
         
-        EmpresaAdquirente empresaAdq = fachadaDB.empresaAdquirenteConsultarPorId(idEmpAdq);
+        EmpresaAdquirente empresaAdq = empresaAdquirenteService.consultarPorId(idEmpAdq);
         
         if (empresaAdq != null && empresaAdq.getEmpresa() != null) {
         	Empresa empresa = empresaAdq.getEmpresa();

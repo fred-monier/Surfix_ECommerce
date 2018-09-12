@@ -7,17 +7,22 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import br.pe.recife.surfix.ecommerce.entity.Adquirente;
 import br.pe.recife.surfix.ecommerce.entity.http.AdquirenteHttp;
 import br.pe.recife.surfix.ecommerce.entity.http.RetornoAdquirentesHttp;
 import br.pe.recife.surfix.ecommerce.exception.InfraException;
-import br.pe.recife.surfix.ecommerce.fachada.FachadaDB;
 import br.pe.recife.surfix.ecommerce.http.RetornoHttp;
+import br.pe.recife.surfix.ecommerce.service.AdquirenteService;
 
+@Component
 @Path("/adquirente")
 public class EntidadeAdquirenteController {
 
-	private FachadaDB fachadaDB = FachadaDB.getInstancia();
+	@Autowired
+	private AdquirenteService adquirenteService;
 	
 	@GET
 	@Produces("application/json; charset=UTF-8")
@@ -30,7 +35,7 @@ public class EntidadeAdquirenteController {
 		
 		try { 
 		
-			List<Adquirente> adquirentes = fachadaDB.adquirenteListar();
+			List<Adquirente> adquirentes = adquirenteService.listar();
 			
 			AdquirenteHttp[] adquirentesHttp = AdquirenteHttp.gerarArranjoAdquirentesHttp(adquirentes);	
 			

@@ -2,56 +2,40 @@ package br.pe.recife.surfix.ecommerce.service;
 
 import java.util.List;
 
-import br.pe.recife.surfix.ecommerce.dao.EntidadeBaseDAO;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import br.pe.recife.surfix.ecommerce.dao.EmpresaDAOIntf;
 import br.pe.recife.surfix.ecommerce.entity.Empresa;
 import br.pe.recife.surfix.ecommerce.exception.InfraException;
 
+@Transactional
+@Service
 public class EmpresaService {
 	
-	private static EmpresaService instancia;
-	
-	private EmpresaService() {		
-	}
+	@Autowired
+	//@Qualifier("empresaDAO")
+	private EmpresaDAOIntf empresaDao;
 		
-	public static EmpresaService getInstancia() {
+	public List<Empresa> listar() throws InfraException {				
 		
-		if (instancia == null) {
-			instancia = new EmpresaService();			
-		}
-		
-		return instancia;
-		
-	}
-	
-	public List<Empresa> listar() throws InfraException {
-		
-		EntidadeBaseDAO<Empresa> dao = new EntidadeBaseDAO<Empresa>();
-		
-		return dao.listar(Empresa.class);
+		return empresaDao.listar();
 	}
 	
 	public Empresa consultarPorId(Integer id) throws InfraException {
-		
-		EntidadeBaseDAO<Empresa> dao = new EntidadeBaseDAO<Empresa>();
-		
-		return dao.consultarPorId(Empresa.class, id);
-		
+			
+		return empresaDao.consultarPorId(id);		
 	}
 	
 	public void salvar(Empresa empresa) throws InfraException {
-		
-		EntidadeBaseDAO<Empresa> dao = new EntidadeBaseDAO<Empresa>();
-		
-		dao.salvar(empresa);
-		
+
+		empresaDao.salvar(empresa);		
 	}
 	
 	public void excluir(Integer id) throws InfraException {
-		
-		EntidadeBaseDAO<Empresa> dao = new EntidadeBaseDAO<Empresa>();
-		
-		dao.excluir(Empresa.class, id);
-		
+
+		empresaDao.excluir(id);		
 	}
 	
 }

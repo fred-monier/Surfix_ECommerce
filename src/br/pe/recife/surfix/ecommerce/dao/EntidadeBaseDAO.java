@@ -3,18 +3,20 @@ package br.pe.recife.surfix.ecommerce.dao;
 import java.util.List;
 
 import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 
-import br.pe.recife.surfix.ecommerce.db.ECommerceDB;
 import br.pe.recife.surfix.ecommerce.entity.EntidadeBase;
 import br.pe.recife.surfix.ecommerce.exception.InfraException;
 
+//Classe teste não mais sendo utilizada em favor do Spring
 public class EntidadeBaseDAO <T extends EntidadeBase> {
 	
-	private ECommerceDB ecommerceDB = ECommerceDB.getInstancia();
+	private EntityManagerFactory factory = Persistence.createEntityManagerFactory("surfix-ecommerce");
 		
 	public List<T> listar(Class<T> clazz) throws InfraException {
 		
@@ -22,7 +24,7 @@ public class EntidadeBaseDAO <T extends EntidadeBase> {
 		
 		try {
 			
-			manager = ecommerceDB.getEMFactory().createEntityManager();
+			manager = factory.createEntityManager();
 			
 	        CriteriaBuilder cb = manager.getCriteriaBuilder();
 	        CriteriaQuery<T> cq = cb.createQuery(clazz);
@@ -51,7 +53,7 @@ public class EntidadeBaseDAO <T extends EntidadeBase> {
 		
 		try {
 			
-			manager = ecommerceDB.getEMFactory().createEntityManager();
+			manager = factory.createEntityManager();
 			
 			return manager.find(clazz, id);
 			
@@ -73,7 +75,7 @@ public class EntidadeBaseDAO <T extends EntidadeBase> {
 		
 		try {
 			
-			manager = ecommerceDB.getEMFactory().createEntityManager();
+			manager = factory.createEntityManager();
 			
 			manager.getTransaction().begin();
 			
@@ -110,7 +112,7 @@ public class EntidadeBaseDAO <T extends EntidadeBase> {
 		
 		try {
 			
-			manager = ecommerceDB.getEMFactory().createEntityManager();
+			manager = factory.createEntityManager();
 			
 			T t = manager.find(clazz, id);
 			

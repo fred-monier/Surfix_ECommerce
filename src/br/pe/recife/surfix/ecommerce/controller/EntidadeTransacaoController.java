@@ -7,17 +7,22 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import br.pe.recife.surfix.ecommerce.entity.Transacao;
 import br.pe.recife.surfix.ecommerce.entity.http.RetornoTransacoesHttp;
 import br.pe.recife.surfix.ecommerce.entity.http.TransacaoHttp;
 import br.pe.recife.surfix.ecommerce.exception.InfraException;
-import br.pe.recife.surfix.ecommerce.fachada.FachadaDB;
 import br.pe.recife.surfix.ecommerce.http.RetornoHttp;
+import br.pe.recife.surfix.ecommerce.service.TransacaoService;
 
+@Component
 @Path("/transacao")
 public class EntidadeTransacaoController {
 	
-	private FachadaDB fachadaDB = FachadaDB.getInstancia();
+	@Autowired
+	private TransacaoService transacaoService;
 	
 	@GET
 	@Produces("application/json; charset=UTF-8")
@@ -30,7 +35,7 @@ public class EntidadeTransacaoController {
 		
 		try { 
 		
-			List<Transacao> transacoes = fachadaDB.transacaoListar();
+			List<Transacao> transacoes = transacaoService.listar();
 			
 			TransacaoHttp[] transacoesHttp = TransacaoHttp.gerarArrayTransacoesHttp(transacoes);	
 			
