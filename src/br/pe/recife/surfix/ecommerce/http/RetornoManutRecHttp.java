@@ -2,7 +2,7 @@ package br.pe.recife.surfix.ecommerce.http;
 
 import br.pe.recife.surfix.ecommerce.entity.http.TransacaoHttp;
 
-//Essa classe terá uma irmã (RetornoTransacaoHttp). Definir qual fica.
+//TODO - Essa classe terá uma irmã (RetornoTransacaoHttp). Definir qual fica.
 public class RetornoManutRecHttp extends RetornoHttp {
 	
 	private TransacaoHttp transacao;

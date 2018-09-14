@@ -27,8 +27,8 @@ public class Empresa implements EntidadeBase {
 			fetch =	FetchType.LAZY, cascade = CascadeType.ALL)	
     private Set<EmpresaAdquirente> empresaAdquirentes;
 	
-	@Column(name = "\"CNPJ\"", nullable = false)
-	private String cnpj;
+	@Column(name = "\"CPF_CNPJ\"", nullable = false)
+	private String cpfCnpj;
 	
 	@Column(name = "\"NOME\"", nullable = false)
 	private String nome;
@@ -55,12 +55,12 @@ public class Empresa implements EntidadeBase {
 		this.empresaAdquirentes = empresaAdquirentes;
 	}
 
-	public String getCnpj() {
-		return cnpj;
+	public String getCpfCnpj() {
+		return cpfCnpj;
 	}
 
-	public void setCnpj(String cnpj) {
-		this.cnpj = cnpj;
+	public void setCpfCnpj(String cpfCnpj) {
+		this.cpfCnpj = cpfCnpj;
 	}
 
 	public String getNome() {

@@ -7,7 +7,7 @@ import br.pe.recife.surfix.ecommerce.entity.Empresa;
 public class EmpresaHttp {
 	
 	private Integer id;
-	private String cnpj;
+	private String cpfCnpj;
 	private String nome;
 	private String usuario;
 	private String senha;
@@ -18,11 +18,11 @@ public class EmpresaHttp {
 	public void setId(Integer id) {
 		this.id = id;
 	}
-	public String getCnpj() {
-		return cnpj;
+	public String getCpfCnpj() {
+		return cpfCnpj;
 	}
-	public void setCnpj(String cnpj) {
-		this.cnpj = cnpj;
+	public void setCpfCnpj(String cpfCnpj) {
+		this.cpfCnpj = cpfCnpj;
 	}
 	public String getNome() {
 		return nome;
@@ -54,7 +54,7 @@ public class EmpresaHttp {
 			EmpresaHttp empresaHttp = new EmpresaHttp();
 			empresaHttp.setId(empresa.getId());
 			empresaHttp.setNome(empresa.getNome());
-			empresaHttp.setCnpj(empresa.getCnpj());
+			empresaHttp.setCpfCnpj(empresa.getCpfCnpj());
 			empresaHttp.setUsuario(empresa.getUsuario());
 			empresaHttp.setSenha(empresa.getSenha());
 			

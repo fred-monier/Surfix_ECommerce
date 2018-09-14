@@ -8,6 +8,7 @@ import br.pe.recife.surfix.ecommerce.entity.Transacao;
 public class TransacaoHttp {
 		
 	private Integer id;
+	private Integer idPai;
 	private Integer idEmpresaAdquirente;
 	private String operacao;
 	private LocalDateTime dataHora;
@@ -23,12 +24,18 @@ public class TransacaoHttp {
 	private String paymentReceivedDate;
 	private String paymentReturnCode;
 	private String paymentReturnMessage;
+	private String paymentReasonCode;
+	private String paymentReasonMessage;
+	private String paymentProviderReturnCode;
+	private String paymentProviderReturnMessage;
 	private Boolean paymentCancelado;
 	private String recPaymentId;
 	private Boolean recPaymentAuthNow;
 	private String recPaymentStartDate;
 	private String recPaymentEndDate;
-	private String recPaymentNextRecurrency;
+	private String recPaymentNextRecurrency;	
+	private String recPaymentRecurrencyDay;
+	private String recPaymentMonthsInterval;	
 	private String recPaymentReasonCode;
 	private String recPaymentReasonMessage;
 	private Boolean recPaymentDisabilitado;
@@ -39,6 +46,12 @@ public class TransacaoHttp {
 	}
 	public void setId(Integer id) {
 		this.id = id;
+	}	
+	public Integer getIdPai() {
+		return idPai;
+	}
+	public void setIdPai(Integer idPai) {
+		this.idPai = idPai;
 	}
 	public Integer getIdEmpresaAdquirente() {
 		return idEmpresaAdquirente;
@@ -129,7 +142,31 @@ public class TransacaoHttp {
 	}
 	public void setPaymentReturnMessage(String paymentReturnMessage) {
 		this.paymentReturnMessage = paymentReturnMessage;
-	}			
+	}
+	public String getPaymentReasonCode() {
+		return paymentReasonCode;
+	}
+	public void setPaymentReasonCode(String paymentReasonCode) {
+		this.paymentReasonCode = paymentReasonCode;
+	}
+	public String getPaymentReasonMessage() {
+		return paymentReasonMessage;
+	}
+	public void setPaymentReasonMessage(String paymentReasonMessage) {
+		this.paymentReasonMessage = paymentReasonMessage;
+	}
+	public String getPaymentProviderReturnCode() {
+		return paymentProviderReturnCode;
+	}
+	public void setPaymentProviderReturnCode(String paymentProviderReturnCode) {
+		this.paymentProviderReturnCode = paymentProviderReturnCode;
+	}
+	public String getPaymentProviderReturnMessage() {
+		return paymentProviderReturnMessage;
+	}
+	public void setPaymentProviderReturnMessage(String paymentProviderReturnMessage) {
+		this.paymentProviderReturnMessage = paymentProviderReturnMessage;
+	}
 	public Boolean getPaymentCancelado() {
 		return paymentCancelado;
 	}
@@ -165,6 +202,18 @@ public class TransacaoHttp {
 	}
 	public void setRecPaymentNextRecurrency(String recPaymentNextRecurrency) {
 		this.recPaymentNextRecurrency = recPaymentNextRecurrency;
+	}			
+	public String getRecPaymentRecurrencyDay() {
+		return recPaymentRecurrencyDay;
+	}
+	public void setRecPaymentRecurrencyDay(String recPaymentRecurrencyDay) {
+		this.recPaymentRecurrencyDay = recPaymentRecurrencyDay;
+	}
+	public String getRecPaymentMonthsInterval() {
+		return recPaymentMonthsInterval;
+	}
+	public void setRecPaymentMonthsInterval(String recPaymentMonthsInterval) {
+		this.recPaymentMonthsInterval = recPaymentMonthsInterval;
 	}
 	public String getRecPaymentReasonCode() {
 		return recPaymentReasonCode;
@@ -197,6 +246,9 @@ public class TransacaoHttp {
 		
 		if (transacao != null) {
 			transacaoHttp.setId(transacao.getId());
+			if (transacao.getTransacaoPai() != null) {
+				transacaoHttp.setIdPai(transacao.getTransacaoPai().getId());
+			}
 			transacaoHttp.setIdEmpresaAdquirente(transacao.getEmpresaAdquirente().getId());
 			transacaoHttp.setOperacao(transacao.getOperacao());
 			transacaoHttp.setDataHora(transacao.getDataHora());
@@ -212,13 +264,19 @@ public class TransacaoHttp {
 			transacaoHttp.setPaymentTid(transacao.getPaymentTid());
 			transacaoHttp.setPaymentReceivedDate(transacao.getPaymentReceivedDate());
 			transacaoHttp.setPaymentReturnCode(transacao.getPaymentReturnCode());
-			transacaoHttp.setPaymentReturnMessage(transacao.getPaymentReturnMessage());
+			transacaoHttp.setPaymentReturnMessage(transacao.getPaymentReturnMessage());			
+			transacaoHttp.setPaymentReasonCode(null);
+			transacaoHttp.setPaymentReasonMessage(null);
+			transacaoHttp.setPaymentProviderReturnCode(null);
+			transacaoHttp.setPaymentProviderReturnMessage(null);						
 			transacaoHttp.setPaymentCancelado(transacao.getPaymentCancelado());
 			transacaoHttp.setRecPaymentId(transacao.getRecPaymentId());
 			transacaoHttp.setRecPaymentAuthNow(transacao.getRecPaymentAuthNow());
 			transacaoHttp.setRecPaymentStartDate(transacao.getRecPaymentStartDate());
 			transacaoHttp.setRecPaymentEndDate(transacao.getRecPaymentEndDate());
 			transacaoHttp.setRecPaymentNextRecurrency(transacao.getRecPaymentNextRecurrency());
+			transacaoHttp.setRecPaymentRecurrencyDay(transacao.getRecPaymentRecurrencyDay());
+			transacaoHttp.setRecPaymentMonthsInterval(transacao.getRecPaymentMonthsInterval());
 			transacaoHttp.setRecPaymentReasonCode(transacao.getRecPaymentReasonCode());
 			transacaoHttp.setRecPaymentReasonMessage(transacao.getRecPaymentReasonMessage());
 			transacaoHttp.setRecPaymentDisabilitado(transacao.getRecPaymentDesabilitado());
