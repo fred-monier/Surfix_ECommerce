@@ -18,6 +18,7 @@ import br.pe.recife.surfix.ecommerce.entity.EmpresaAdquirente;
 import br.pe.recife.surfix.ecommerce.entity.Transacao;
 import br.pe.recife.surfix.ecommerce.entity.http.TransacaoHttp;
 import br.pe.recife.surfix.ecommerce.exception.InfraException;
+import br.pe.recife.surfix.ecommerce.http.RetornoGeneralSaleHttp;
 import br.pe.recife.surfix.ecommerce.http.RetornoHttp;
 import br.pe.recife.surfix.ecommerce.http.RetornoManutRecHttp;
 import br.pe.recife.surfix.ecommerce.http.RetornoPaymentHttp;
@@ -109,7 +110,7 @@ public class CieloController {
 					vendaCreditoHttp.getPedidoVirtualHttp().getDescricaoVenda());					
 
 			//Registrar Transação
-			TransacaoHttp transacaoHttp = this.registrarTransacao(vendaCreditoHttp, empresaAdquirente, 
+			TransacaoHttp transacaoHttp = this.registrarTransacao( empresaAdquirente, vendaCreditoHttp,
 					payment, res, Transacao.OPERACAO_TRANSACAO_1);
 						
 			res.setTransacao(transacaoHttp);
@@ -126,7 +127,9 @@ public class CieloController {
 		return res;				
 	}	
 	
-	//TODO - Criar um novo método que utilize transacaoId Pai (verificar se é, de fato), ao invés de idPayment (trazendo todas as transações filhas). Serve para RecProg.
+	//TODO - Atualizar Postman (1 método novo)
+	//---------------------------------------------------------------------------------------------------------------------------------------------------
+	//Criado um novo método que utiliza transacaoId, verificando se existe idPayment ou idRecPayment para tal (serve tanto para pagamentos normais como recorrentes 	
 	/**
 	 * 
 	 * Chama [2-consultarVendaCreditoAVistaPorPaymentId]
@@ -167,6 +170,58 @@ public class CieloController {
 		
 		return res;
 	}
+	@GET
+	@Produces("application/json; charset=UTF-8")
+	@Path("/consultar_vend_por_transacaoid")
+	@RolesAllowed("ADMIN")
+	public RetornoGeneralSaleHttp consultarVendaPorTransacaoId(@HeaderParam("idComAdq") String idComAdq,
+			@HeaderParam("idTransacao") String idTransacao) {
+ 
+		RetornoGeneralSaleHttp res = new RetornoGeneralSaleHttp();
+		res.setResultado(RetornoHttp.SUCESSO);
+		
+		try {
+			
+			//Recuperando Transacao
+			Transacao transacaoPai = transacaoRequisitada(idTransacao);
+			this.checarTransacaoEmpresaAdquirente(transacaoPai, idComAdq);
+			//					
+			
+			EmpresaAdquirente empresaAdquirente = this.empresaAdquirenteRequisitado(idComAdq);
+
+			String mecId;
+			String mecKey;
+			if (this.modoProd) {
+				mecId = empresaAdquirente.getMecId();
+				mecKey = empresaAdquirente.getMecKey();
+			} else {
+				mecId = empresaAdquirente.getMecIdTeste();
+				mecKey = empresaAdquirente.getMecKeyTeste();
+			}
+						
+			Sale sale = null;
+			RecurrentSale recSale = null;
+			
+			if (transacaoPai.getPaymentId() != null) {
+				sale = fachada.consultarVendaCreditoAVistaPorPaymentId(this.modoProd, mecId, mecKey, transacaoPai.getPaymentId());
+				res.setSale(sale);
+			}			
+			if (transacaoPai.getRecPaymentId() != null) {
+				recSale = fachada.consultarVendaCreditoRecProgPorRecurrentPaymentId(this.modoProd, mecId, mecKey, transacaoPai.getRecPaymentId());
+				res.setRecurrentSale(recSale);
+			}		
+			
+			res.setTransacao(TransacaoHttp.gerarTransacaoHttp(transacaoPai));
+						
+												
+		} catch (FachadaCieloException e) {
+			
+			res.setResultado(e.getMensagem());							
+		}
+		
+		return res;
+	}	
+	//---------------------------------------------------------------------------------------------------------------------------------------------------	
 	
 	//TODO - Criar um novo método que retorne os transacaoIds que sejam Pai, ao invés de idPayments
 	/**
@@ -267,7 +322,8 @@ public class CieloController {
 		try {
 			
 			//Recuperando Transacao
-			Transacao transacaoPai = transacaoRequisitada(idTransacao, false);						
+			Transacao transacaoPai = transacaoRequisitada(idTransacao, false);			
+			this.checarTransacaoEmpresaAdquirente(transacaoPai, idComAdq);
 			//				
 			
 			EmpresaAdquirente empresaAdquirente = this.empresaAdquirenteRequisitado(idComAdq);
@@ -285,7 +341,7 @@ public class CieloController {
 			SaleResponse saleResponse = fachada.cancelarPagamentoTotalCreditoAVista(this.modoProd, mecId, mecKey, transacaoPai.getPaymentId());
 			
 			//Registrar Transação
-			TransacaoHttp transacaoHttp = this.registrarTransacao(empresaAdquirente, saleResponse, transacaoPai, 
+			TransacaoHttp transacaoHttp = this.registrarTransacao(transacaoPai, saleResponse, 
 					res, Transacao.OPERACAO_TRANSACAO_4);
 						
 			res.setTransacao(transacaoHttp);
@@ -347,7 +403,7 @@ public class CieloController {
 					vendaCreditoHttp.getRecProgHttp().getDataFinal());					
 			
 			//Registrar Transação
-			TransacaoHttp transacaoHttp = this.registrarTransacao(vendaCreditoHttp, empresaAdquirente, 
+			TransacaoHttp transacaoHttp = this.registrarTransacao(empresaAdquirente, vendaCreditoHttp,
 					payment, res, Transacao.OPERACAO_TRANSACAO_2);
 						
 			res.setTransacao(transacaoHttp);
@@ -408,7 +464,7 @@ public class CieloController {
 					vendaCreditoHttp.getRecProgHttp().getDataFinal());					
 			
 			//Registrar Transação
-			TransacaoHttp transacaoHttp = this.registrarTransacao(vendaCreditoHttp, empresaAdquirente, 
+			TransacaoHttp transacaoHttp = this.registrarTransacao(empresaAdquirente, vendaCreditoHttp, 
 					payment, res, Transacao.OPERACAO_TRANSACAO_3);
 						
 			res.setTransacao(transacaoHttp);
@@ -531,7 +587,8 @@ public class CieloController {
 		try {
 			
 			//Recuperando Transacao
-			Transacao transacaoPai = transacaoRequisitada(idTransacao, true);						
+			Transacao transacaoPai = transacaoRequisitada(idTransacao, true);	
+			this.checarTransacaoEmpresaAdquirente(transacaoPai, idComAdq);
 			//			
 			
 			EmpresaAdquirente empresaAdquirente = this.empresaAdquirenteRequisitado(idComAdq);
@@ -557,7 +614,7 @@ public class CieloController {
 					vendaCreditoHttp.getPedidoVirtualHttp().getDescricaoVenda());		
 			
 			//Registrar Transação
-			TransacaoHttp transacaoHttp = this.registrarTransacao(vendaCreditoHttp, empresaAdquirente, transacaoPai, 
+			TransacaoHttp transacaoHttp = this.registrarTransacao(transacaoPai, vendaCreditoHttp, 
 					res, Transacao.OPERACAO_TRANSACAO_7);
 						
 			res.setTransacao(transacaoHttp);
@@ -627,7 +684,8 @@ public class CieloController {
 		try {
 			
 			//Recuperando Transacao
-			Transacao transacaoPai = transacaoRequisitada(idTransacao, true);						
+			Transacao transacaoPai = transacaoRequisitada(idTransacao, true);			
+			this.checarTransacaoEmpresaAdquirente(transacaoPai, idComAdq);
 			//	
 			
 			EmpresaAdquirente empresaAdquirente = this.empresaAdquirenteRequisitado(idComAdq);
@@ -646,7 +704,7 @@ public class CieloController {
 					transacaoPai.getRecPaymentId(), dataFinal);	
 			
 			//Registrar Transação
-			TransacaoHttp transacaoHttp = this.registrarTransacao(empresaAdquirente, transacaoPai, 
+			TransacaoHttp transacaoHttp = this.registrarTransacao(transacaoPai, 
 					res, Transacao.OPERACAO_TRANSACAO_8, dataFinal);
 						
 			res.setTransacao(transacaoHttp);
@@ -716,7 +774,8 @@ public class CieloController {
 		try {
 			
 			//Recuperando Transacao
-			Transacao transacaoPai = transacaoRequisitada(idTransacao, true);						
+			Transacao transacaoPai = transacaoRequisitada(idTransacao, true);	
+			this.checarTransacaoEmpresaAdquirente(transacaoPai, idComAdq);
 			//				
 			
 			EmpresaAdquirente empresaAdquirente = this.empresaAdquirenteRequisitado(idComAdq);
@@ -735,7 +794,7 @@ public class CieloController {
 					transacaoPai.getRecPaymentId(), diaRec);	
 			
 			//Registrar Transação
-			TransacaoHttp transacaoHttp = this.registrarTransacao(empresaAdquirente, transacaoPai, 
+			TransacaoHttp transacaoHttp = this.registrarTransacao(transacaoPai, 
 					res, Transacao.OPERACAO_TRANSACAO_9, diaRec + "");
 						
 			res.setTransacao(transacaoHttp);
@@ -805,7 +864,8 @@ public class CieloController {
 		try {
 			
 			//Recuperando Transacao
-			Transacao transacaoPai = transacaoRequisitada(idTransacao, true);					
+			Transacao transacaoPai = transacaoRequisitada(idTransacao, true);	
+			this.checarTransacaoEmpresaAdquirente(transacaoPai, idComAdq);
 			//	
 			
 			EmpresaAdquirente empresaAdquirente = this.empresaAdquirenteRequisitado(idComAdq);
@@ -824,7 +884,7 @@ public class CieloController {
 					transacaoPai.getRecPaymentId(), valorRec);	
 			
 			//Registrar Transação
-			TransacaoHttp transacaoHttp = this.registrarTransacao(empresaAdquirente, transacaoPai, 
+			TransacaoHttp transacaoHttp = this.registrarTransacao(transacaoPai, 
 					res, Transacao.OPERACAO_TRANSACAO_10, valorRec + "");
 						
 			res.setTransacao(transacaoHttp);
@@ -894,7 +954,8 @@ public class CieloController {
 		try {
 						
 			//Recuperando Transacao
-			Transacao transacaoPai = transacaoRequisitada(idTransacao, true);						
+			Transacao transacaoPai = transacaoRequisitada(idTransacao, true);		
+			this.checarTransacaoEmpresaAdquirente(transacaoPai, idComAdq);
 			//	
 						
 			EmpresaAdquirente empresaAdquirente = this.empresaAdquirenteRequisitado(idComAdq);
@@ -913,7 +974,7 @@ public class CieloController {
 					transacaoPai.getRecPaymentId(), dataProxRec);	
 			
 			//Registrar Transação
-			TransacaoHttp transacaoHttp = this.registrarTransacao(empresaAdquirente, transacaoPai, 
+			TransacaoHttp transacaoHttp = this.registrarTransacao(transacaoPai, 
 					res, Transacao.OPERACAO_TRANSACAO_11, dataProxRec);
 						
 			res.setTransacao(transacaoHttp);
@@ -982,7 +1043,8 @@ public class CieloController {
 		try {
 			
 			//Recuperando Transacao
-			Transacao transacaoPai = transacaoRequisitada(idTransacao, true);						
+			Transacao transacaoPai = transacaoRequisitada(idTransacao, true);		
+			this.checarTransacaoEmpresaAdquirente(transacaoPai, idComAdq);
 			//				
 			
 			EmpresaAdquirente empresaAdquirente = this.empresaAdquirenteRequisitado(idComAdq);
@@ -1001,7 +1063,7 @@ public class CieloController {
 					transacaoPai.getRecPaymentId(), intervalo);		
 			
 			//Registrar Transação
-			TransacaoHttp transacaoHttp = this.registrarTransacao(empresaAdquirente, transacaoPai, 
+			TransacaoHttp transacaoHttp = this.registrarTransacao(transacaoPai, 
 					res, Transacao.OPERACAO_TRANSACAO_12, intervalo);
 						
 			res.setTransacao(transacaoHttp);
@@ -1071,7 +1133,8 @@ public class CieloController {
 		try {
 			
 			//Recuperando Transacao
-			Transacao transacaoPai = transacaoRequisitada(idTransacao, true);						
+			Transacao transacaoPai = transacaoRequisitada(idTransacao, true);	
+			this.checarTransacaoEmpresaAdquirente(transacaoPai, idComAdq);
 			//	
 			
 			EmpresaAdquirente empresaAdquirente = this.empresaAdquirenteRequisitado(idComAdq);
@@ -1089,7 +1152,7 @@ public class CieloController {
 			fachada.desabilitarVendaCreditoRecProgPorRecurrentPaymentId(this.modoProd, mecId, mecKey, transacaoPai.getRecPaymentId());
 			
 			//Registrar Transação
-			TransacaoHttp transacaoHttp = this.registrarTransacao(empresaAdquirente, transacaoPai, 
+			TransacaoHttp transacaoHttp = this.registrarTransacao(transacaoPai, 
 					res, Transacao.OPERACAO_TRANSACAO_5);
 						
 			res.setTransacao(transacaoHttp);
@@ -1158,7 +1221,8 @@ public class CieloController {
 		try {
 			
 			//Recuperando Transacao
-			Transacao transacaoPai = transacaoRequisitada(idTransacao, true);						
+			Transacao transacaoPai = transacaoRequisitada(idTransacao, true);		
+			this.checarTransacaoEmpresaAdquirente(transacaoPai, idComAdq);
 			//
 			
 			EmpresaAdquirente empresaAdquirente = this.empresaAdquirenteRequisitado(idComAdq);
@@ -1176,7 +1240,7 @@ public class CieloController {
 			fachada.reabilitarVendaCreditoRecProgPorRecurrentPaymentId(this.modoProd, mecId, mecKey, transacaoPai.getRecPaymentId());
 			
 			//Registrar Transação
-			TransacaoHttp transacaoHttp = this.registrarTransacao(empresaAdquirente, transacaoPai, 
+			TransacaoHttp transacaoHttp = this.registrarTransacao(transacaoPai, 
 					res, Transacao.OPERACAO_TRANSACAO_6);
 						
 			res.setTransacao(transacaoHttp);
@@ -1217,8 +1281,36 @@ public class CieloController {
 			throw new FachadaCieloException(null, "Erro ao tentar recuperar credenciais de acesso");
 		}
 	}
-	
-	//
+
+	private Transacao transacaoRequisitada(String id) throws FachadaCieloException {
+		
+		Transacao transacao = null;
+		
+		try {
+			Integer idTransacao = Integer.valueOf(id);		
+			
+			transacao = transacaoService.consultarPorId(idTransacao);
+									
+		} catch (InfraException e) {
+			
+			throw new FachadaCieloException(e, "Erro ao tentar recuperar Transação " + id);
+			
+        } catch (Exception e) {        	     
+        	
+        	throw new FachadaCieloException(e, "ID Transação inválido");
+        }				
+                
+		if (transacao != null) {				
+			if (transacao.getTransacaoPai() == null) {				
+				return transacao;
+			} else {							
+				throw new FachadaCieloException(null, "A Transação informada não é uma transação pai");
+			}			
+		} else {			
+			throw new FachadaCieloException(null, "Erro ao tentar recuperar Transação " + id);
+		}
+	}			
+		
 	private Transacao transacaoRequisitada(String id, boolean recorrente) throws FachadaCieloException {
 		
 		Transacao transacao = null;
@@ -1264,15 +1356,20 @@ public class CieloController {
 			throw new FachadaCieloException(null, "Erro ao tentar recuperar Transação " + id);
 		}
 	}		
-	//
+	
+	private void checarTransacaoEmpresaAdquirente(Transacao transacao, String idComAdq) throws FachadaCieloException {
+		if (!idComAdq.equals(transacao.getEmpresaAdquirente().getId())) {
+			throw new FachadaCieloException(null, "Transação não encontrada para a Empresa-Adquirente informada");
+		}		
+	}
 		
 	//Registra uma compra no cartão à vista ou recorrente
-	private TransacaoHttp registrarTransacao(VendaCreditoHttp vendaCreditoHttp, 
-			EmpresaAdquirente empresaAdquirente, Payment payment, RetornoPaymentHttp res, 
+	private TransacaoHttp registrarTransacao(EmpresaAdquirente empresaAdquirente, 
+			VendaCreditoHttp vendaCreditoHttp, Payment payment, RetornoPaymentHttp res, 
 			String operacao) {
 			
-		Transacao transacao = Transacao.gerarTransacao(vendaCreditoHttp, empresaAdquirente, 
-				payment, operacao);
+		Transacao transacao = Transacao.gerarTransacao(empresaAdquirente, operacao, vendaCreditoHttp,  
+				payment);
 		
 		TransacaoHttp transacaoHttp = this.encaminharParaFachada(transacao, res);
 				
@@ -1281,12 +1378,10 @@ public class CieloController {
 	}
 	
 	//Registra o cancelamento de uma compra no cartão à vista
-	private TransacaoHttp registrarTransacao(EmpresaAdquirente empresaAdquirente,
-			SaleResponse saleResponse, Transacao transacaoPai, RetornoSaleResponseHttp res, 
-			String operacao) {
+	private TransacaoHttp registrarTransacao(Transacao transacaoPai, 
+			SaleResponse saleResponse, RetornoSaleResponseHttp res, String operacao) {
 		
-		Transacao transacao = Transacao.gerarTransacao(empresaAdquirente, saleResponse, 
-				operacao, transacaoPai);
+		Transacao transacao = Transacao.gerarTransacao(transacaoPai, operacao, saleResponse);
 					
 		TransacaoHttp transacaoHttp = this.encaminharParaFachada(transacao, res);
 		
@@ -1294,16 +1389,16 @@ public class CieloController {
 	}
 	
 	//Registra a desativação ou reativação de um pagamento recorrente
-	private TransacaoHttp registrarTransacao(EmpresaAdquirente empresaAdquirente,
-			Transacao transacaoPai, RetornoManutRecHttp res, String operacao) {
+	private TransacaoHttp registrarTransacao(Transacao transacaoPai, 
+			RetornoManutRecHttp res, String operacao) {
 		
 		Transacao transacao = null;
 		
 		if (Transacao.OPERACAO_TRANSACAO_5.equals(operacao)) {			
-			transacao = Transacao.gerarTransacao(empresaAdquirente, operacao, transacaoPai, true);
+			transacao = Transacao.gerarTransacao(transacaoPai, operacao, true);
 			
 		} else if (Transacao.OPERACAO_TRANSACAO_6.equals(operacao)) {
-			transacao = Transacao.gerarTransacao(empresaAdquirente, operacao, transacaoPai, false);			
+			transacao = Transacao.gerarTransacao(transacaoPai, operacao, false);			
 		}
 							
 		TransacaoHttp transacaoHttp = this.encaminharParaFachada(transacao, res);
@@ -1312,12 +1407,12 @@ public class CieloController {
 	}	
 	
 	//Registra a alteração dos dados de um pagamento recorrente
-	private TransacaoHttp registrarTransacao(VendaCreditoHttp vendaCreditoHttp, EmpresaAdquirente empresaAdquirente,
-			Transacao transacaoPai, RetornoManutRecHttp res, String operacao) {
+	private TransacaoHttp registrarTransacao(Transacao transacaoPai, 
+			VendaCreditoHttp vendaCreditoHttp, RetornoManutRecHttp res, String operacao) {
 		
 		Transacao transacao = null;
 		
-		transacao = Transacao.gerarTransacao(vendaCreditoHttp, empresaAdquirente, operacao, transacaoPai);
+		transacao = Transacao.gerarTransacao(transacaoPai, operacao, vendaCreditoHttp);
 		
 		TransacaoHttp transacaoHttp = this.encaminharParaFachada(transacao, res);
 		
@@ -1325,12 +1420,12 @@ public class CieloController {
 	}
 	
 	//Registra alterações de um pagamento recorrente (exceto de dados de pagamento)
-	private TransacaoHttp registrarTransacao(EmpresaAdquirente empresaAdquirente,
-			Transacao transacaoPai, RetornoManutRecHttp res, String operacao, String outraAlteracao) {
+	private TransacaoHttp registrarTransacao(Transacao transacaoPai, 
+			RetornoManutRecHttp res, String operacao, String outraAlteracao) {
 		
 		Transacao transacao = null;
 				
-		transacao = Transacao.gerarTransacao(empresaAdquirente, operacao, transacaoPai, outraAlteracao);
+		transacao = Transacao.gerarTransacao(transacaoPai, operacao, outraAlteracao);
 						
 		TransacaoHttp transacaoHttp = this.encaminharParaFachada(transacao, res);
 		

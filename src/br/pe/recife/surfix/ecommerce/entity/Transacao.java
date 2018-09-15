@@ -171,6 +171,14 @@ public class Transacao implements EntidadeBase {
 	public void setTransacaoPai(Transacao transacaoPai) {
 		this.transacaoPai = transacaoPai;
 	}
+		
+	public Set<Transacao> getTransacoesFilhas() {
+		return transacoesFilhas;
+	}
+
+	public void setTransacoesFilhas(Set<Transacao> transacoesFilhas) {
+		this.transacoesFilhas = transacoesFilhas;
+	}
 
 	public EmpresaAdquirente getEmpresaAdquirente() {
 		return empresaAdquirente;
@@ -436,215 +444,14 @@ public class Transacao implements EntidadeBase {
 		this.numPedidoVirtual = numPedidoVirtual;
 	}
 	
-	//OPERACAO_TRANSACAO_4 = "CREDITO_AVISTA_CANCELAMENTO";
-	//Cria uma nova transacao de cancelamento de compra no cartão à vista
-	public static Transacao gerarTransacao(EmpresaAdquirente empresaAdquirente,
-			SaleResponse saleResponse, String operacao, Transacao transacaoPai) {
-		
-		Transacao res = new Transacao();
-		
-		Gson gson = new Gson();
-		
-		res.setTransacaoPai(transacaoPai);
-		res.setEmpresaAdquirente(empresaAdquirente);
-		//res.setjSonIn(null);
-		res.setjSonOut(gson.toJson(saleResponse));				
-		res.setOperacao(operacao);	
-		res.setDataHora(LocalDateTime.now());		
-		res.setNumPedidoVirtual(saleResponse.getMerchantOrderId());
-		//res.setProvider(null);
-		//res.setAmount(null);
-		//res.setCreditCardBrand(null);
-		//res.setCreditCardNumber(null);	
-		res.setStatus(saleResponse.getStatus());		
-		res.setPaymentId(transacaoPai.getPaymentId());		
-		//res.setPaymentAuthCode(null);
-		//res.setPaymentProofOfSale(null);
-		//res.setPaymentTid(null);
-		//res.setPaymentReceivedDate(null);
-		res.setPaymentReturnCode(saleResponse.getReturnCode());
-		res.setPaymentReturnMessage(saleResponse.getReturnMessage());
-		res.setPaymentReasonCode(saleResponse.getReasonCode());
-		res.setPaymentReasonMessage(saleResponse.getReasonMessage());
-		res.setPaymentProviderReturnCode(saleResponse.getProviderReturnCode());
-		res.setPaymentProviderReturnMessage(saleResponse.getProviderReturnMessage());
-		res.setPaymentCancelado(true);				
-		//res.setRecPaymentId(null);
-		//res.setRecPaymentAuthNow(null);
-		//res.setRecPaymentStartDate(null);
-		//res.setRecPaymentEndDate(null);
-		//res.setRecPaymentNextRecurrency(null);
-		//res.setRecPaymentRecurrencyDay(null);
-		//res.setRecPaymentMonthsInterval(null);
-		//res.setRecPaymentReasonCode(null);
-		//res.setRecPaymentReasonMessage(null);
-		//res.setRecPaymentDesabilitado(null);			
-					
-		return res;
-	}
-	
-	//Cria uma transação de desativação ou reativação de pagamento recorrente
-	//OPERACAO_TRANSACAO_5 = "CREDITO_RECORRENTE_DESATIVACAO";
-	//OPERACAO_TRANSACAO_6 = "CREDITO_RECORRENTE_REATIVACAO";	
-	public static Transacao gerarTransacao(EmpresaAdquirente empresaAdquirente, String operacao, 
-			Transacao transacaoPai, boolean cancelar) {
-		
-		Transacao res = new Transacao();		
-		
-		res.setTransacaoPai(transacaoPai);
-		res.setEmpresaAdquirente(empresaAdquirente);
-		//res.setjSonIn(null);
-		//res.setjSonOut(null);				
-		res.setOperacao(operacao);	
-		res.setDataHora(LocalDateTime.now());		
-		//res.setNumPedidoVirtual(null);
-		//res.setProvider(null);
-		//res.setAmount(null);
-		//res.setCreditCardBrand(null);
-		//res.setCreditCardNumber(null);		
-		//res.setStatus(null);		
-		//res.setPaymentId(null);		
-		//res.setPaymentAuthCode(null);
-		//res.setPaymentProofOfSale(null);
-		//res.setPaymentTid(null);
-		//res.setPaymentReceivedDate(null);
-		//res.setPaymentReturnCode(null);
-		//res.setPaymentReturnMessage(null);		
-		//res.setPaymentReasonCode(null);
-		//res.setPaymentReasonMessage(null);
-		//res.setPaymentProviderReturnCode(null);
-		//res.setPaymentProviderReturnMessage(null);						
-		//res.setPaymentCancelado(null);			
-		res.setRecPaymentId(transacaoPai.getRecPaymentId());
-		//res.setRecPaymentAuthNow(null);
-		//res.setRecPaymentStartDate(null);
-		//res.setRecPaymentEndDate(null);
-		//res.setRecPaymentNextRecurrency(null);
-		//res.setRecPaymentRecurrencyDay(null);
-		//res.setRecPaymentMonthsInterval(null);
-		//res.setRecPaymentReasonCode(null);
-		//res.setRecPaymentReasonMessage(null);
-		res.setRecPaymentDesabilitado(cancelar);				
-					
-		return res;
-	}
-	
-	//Cria uma transação de alteração de pagamento recorrente (exceto de dados de pagamento)
-	//OPERACAO_TRANSACAO_8 = "CREDITO_RECORRENTE_ALTERACAO_DATA_FINAL_RECORRENCIA";
-	//OPERACAO_TRANSACAO_9 = "CREDITO_RECORRENTE_ALTERACAO_DIA_RECORENCIA";
-	//OPERACAO_TRANSACAO_10 = "CREDITO_RECORRENTE_ALTERACAO_VALOR_RECORRENCIA";
-	//OPERACAO_TRANSACAO_11 = "CREDITO_RECORRENTE_ALTERACAO_DATA_RECORRENCIA";	
-	//OPERACAO_TRANSACAO_12 = "CREDITO_RECORRENTE_ALTERACAO_INTERVALO_RECORRENCIA";	
-	public static Transacao gerarTransacao(EmpresaAdquirente empresaAdquirente, String operacao, 
-			Transacao transacaoPai, String outraAlteracao) {
-		
-		Transacao res = new Transacao();		
-		
-		res.setTransacaoPai(transacaoPai);
-		res.setEmpresaAdquirente(empresaAdquirente);
-		//res.setjSonIn(null);
-		//res.setjSonOut(null);				
-		res.setOperacao(operacao);	
-		res.setDataHora(LocalDateTime.now());		
-		//res.setNumPedidoVirtual(null);
-		//res.setProvider(null);
-		if (operacao.equals(Transacao.OPERACAO_TRANSACAO_10)) {
-			res.setAmount(Integer.valueOf(outraAlteracao));
-		}
-		//res.setCreditCardBrand(null);
-		//res.setCreditCardNumber(null);		
-		//res.setStatus(null);		
-		//res.setPaymentId(null);		
-		//res.setPaymentAuthCode(null);
-		//res.setPaymentProofOfSale(null);
-		//res.setPaymentTid(null);
-		//res.setPaymentReceivedDate(null);
-		//res.setPaymentReturnCode(null);
-		//res.setPaymentReturnMessage(null);		
-		//res.setPaymentReasonCode(null);
-		//res.setPaymentReasonMessage(null);
-		//res.setPaymentProviderReturnCode(null);
-		//res.setPaymentProviderReturnMessage(null);						
-		//res.setPaymentCancelado(null);			
-		res.setRecPaymentId(transacaoPai.getRecPaymentId());
-		//res.setRecPaymentAuthNow(null);
-		//res.setRecPaymentStartDate(null);
-		if (operacao.equals(Transacao.OPERACAO_TRANSACAO_8)) {
-			res.setRecPaymentEndDate(outraAlteracao);
-		}				
-		if (operacao.equals(Transacao.OPERACAO_TRANSACAO_11)) {
-			res.setRecPaymentNextRecurrency(outraAlteracao);	
-		}
-		if (operacao.equals(Transacao.OPERACAO_TRANSACAO_9)) {
-			res.setRecPaymentRecurrencyDay(outraAlteracao);
-		}
-		if (operacao.equals(Transacao.OPERACAO_TRANSACAO_12)) {
-			res.setRecPaymentMonthsInterval(outraAlteracao);
-		}
-		//res.setRecPaymentReasonCode(null);
-		//res.setRecPaymentReasonMessage(null);
-		//res.setRecPaymentDesabilitado(null);				
-					
-		return res;
-	}	
-	
-	//Cria uma transação de alteração de dados de pagamento recorrente
-	//OPERACAO_TRANSACAO_7 = "CREDITO_RECORRENTE_ALTERACAO_PAGAMENTO_RECORRENTE";
-	public static Transacao gerarTransacao(VendaCreditoHttp vendaCreditoHttp, EmpresaAdquirente empresaAdquirente, 
-			String operacao, Transacao transacaoPai) {
-		
-		Transacao res = new Transacao();		
-		
-		Gson gson = new Gson();
-		
-		res.setTransacaoPai(transacaoPai);
-		res.setEmpresaAdquirente(empresaAdquirente);
-		res.setjSonIn(gson.toJson(vendaCreditoHttp));
-		//res.setjSonOut(null);				
-		res.setOperacao(operacao);	
-		res.setDataHora(LocalDateTime.now());		
-		//res.setNumPedidoVirtual(null);
-		//res.setProvider(null);
-		if (vendaCreditoHttp.getPedidoVirtualHttp() != null) {
-			res.setAmount(vendaCreditoHttp.getPedidoVirtualHttp().getValor());
-		}
-		if (vendaCreditoHttp.getCartaoCreditoHttp() != null) {
-			res.setCreditCardBrand(vendaCreditoHttp.getCartaoCreditoHttp().getBandeiraCartao());
-			res.setCreditCardNumber(vendaCreditoHttp.getCartaoCreditoHttp().getNumCartao());
-		}		
-		//res.setStatus(null);		
-		//res.setPaymentId(null);		
-		//res.setPaymentAuthCode(null);
-		//res.setPaymentProofOfSale(null);
-		//res.setPaymentTid(null);
-		//res.setPaymentReceivedDate(null);
-		//res.setPaymentReturnCode(null);
-		//res.setPaymentReturnMessage(null);		
-		//res.setPaymentReasonCode(null);
-		//res.setPaymentReasonMessage(null);
-		//res.setPaymentProviderReturnCode(null);
-		//res.setPaymentProviderReturnMessage(null);						
-		//res.setPaymentCancelado(null);			
-		res.setRecPaymentId(transacaoPai.getRecPaymentId());
-		//res.setRecPaymentAuthNow(null);
-		//res.setRecPaymentStartDate(null);
-		//res.setRecPaymentEndDate(null);
-		//res.setRecPaymentNextRecurrency(null);
-		//res.setRecPaymentRecurrencyDay(null);
-		//res.setRecPaymentMonthsInterval(null);
-		//res.setRecPaymentReasonCode(null);
-		//res.setRecPaymentReasonMessage(null);
-		//res.setRecPaymentDesabilitado(null);				
-					
-		return res;
-	}	
+	//***************************************
 	
 	//Cria uma transação de compra no cartão à vista ou recorrente
 	//OPERACAO_TRANSACAO_1 = "CREDITO_AVISTA";
 	//OPERACAO_TRANSACAO_2 = "CREDITO_AVISTA_RECORRENTE";
 	//OPERACAO_TRANSACAO_3 = "CREDITO_AGENDADO_RECORRENTE";	
-	public static Transacao gerarTransacao(VendaCreditoHttp vendaCreditoHttp, 
-			EmpresaAdquirente empresaAdquirente, Payment payment, String operacao) {
+	public static Transacao gerarTransacao(EmpresaAdquirente empresaAdquirente, String operacao, 
+			VendaCreditoHttp vendaCreditoHttp, Payment payment) {
 	
 		Transacao res = new Transacao();
 		
@@ -698,5 +505,207 @@ public class Transacao implements EntidadeBase {
 								
 		return res;		
 		
-	}						
+	}							
+	
+	//OPERACAO_TRANSACAO_4 = "CREDITO_AVISTA_CANCELAMENTO";
+	//Cria uma nova transacao de cancelamento de compra no cartão à vista
+	public static Transacao gerarTransacao(Transacao transacaoPai, String operacao, 
+			SaleResponse saleResponse) {
+		
+		Transacao res = new Transacao();
+		
+		Gson gson = new Gson();
+		
+		res.setTransacaoPai(transacaoPai);
+		res.setEmpresaAdquirente(transacaoPai.getEmpresaAdquirente());
+		//res.setjSonIn(null);
+		res.setjSonOut(gson.toJson(saleResponse));				
+		res.setOperacao(operacao);	
+		res.setDataHora(LocalDateTime.now());		
+		res.setNumPedidoVirtual(saleResponse.getMerchantOrderId());
+		//res.setProvider(null);
+		//res.setAmount(null);
+		//res.setCreditCardBrand(null);
+		//res.setCreditCardNumber(null);	
+		res.setStatus(saleResponse.getStatus());		
+		res.setPaymentId(transacaoPai.getPaymentId());		
+		//res.setPaymentAuthCode(null);
+		//res.setPaymentProofOfSale(null);
+		//res.setPaymentTid(null);
+		//res.setPaymentReceivedDate(null);
+		res.setPaymentReturnCode(saleResponse.getReturnCode());
+		res.setPaymentReturnMessage(saleResponse.getReturnMessage());
+		res.setPaymentReasonCode(saleResponse.getReasonCode());
+		res.setPaymentReasonMessage(saleResponse.getReasonMessage());
+		res.setPaymentProviderReturnCode(saleResponse.getProviderReturnCode());
+		res.setPaymentProviderReturnMessage(saleResponse.getProviderReturnMessage());
+		res.setPaymentCancelado(true);				
+		//res.setRecPaymentId(null);
+		//res.setRecPaymentAuthNow(null);
+		//res.setRecPaymentStartDate(null);
+		//res.setRecPaymentEndDate(null);
+		//res.setRecPaymentNextRecurrency(null);
+		//res.setRecPaymentRecurrencyDay(null);
+		//res.setRecPaymentMonthsInterval(null);
+		//res.setRecPaymentReasonCode(null);
+		//res.setRecPaymentReasonMessage(null);
+		//res.setRecPaymentDesabilitado(null);			
+					
+		return res;
+	}
+	
+	//Cria uma transação de desativação ou reativação de pagamento recorrente
+	//OPERACAO_TRANSACAO_5 = "CREDITO_RECORRENTE_DESATIVACAO";
+	//OPERACAO_TRANSACAO_6 = "CREDITO_RECORRENTE_REATIVACAO";	
+	public static Transacao gerarTransacao(Transacao transacaoPai, String operacao, boolean cancelar) {
+		
+		Transacao res = new Transacao();		
+		
+		res.setTransacaoPai(transacaoPai);
+		res.setEmpresaAdquirente(transacaoPai.getEmpresaAdquirente());
+		//res.setjSonIn(null);
+		//res.setjSonOut(null);				
+		res.setOperacao(operacao);	
+		res.setDataHora(LocalDateTime.now());		
+		//res.setNumPedidoVirtual(null);
+		//res.setProvider(null);
+		//res.setAmount(null);
+		//res.setCreditCardBrand(null);
+		//res.setCreditCardNumber(null);		
+		//res.setStatus(null);		
+		//res.setPaymentId(null);		
+		//res.setPaymentAuthCode(null);
+		//res.setPaymentProofOfSale(null);
+		//res.setPaymentTid(null);
+		//res.setPaymentReceivedDate(null);
+		//res.setPaymentReturnCode(null);
+		//res.setPaymentReturnMessage(null);		
+		//res.setPaymentReasonCode(null);
+		//res.setPaymentReasonMessage(null);
+		//res.setPaymentProviderReturnCode(null);
+		//res.setPaymentProviderReturnMessage(null);						
+		//res.setPaymentCancelado(null);			
+		res.setRecPaymentId(transacaoPai.getRecPaymentId());
+		//res.setRecPaymentAuthNow(null);
+		//res.setRecPaymentStartDate(null);
+		//res.setRecPaymentEndDate(null);
+		//res.setRecPaymentNextRecurrency(null);
+		//res.setRecPaymentRecurrencyDay(null);
+		//res.setRecPaymentMonthsInterval(null);
+		//res.setRecPaymentReasonCode(null);
+		//res.setRecPaymentReasonMessage(null);
+		res.setRecPaymentDesabilitado(cancelar);				
+					
+		return res;
+	}
+	
+	//Cria uma transação de alteração de dados de pagamento recorrente
+	//OPERACAO_TRANSACAO_7 = "CREDITO_RECORRENTE_ALTERACAO_PAGAMENTO_RECORRENTE";
+	public static Transacao gerarTransacao(Transacao transacaoPai, String operacao, 
+			VendaCreditoHttp vendaCreditoHttp) {
+		
+		Transacao res = new Transacao();		
+		
+		Gson gson = new Gson();
+		
+		res.setTransacaoPai(transacaoPai);
+		res.setEmpresaAdquirente(transacaoPai.getEmpresaAdquirente());
+		res.setjSonIn(gson.toJson(vendaCreditoHttp));
+		//res.setjSonOut(null);				
+		res.setOperacao(operacao);	
+		res.setDataHora(LocalDateTime.now());		
+		//res.setNumPedidoVirtual(null);
+		//res.setProvider(null);
+		if (vendaCreditoHttp.getPedidoVirtualHttp() != null) {
+			res.setAmount(vendaCreditoHttp.getPedidoVirtualHttp().getValor());
+		}
+		if (vendaCreditoHttp.getCartaoCreditoHttp() != null) {
+			res.setCreditCardBrand(vendaCreditoHttp.getCartaoCreditoHttp().getBandeiraCartao());
+			res.setCreditCardNumber(vendaCreditoHttp.getCartaoCreditoHttp().getNumCartao());
+		}		
+		//res.setStatus(null);		
+		//res.setPaymentId(null);		
+		//res.setPaymentAuthCode(null);
+		//res.setPaymentProofOfSale(null);
+		//res.setPaymentTid(null);
+		//res.setPaymentReceivedDate(null);
+		//res.setPaymentReturnCode(null);
+		//res.setPaymentReturnMessage(null);		
+		//res.setPaymentReasonCode(null);
+		//res.setPaymentReasonMessage(null);
+		//res.setPaymentProviderReturnCode(null);
+		//res.setPaymentProviderReturnMessage(null);						
+		//res.setPaymentCancelado(null);			
+		res.setRecPaymentId(transacaoPai.getRecPaymentId());
+		//res.setRecPaymentAuthNow(null);
+		//res.setRecPaymentStartDate(null);
+		//res.setRecPaymentEndDate(null);
+		//res.setRecPaymentNextRecurrency(null);
+		//res.setRecPaymentRecurrencyDay(null);
+		//res.setRecPaymentMonthsInterval(null);
+		//res.setRecPaymentReasonCode(null);
+		//res.setRecPaymentReasonMessage(null);
+		//res.setRecPaymentDesabilitado(null);				
+					
+		return res;
+	}	
+			
+	//Cria uma transação de alteração de pagamento recorrente (exceto de dados de pagamento)
+	//OPERACAO_TRANSACAO_8 = "CREDITO_RECORRENTE_ALTERACAO_DATA_FINAL_RECORRENCIA";
+	//OPERACAO_TRANSACAO_9 = "CREDITO_RECORRENTE_ALTERACAO_DIA_RECORENCIA";
+	//OPERACAO_TRANSACAO_10 = "CREDITO_RECORRENTE_ALTERACAO_VALOR_RECORRENCIA";
+	//OPERACAO_TRANSACAO_11 = "CREDITO_RECORRENTE_ALTERACAO_DATA_RECORRENCIA";	
+	//OPERACAO_TRANSACAO_12 = "CREDITO_RECORRENTE_ALTERACAO_INTERVALO_RECORRENCIA";	
+	public static Transacao gerarTransacao(Transacao transacaoPai, String operacao,	String outraAlteracao) {
+		
+		Transacao res = new Transacao();		
+		
+		res.setTransacaoPai(transacaoPai);
+		res.setEmpresaAdquirente(transacaoPai.getEmpresaAdquirente());
+		//res.setjSonIn(null);
+		//res.setjSonOut(null);				
+		res.setOperacao(operacao);	
+		res.setDataHora(LocalDateTime.now());		
+		//res.setNumPedidoVirtual(null);
+		//res.setProvider(null);
+		if (operacao.equals(Transacao.OPERACAO_TRANSACAO_10)) {
+			res.setAmount(Integer.valueOf(outraAlteracao));
+		}
+		//res.setCreditCardBrand(null);
+		//res.setCreditCardNumber(null);		
+		//res.setStatus(null);		
+		//res.setPaymentId(null);		
+		//res.setPaymentAuthCode(null);
+		//res.setPaymentProofOfSale(null);
+		//res.setPaymentTid(null);
+		//res.setPaymentReceivedDate(null);
+		//res.setPaymentReturnCode(null);
+		//res.setPaymentReturnMessage(null);		
+		//res.setPaymentReasonCode(null);
+		//res.setPaymentReasonMessage(null);
+		//res.setPaymentProviderReturnCode(null);
+		//res.setPaymentProviderReturnMessage(null);						
+		//res.setPaymentCancelado(null);			
+		res.setRecPaymentId(transacaoPai.getRecPaymentId());
+		//res.setRecPaymentAuthNow(null);
+		//res.setRecPaymentStartDate(null);
+		if (operacao.equals(Transacao.OPERACAO_TRANSACAO_8)) {
+			res.setRecPaymentEndDate(outraAlteracao);
+		}				
+		if (operacao.equals(Transacao.OPERACAO_TRANSACAO_11)) {
+			res.setRecPaymentNextRecurrency(outraAlteracao);	
+		}
+		if (operacao.equals(Transacao.OPERACAO_TRANSACAO_9)) {
+			res.setRecPaymentRecurrencyDay(outraAlteracao);
+		}
+		if (operacao.equals(Transacao.OPERACAO_TRANSACAO_12)) {
+			res.setRecPaymentMonthsInterval(outraAlteracao);
+		}
+		//res.setRecPaymentReasonCode(null);
+		//res.setRecPaymentReasonMessage(null);
+		//res.setRecPaymentDesabilitado(null);				
+					
+		return res;
+	}	
+
 }

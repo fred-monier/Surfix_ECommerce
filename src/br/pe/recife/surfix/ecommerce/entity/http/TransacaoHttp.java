@@ -1,6 +1,7 @@
 package br.pe.recife.surfix.ecommerce.entity.http;
 
 import java.time.LocalDateTime;
+import java.util.Iterator;
 import java.util.List;
 
 import br.pe.recife.surfix.ecommerce.entity.Transacao;
@@ -40,6 +41,8 @@ public class TransacaoHttp {
 	private String recPaymentReasonMessage;
 	private Boolean recPaymentDisabilitado;
 	private String numPedidoVirtual;
+	
+	private TransacaoHttp[] transacoesFilhas;
 	
 	public Integer getId() {
 		return id;
@@ -238,8 +241,13 @@ public class TransacaoHttp {
 	}
 	public void setNumPedidoVirtual(String numPedidoVirtual) {
 		this.numPedidoVirtual = numPedidoVirtual;
+	}		
+	public TransacaoHttp[] getTransacoesFilhas() {
+		return transacoesFilhas;
 	}
-	
+	public void setTransacoesFilhas(TransacaoHttp[] transacoesFilhas) {
+		this.transacoesFilhas = transacoesFilhas;
+	}
 	public static TransacaoHttp gerarTransacaoHttp(Transacao transacao) {
 		
 		TransacaoHttp transacaoHttp = new TransacaoHttp();
@@ -280,6 +288,22 @@ public class TransacaoHttp {
 			transacaoHttp.setRecPaymentReasonCode(transacao.getRecPaymentReasonCode());
 			transacaoHttp.setRecPaymentReasonMessage(transacao.getRecPaymentReasonMessage());
 			transacaoHttp.setRecPaymentDisabilitado(transacao.getRecPaymentDesabilitado());
+			
+			if (transacao.getTransacoesFilhas() != null) {
+				
+				TransacaoHttp[] transacoesFilhas = new TransacaoHttp[transacao.getTransacoesFilhas().size()];
+				
+				int i =0;
+				for (Iterator<Transacao> iterator = transacao.getTransacoesFilhas().iterator(); iterator.hasNext();) {
+					
+					Transacao transacaoFilha = iterator.next();					
+					TransacaoHttp transacaoFilhaHttp = TransacaoHttp.gerarTransacaoHttp(transacaoFilha);
+					
+					transacoesFilhas[i++] = transacaoFilhaHttp;
+				}
+				
+				transacaoHttp.setTransacoesFilhas(transacoesFilhas);				
+			}
 		}
 		
 		return transacaoHttp;
