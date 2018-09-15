@@ -16,15 +16,12 @@ import com.google.gson.Gson;
 
 import br.pe.recife.surfix.ecommerce.entity.EmpresaAdquirente;
 import br.pe.recife.surfix.ecommerce.entity.Transacao;
+import br.pe.recife.surfix.ecommerce.entity.http.RetornoTransacaoHttp;
 import br.pe.recife.surfix.ecommerce.entity.http.TransacaoHttp;
-import br.pe.recife.surfix.ecommerce.exception.InfraException;
 import br.pe.recife.surfix.ecommerce.http.RetornoGeneralSaleHttp;
 import br.pe.recife.surfix.ecommerce.http.RetornoHttp;
-import br.pe.recife.surfix.ecommerce.http.RetornoManutRecHttp;
 import br.pe.recife.surfix.ecommerce.http.RetornoPaymentHttp;
 import br.pe.recife.surfix.ecommerce.http.RetornoPaymentsHttp;
-import br.pe.recife.surfix.ecommerce.http.RetornoRecurrentSaleHttp;
-import br.pe.recife.surfix.ecommerce.http.RetornoSaleHttp;
 import br.pe.recife.surfix.ecommerce.http.RetornoSaleResponseHttp;
 import br.pe.recife.surfix.ecommerce.http.VendaCreditoHttp;
 import br.pe.recife.surfix.ecommerce.service.EmpresaAdquirenteService;
@@ -129,7 +126,8 @@ public class CieloController {
 	
 	//TODO - Atualizar Postman (1 método novo)
 	//---------------------------------------------------------------------------------------------------------------------------------------------------
-	//Criado um novo método que utiliza transacaoId, verificando se existe idPayment ou idRecPayment para tal (serve tanto para pagamentos normais como recorrentes 	
+	//Criado um novo método que utiliza transacaoId, verificando se existe idPayment ou idRecPayment 
+	//  para tal (serve tanto para pagamentos normais como recorrentes) 	
 	/**
 	 * 
 	 * Chama [2-consultarVendaCreditoAVistaPorPaymentId]
@@ -139,10 +137,10 @@ public class CieloController {
 	@Produces("application/json; charset=UTF-8")
 	@Path("/consultar_vend_cred_a_vista_por_payid")
 	@RolesAllowed("ADMIN")
-	public RetornoSaleHttp consultarVendaCreditoAVistaPorPaymentId(@HeaderParam("idComAdq") String idComAdq,
+	public RetornoGeneralSaleHttp consultarVendaCreditoAVistaPorPaymentId(@HeaderParam("idComAdq") String idComAdq,
 			@HeaderParam("idPayment") String idPayment) {
  
-		RetornoSaleHttp res = new RetornoSaleHttp();
+		RetornoGeneralSaleHttp res = new RetornoGeneralSaleHttp();
 		res.setResultado(RetornoHttp.SUCESSO);
 		
 		try {
@@ -223,7 +221,6 @@ public class CieloController {
 	}	
 	//---------------------------------------------------------------------------------------------------------------------------------------------------	
 	
-	//TODO - Criar um novo método que retorne os transacaoIds que sejam Pai, ao invés de idPayments
 	/**
 	 * 
 	 * Chama [3-consultarVendasPorNumPedidoVirtual]
@@ -264,8 +261,9 @@ public class CieloController {
 		
 		return res;
 	}
+	//---------------------------------------------------------------------------------------------------------------------------------------------------	
 	
-	//TODO - Usar mesmo RetornoSaleResponseHttp pros dois?
+	//  
 	//TODO - Atualizar Postman (1 revertido mais 1 método novo)
 	//---------------------------------------------------------------------------------------------------------------------------------------------------
 	//Criado um novo método que utiliza transacaoId (registrando a Transação), verificando se existe um idPayment para tal	
@@ -490,10 +488,10 @@ public class CieloController {
 	@Produces("application/json; charset=UTF-8")
 	@Path("/consultar_vend_cred_rec_prog_por_recpayid")
 	@RolesAllowed("ADMIN")
-	public RetornoRecurrentSaleHttp consultarVendaCreditoRecProgPorRecurrentPaymentId(@HeaderParam("idComAdq") String idComAdq,
+	public RetornoGeneralSaleHttp consultarVendaCreditoRecProgPorRecurrentPaymentId(@HeaderParam("idComAdq") String idComAdq,
 			@HeaderParam("idRecPayment") String idRecPayment) {
 		
-		RetornoRecurrentSaleHttp res = new RetornoRecurrentSaleHttp();
+		RetornoGeneralSaleHttp res = new RetornoGeneralSaleHttp();
 		res.setResultado(RetornoHttp.SUCESSO);
 		
 		try {
@@ -578,10 +576,10 @@ public class CieloController {
 	@Produces("application/json; charset=UTF-8")
 	@Path("/alterar_pag_cred_rec_prog_por_transacaoid")
 	@RolesAllowed("ADMIN")
-	public RetornoManutRecHttp alterarPagamentoCreditoRecProgPorTransacaoId(@HeaderParam("idComAdq") String idComAdq,
+	public RetornoTransacaoHttp alterarPagamentoCreditoRecProgPorTransacaoId(@HeaderParam("idComAdq") String idComAdq,
 			@HeaderParam("idTransacao") String idTransacao, VendaCreditoHttp vendaCreditoHttp) {
 		
-		RetornoManutRecHttp res = new RetornoManutRecHttp();
+		RetornoTransacaoHttp res = new RetornoTransacaoHttp();
 		res.setResultado(RetornoHttp.SUCESSO);
 		
 		try {
@@ -675,10 +673,10 @@ public class CieloController {
 	@Produces("application/json; charset=UTF-8")
 	@Path("/alterar_venda_cred_rec_prog_data_final_por_transacaoid")	
 	@RolesAllowed("ADMIN")
-	public RetornoManutRecHttp alterarVendaCreditoRecProgDataFinalPorTransacaoId(@HeaderParam("idTransacao") String idTransacao,
+	public RetornoTransacaoHttp alterarVendaCreditoRecProgDataFinalPorTransacaoId(@HeaderParam("idTransacao") String idTransacao,
 		@HeaderParam("dataFinal") String dataFinal, @HeaderParam("idComAdq") String idComAdq) {
 		
-		RetornoManutRecHttp res = new RetornoManutRecHttp();
+		RetornoTransacaoHttp res = new RetornoTransacaoHttp();
 		res.setResultado(RetornoHttp.SUCESSO);
 		
 		try {
@@ -765,10 +763,10 @@ public class CieloController {
 	@Produces("application/json; charset=UTF-8")
 	@Path("/alterar_venda_cred_rec_prog_dia_rec_por_transacaoid")	
 	@RolesAllowed("ADMIN")
-	public RetornoManutRecHttp alterarVendaCreditoRecProgDiaRecPorTransacaoId(@HeaderParam("idTransacao") String idTransacao, 
+	public RetornoTransacaoHttp alterarVendaCreditoRecProgDiaRecPorTransacaoId(@HeaderParam("idTransacao") String idTransacao, 
 		@HeaderParam("diaRec") int diaRec, @HeaderParam("idComAdq") String idComAdq) {
 		
-		RetornoManutRecHttp res = new RetornoManutRecHttp();
+		RetornoTransacaoHttp res = new RetornoTransacaoHttp();
 		res.setResultado(RetornoHttp.SUCESSO);
 		
 		try {
@@ -855,10 +853,10 @@ public class CieloController {
 	@Produces("application/json; charset=UTF-8")
 	@Path("/alterar_venda_cred_rec_prog_valor_rec_por_transacaoid")	
 	@RolesAllowed("ADMIN")
-	public RetornoManutRecHttp alterarVendaCreditoRecProgValorRecPorTransacaoId(@HeaderParam("idTransacao") String idTransacao, 
+	public RetornoTransacaoHttp alterarVendaCreditoRecProgValorRecPorTransacaoId(@HeaderParam("idTransacao") String idTransacao, 
 		@HeaderParam("valorRec") int valorRec, @HeaderParam("idComAdq") String idComAdq) {
 		
-		RetornoManutRecHttp res = new RetornoManutRecHttp();
+		RetornoTransacaoHttp res = new RetornoTransacaoHttp();
 		res.setResultado(RetornoHttp.SUCESSO);
 		
 		try {
@@ -945,10 +943,10 @@ public class CieloController {
 	@Produces("application/json; charset=UTF-8")
 	@Path("/alterar_venda_cred_rec_prog_data_prox_rec_por_transacaoid")	
 	@RolesAllowed("ADMIN")
-	public RetornoManutRecHttp alterarVendaCreditoRecProgDataProxRecPorTransferenciaId(@HeaderParam("idTransacao") String idTransacao, 
+	public RetornoTransacaoHttp alterarVendaCreditoRecProgDataProxRecPorTransferenciaId(@HeaderParam("idTransacao") String idTransacao, 
 		@HeaderParam("dataProxRec") String dataProxRec, @HeaderParam("idComAdq") String idComAdq) {
 		
-		RetornoManutRecHttp res = new RetornoManutRecHttp();
+		RetornoTransacaoHttp res = new RetornoTransacaoHttp();
 		res.setResultado(RetornoHttp.SUCESSO);
 		
 		try {
@@ -1034,10 +1032,10 @@ public class CieloController {
 	@Produces("application/json; charset=UTF-8")
 	@Path("/alterar_venda_cred_rec_prog_intervalo_por_transacaoid")	
 	@RolesAllowed("ADMIN")
-	public RetornoManutRecHttp alterarVendaCreditoRecProgIntervaloPorTransacaoId(@HeaderParam("idTransacao") String idTransacao, 
+	public RetornoTransacaoHttp alterarVendaCreditoRecProgIntervaloPorTransacaoId(@HeaderParam("idTransacao") String idTransacao, 
 		@HeaderParam("intervalo") String intervalo, @HeaderParam("idComAdq") String idComAdq) {
 		
-		RetornoManutRecHttp res = new RetornoManutRecHttp();
+		RetornoTransacaoHttp res = new RetornoTransacaoHttp();
 		res.setResultado(RetornoHttp.SUCESSO);
 		
 		try {
@@ -1124,10 +1122,10 @@ public class CieloController {
 	@Produces("application/json; charset=UTF-8")
 	@Path("/desabilitar_venda_cred_rec_prog_por_transacaoid")	
 	@RolesAllowed("ADMIN")
-	public RetornoManutRecHttp desabilitarVendaCreditoRecProgPorTransacaoId(@HeaderParam("idTransacao") String idTransacao, 
+	public RetornoTransacaoHttp desabilitarVendaCreditoRecProgPorTransacaoId(@HeaderParam("idTransacao") String idTransacao, 
 		@HeaderParam("idComAdq") String idComAdq) {
 		
-		RetornoManutRecHttp res = new RetornoManutRecHttp();
+		RetornoTransacaoHttp res = new RetornoTransacaoHttp();
 		res.setResultado(RetornoHttp.SUCESSO);
 		
 		try {
@@ -1212,10 +1210,10 @@ public class CieloController {
 	@Produces("application/json; charset=UTF-8")
 	@Path("/reabilitar_venda_cred_rec_prog_por_transacaoid")	
 	@RolesAllowed("ADMIN")
-	public RetornoManutRecHttp reabilitarVendaCreditoRecProgPorTransacaoId(@HeaderParam("idTransacao") String idTransacao, 
+	public RetornoTransacaoHttp reabilitarVendaCreditoRecProgPorTransacaoId(@HeaderParam("idTransacao") String idTransacao, 
 			@HeaderParam("idComAdq") String idComAdq) {
 		
-		RetornoManutRecHttp res = new RetornoManutRecHttp();
+		RetornoTransacaoHttp res = new RetornoTransacaoHttp();
 		res.setResultado(RetornoHttp.SUCESSO);
 		
 		try {
@@ -1266,11 +1264,7 @@ public class CieloController {
 			
 			empresaAdquirente = empresaAdquirenteService.consultarPorId(idEmpresaAquirente);
 									
-		} catch (InfraException e) {
-			
-			throw new FachadaCieloException(e, "Erro ao tentar recuperar credenciais de acesso");
-			
-        } catch (Exception e) {        	     
+		} catch (Exception e) {        	     
         	
         	throw new FachadaCieloException(e, "ID Empresa Adquirente inválido");
         }				
@@ -1291,11 +1285,7 @@ public class CieloController {
 			
 			transacao = transacaoService.consultarPorId(idTransacao);
 									
-		} catch (InfraException e) {
-			
-			throw new FachadaCieloException(e, "Erro ao tentar recuperar Transação " + id);
-			
-        } catch (Exception e) {        	     
+		} catch (Exception e) {        	     
         	
         	throw new FachadaCieloException(e, "ID Transação inválido");
         }				
@@ -1320,11 +1310,7 @@ public class CieloController {
 			
 			transacao = transacaoService.consultarPorId(idTransacao);
 									
-		} catch (InfraException e) {
-			
-			throw new FachadaCieloException(e, "Erro ao tentar recuperar Transação " + id);
-			
-        } catch (Exception e) {        	     
+		} catch (Exception e) {        	     
         	
         	throw new FachadaCieloException(e, "ID Transação inválido");
         }				
@@ -1390,7 +1376,7 @@ public class CieloController {
 	
 	//Registra a desativação ou reativação de um pagamento recorrente
 	private TransacaoHttp registrarTransacao(Transacao transacaoPai, 
-			RetornoManutRecHttp res, String operacao) {
+			RetornoTransacaoHttp res, String operacao) {
 		
 		Transacao transacao = null;
 		
@@ -1408,7 +1394,7 @@ public class CieloController {
 	
 	//Registra a alteração dos dados de um pagamento recorrente
 	private TransacaoHttp registrarTransacao(Transacao transacaoPai, 
-			VendaCreditoHttp vendaCreditoHttp, RetornoManutRecHttp res, String operacao) {
+			VendaCreditoHttp vendaCreditoHttp, RetornoTransacaoHttp res, String operacao) {
 		
 		Transacao transacao = null;
 		
@@ -1421,7 +1407,7 @@ public class CieloController {
 	
 	//Registra alterações de um pagamento recorrente (exceto de dados de pagamento)
 	private TransacaoHttp registrarTransacao(Transacao transacaoPai, 
-			RetornoManutRecHttp res, String operacao, String outraAlteracao) {
+			RetornoTransacaoHttp res, String operacao, String outraAlteracao) {
 		
 		Transacao transacao = null;
 				
@@ -1435,10 +1421,10 @@ public class CieloController {
 	private TransacaoHttp encaminharParaFachada(Transacao transacao, RetornoHttp res) {
 		
 		boolean erro = false;
-		InfraException exc = null;			
+		Exception exc = null;			
 		try {				
 			transacaoService.salvar(transacao);				
-		} catch (InfraException e) {				
+		} catch (Exception e) {				
 			erro = true;	
 			exc = e;
 		}			
@@ -1453,7 +1439,7 @@ public class CieloController {
 			System.out.println("********************************");
 			System.out.println("Erro ao tentar gravar transação: ");
 			System.out.println(gson.toJson(transacaoHttp));
-			System.out.println(exc.getExcecaoOriginal().getMessage());	
+			System.out.println(exc.getMessage());	
 			System.out.println("********************************");		
 			
 			//TODO - Salvar em arquivo texto no servidor, nesse caso

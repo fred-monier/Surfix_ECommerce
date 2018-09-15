@@ -30,7 +30,7 @@ public class EmpresaDAO implements EmpresaDAOIntf {
         
         return allQuery.getResultList();
 	}
-	
+
 	@Override
 	public Empresa consultarPorId(int id) {
 		return manager.find(Empresa.class, id);

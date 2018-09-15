@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.annotation.security.PermitAll;
 import javax.ws.rs.GET;
+import javax.ws.rs.HeaderParam;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 
@@ -13,7 +14,6 @@ import org.springframework.stereotype.Component;
 import br.pe.recife.surfix.ecommerce.entity.Transacao;
 import br.pe.recife.surfix.ecommerce.entity.http.RetornoTransacoesHttp;
 import br.pe.recife.surfix.ecommerce.entity.http.TransacaoHttp;
-import br.pe.recife.surfix.ecommerce.exception.InfraException;
 import br.pe.recife.surfix.ecommerce.http.RetornoHttp;
 import br.pe.recife.surfix.ecommerce.service.TransacaoService;
 
@@ -41,10 +41,6 @@ public class EntidadeTransacaoController {
 			
 			res.setTransacoes(transacoesHttp);
 			
-		} catch	(InfraException e) {
-		
-			res.setResultado(e.getMensagem());	
-			
 		} catch (Exception e) {
 			
 			res.setResultado(e.getMessage());	
@@ -52,5 +48,32 @@ public class EntidadeTransacaoController {
 		
 		return res;
 	}		
+	
+	//TODO - Atualizar Postman entidade (1 método novo)
+	//---------------------------------------------------------------------------------------------------------------------------------------------------	
+	@GET
+	@Produces("application/json; charset=UTF-8")
+	@Path("/listar_pais_por_pednum")
+	@PermitAll
+	public RetornoTransacoesHttp listarPaisPorNumPedidoVirtual(@HeaderParam("pedNum") String pedNum) {
+	
+		RetornoTransacoesHttp res = new RetornoTransacoesHttp();
+		res.setResultado(RetornoHttp.SUCESSO);
+		
+		try { 
+		
+			List<Transacao> transacoes = transacaoService.listarPaisPorNumPedidoVirtual(pedNum);
+			
+			TransacaoHttp[] transacoesHttp = TransacaoHttp.gerarArrayTransacoesHttp(transacoes);	
+			
+			res.setTransacoes(transacoesHttp);
+			
+		} catch (Exception e) {
+			
+			res.setResultado(e.getMessage());	
+		}
+		
+		return res;
+	}			
 
 }

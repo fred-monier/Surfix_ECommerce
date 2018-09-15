@@ -13,7 +13,6 @@ import org.springframework.stereotype.Component;
 import br.pe.recife.surfix.ecommerce.entity.Empresa;
 import br.pe.recife.surfix.ecommerce.entity.http.EmpresaHttp;
 import br.pe.recife.surfix.ecommerce.entity.http.RetornoEmpresasHttp;
-import br.pe.recife.surfix.ecommerce.exception.InfraException;
 import br.pe.recife.surfix.ecommerce.http.RetornoHttp;
 import br.pe.recife.surfix.ecommerce.service.EmpresaService;
 
@@ -40,10 +39,6 @@ public class EntidadeEmpresaController {
 			EmpresaHttp[] empresasHttp = EmpresaHttp.gerarArrayEmpresasHttp(empresas);	
 			
 			res.setEmpresas(empresasHttp);
-			
-		} catch	(InfraException e) {
-		
-			res.setResultado(e.getMensagem());	
 			
 		} catch (Exception e) {
 			

@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Repository;
 
 import br.pe.recife.surfix.ecommerce.entity.Transacao;
 
+//TODO - Qual a melhor forma de gerar selects?
 @Repository
 public class TransacaoDAO implements TransacaoDAOIntf {
 	
@@ -29,6 +31,20 @@ public class TransacaoDAO implements TransacaoDAOIntf {
         TypedQuery<Transacao> allQuery = manager.createQuery(all);
         
         return allQuery.getResultList();
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Transacao> listarPaisPorNumPedidoVirtual(String numPedVirtual) {
+		
+		Query query = manager
+	            .createQuery("select t from \"TRANSACAO\" as t " +
+	    				"where t.\"NUM_PEDIDO_VIRTUAL\" = :paramNumPedVirtual and t.\"ID_PAI\" isnull");
+	    query.setParameter("paramNumPedVirtual", numPedVirtual);
+		
+	    List<Transacao> lista = query.getResultList();
+	
+	    return lista;		
 	}
 
 	@Override

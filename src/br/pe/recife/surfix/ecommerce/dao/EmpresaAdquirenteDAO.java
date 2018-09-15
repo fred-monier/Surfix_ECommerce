@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -31,6 +32,21 @@ public class EmpresaAdquirenteDAO implements EmpresaAdquirenteDAOIntf {
         return allQuery.getResultList();
 	}
 
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<EmpresaAdquirente> listarPorEmpresa(int idEmpresa) {
+				
+		Query query = manager
+	            .createQuery("select ea from \"EMPRESA_ADQUIRENTE\" as ea " +
+	    				"where ea.\"ID_EMPRESA\" = :paramIdEmpresa");
+	    query.setParameter("paramIdEmpresa", idEmpresa);
+		
+	    List<EmpresaAdquirente> lista = query.getResultList();
+	
+	    return lista;					
+	}
+		
+	
 	@Override
 	public EmpresaAdquirente consultarPorId(int id) {
 		return manager.find(EmpresaAdquirente.class, id);

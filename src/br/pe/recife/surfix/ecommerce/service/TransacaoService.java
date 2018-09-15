@@ -8,7 +8,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import br.pe.recife.surfix.ecommerce.dao.TransacaoDAOIntf;
 import br.pe.recife.surfix.ecommerce.entity.Transacao;
-import br.pe.recife.surfix.ecommerce.exception.InfraException;
 
 @Transactional
 @Service
@@ -18,22 +17,26 @@ public class TransacaoService {
 	//@Qualifier("transacaoDAO")
 	private TransacaoDAOIntf transacaoDao;
 		
-	public List<Transacao> listar() throws InfraException {
+	public List<Transacao> listar() {
 			
 		return transacaoDao.listar();
 	}
 	
-	public Transacao consultarPorId(Integer id) throws InfraException {
+	public List<Transacao> listarPaisPorNumPedidoVirtual(String numPedVirtual) {
+		return transacaoDao.listarPaisPorNumPedidoVirtual(numPedVirtual);
+	}
+	
+	public Transacao consultarPorId(Integer id) {
 
 		return transacaoDao.consultarPorId(id);		
 	}
 	
-	public void salvar(Transacao transacao) throws InfraException {
+	public void salvar(Transacao transacao) {
 
 		transacaoDao.salvar(transacao);		
 	}
 	
-	public void excluir(Integer id) throws InfraException {
+	public void excluir(Integer id) {
 
 		transacaoDao.excluir(id);		
 	}

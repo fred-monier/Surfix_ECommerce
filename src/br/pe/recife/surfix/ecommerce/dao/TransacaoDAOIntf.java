@@ -7,6 +7,7 @@ import br.pe.recife.surfix.ecommerce.entity.Transacao;
 public interface TransacaoDAOIntf {
 	
 	public List<Transacao> listar();
+	public List<Transacao> listarPaisPorNumPedidoVirtual(String numPedVirtual);
 	public Transacao consultarPorId(int id);
 	public void salvar(Transacao transacao);
 	public void excluir(int id);

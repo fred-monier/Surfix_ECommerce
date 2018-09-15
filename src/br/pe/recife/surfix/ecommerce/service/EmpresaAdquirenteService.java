@@ -18,17 +18,22 @@ public class EmpresaAdquirenteService {
 	//@Qualifier("empresaAdquirenteDAO")
 	private EmpresaAdquirenteDAOIntf empresaAdquirenteDao;		
 	
-	public List<EmpresaAdquirente> listar() throws InfraException {
+	public List<EmpresaAdquirente> listar() {
 
 		return empresaAdquirenteDao.listar();
 	}
 	
-	public EmpresaAdquirente consultarPorId(Integer id) throws InfraException {
+	public List<EmpresaAdquirente> listarPorEmpresa(int idEmpresa) {
+		
+		return empresaAdquirenteDao.listarPorEmpresa(idEmpresa);
+	}
+	
+	public EmpresaAdquirente consultarPorId(Integer id) {
 
 		return empresaAdquirenteDao.consultarPorId(id);
 	}
 	
-	public void salvar(EmpresaAdquirente empresaAdquirente) throws InfraException {
+	public void salvar(EmpresaAdquirente empresaAdquirente) {
 
 		empresaAdquirenteDao.salvar(empresaAdquirente);		
 	}
