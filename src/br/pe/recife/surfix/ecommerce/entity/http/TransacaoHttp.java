@@ -273,10 +273,10 @@ public class TransacaoHttp {
 			transacaoHttp.setPaymentReceivedDate(transacao.getPaymentReceivedDate());
 			transacaoHttp.setPaymentReturnCode(transacao.getPaymentReturnCode());
 			transacaoHttp.setPaymentReturnMessage(transacao.getPaymentReturnMessage());			
-			transacaoHttp.setPaymentReasonCode(null);
-			transacaoHttp.setPaymentReasonMessage(null);
-			transacaoHttp.setPaymentProviderReturnCode(null);
-			transacaoHttp.setPaymentProviderReturnMessage(null);						
+			transacaoHttp.setPaymentReasonCode(transacao.getPaymentReasonCode());
+			transacaoHttp.setPaymentReasonMessage(transacao.getPaymentReasonMessage());
+			transacaoHttp.setPaymentProviderReturnCode(transacao.getPaymentProviderReturnCode());
+			transacaoHttp.setPaymentProviderReturnMessage(transacao.getPaymentProviderReturnMessage());						
 			transacaoHttp.setPaymentCancelado(transacao.getPaymentCancelado());
 			transacaoHttp.setRecPaymentId(transacao.getRecPaymentId());
 			transacaoHttp.setRecPaymentAuthNow(transacao.getRecPaymentAuthNow());
@@ -289,7 +289,7 @@ public class TransacaoHttp {
 			transacaoHttp.setRecPaymentReasonMessage(transacao.getRecPaymentReasonMessage());
 			transacaoHttp.setRecPaymentDisabilitado(transacao.getRecPaymentDesabilitado());
 			
-			if (transacao.getTransacoesFilhas() != null) {
+			if (transacao.getTransacaoPai() == null) {
 				
 				TransacaoHttp[] transacoesFilhas = new TransacaoHttp[transacao.getTransacoesFilhas().size()];
 				

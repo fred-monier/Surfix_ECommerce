@@ -5,10 +5,6 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
-import javax.persistence.TypedQuery;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Root;
 
 import org.springframework.stereotype.Repository;
 
@@ -21,7 +17,7 @@ public class TransacaoDAO implements TransacaoDAOIntf {
 	@PersistenceContext
     private EntityManager manager;
 
-	@Override
+	/*
 	public List<Transacao> listar() {
 		
 		CriteriaBuilder cb = manager.getCriteriaBuilder();
@@ -32,15 +28,48 @@ public class TransacaoDAO implements TransacaoDAOIntf {
         
         return allQuery.getResultList();
 	}
+	*/
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Transacao> listarPaisPorNumPedidoVirtual(String numPedVirtual) {
+	public List<Transacao> listarPais() {
+			
+		Query query = manager.createQuery("select distinct t from Transacao t " + 
+				"left join fetch t.transacoesFilhas where t.transacaoPai = null");
+		List<Transacao> lista = query.getResultList(); 
+			
+	    return lista;
+	    
+	    /*
+	    String jpql = "select t from Transacao t where t.transacaoPai = null";
+	    return this.manager
+	        .createQuery(jpql, Usuario.class)
+	        .setParameter("email", email)
+	        .getSingleResult();	    
+	    */
+	    
+	}	
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Transacao> listarPaisPorEmpAdqENumPedidoVirtual(int idEmpAdq, String numPedVirtual) {
 		
 		Query query = manager
-	            .createQuery("select t from \"TRANSACAO\" as t " +
-	    				"where t.\"NUM_PEDIDO_VIRTUAL\" = :paramNumPedVirtual and t.\"ID_PAI\" isnull");
+	            .createQuery("select t from Transacao t left join fetch t.transacoesFilhas " +
+	            		"where t.empresaAdquirente.id = :idEmpAdq and " +
+	    				"t.numPedidoVirtual = :paramNumPedVirtual and t.transacaoPai = null");
+		
+		query.setParameter("idEmpAdq", idEmpAdq);
 	    query.setParameter("paramNumPedVirtual", numPedVirtual);
+	    
+	    /*
+		entityManager.createQuery(
+        "select pc " +
+        "from PostComment pc " +
+        "where pc.review = :review", PostComment.class)
+    		.setParameter("review", review)
+    		.getResultList();	     
+    	*/
 		
 	    List<Transacao> lista = query.getResultList();
 	

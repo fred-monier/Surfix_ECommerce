@@ -17,13 +17,13 @@ public class TransacaoService {
 	//@Qualifier("transacaoDAO")
 	private TransacaoDAOIntf transacaoDao;
 		
-	public List<Transacao> listar() {
+	public List<Transacao> listarPais() {
 			
-		return transacaoDao.listar();
+		return transacaoDao.listarPais();
 	}
 	
-	public List<Transacao> listarPaisPorNumPedidoVirtual(String numPedVirtual) {
-		return transacaoDao.listarPaisPorNumPedidoVirtual(numPedVirtual);
+	public List<Transacao> listarPaisPorEmpAdqENumPedidoVirtual(int idEmpAdq, String numPedVirtual) {
+		return transacaoDao.listarPaisPorEmpAdqENumPedidoVirtual(idEmpAdq, numPedVirtual);
 	}
 	
 	public Transacao consultarPorId(Integer id) {

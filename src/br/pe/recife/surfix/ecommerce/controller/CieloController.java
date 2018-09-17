@@ -68,7 +68,7 @@ public class CieloController {
 	
 	/**
 	 * 
-	 * Chama [1-gerarPagamentoCreditoAVista]
+	 * Chama [1-gerarPagamentoCreditoAVista] - (HÍBRIDO)*
 	 * 
 	 * */		
 	@POST	
@@ -123,11 +123,7 @@ public class CieloController {
 		
 		return res;				
 	}	
-	
-	//TODO - Atualizar Postman (1 método novo)
-	//---------------------------------------------------------------------------------------------------------------------------------------------------
-	//Criado um novo método que utiliza transacaoId, verificando se existe idPayment ou idRecPayment 
-	//  para tal (serve tanto para pagamentos normais como recorrentes) 	
+		
 	/**
 	 * 
 	 * Chama [2-consultarVendaCreditoAVistaPorPaymentId]
@@ -168,6 +164,16 @@ public class CieloController {
 		
 		return res;
 	}
+	
+	//---------------------------------------------------------------------------------------------------------------------------------------------------	
+	//TODO - Atualizar Postman (1 método novo)
+	//Novo método que utiliza transacaoId, verificando se existe idPayment ou idRecPayment 
+	//  para tal (serve tanto para pagamentos normais como recorrentes) 	
+	/**
+	 * 
+	 * Chama [2.a-consultarVendaPorTransacaoId] - (HÍBRIDO)*
+	 * 
+	 * */		
 	@GET
 	@Produces("application/json; charset=UTF-8")
 	@Path("/consultar_vend_por_transacaoid")
@@ -260,13 +266,8 @@ public class CieloController {
 		}
 		
 		return res;
-	}
-	//---------------------------------------------------------------------------------------------------------------------------------------------------	
-	
-	//  
-	//TODO - Atualizar Postman (1 revertido mais 1 método novo)
-	//---------------------------------------------------------------------------------------------------------------------------------------------------
-	//Criado um novo método que utiliza transacaoId (registrando a Transação), verificando se existe um idPayment para tal	
+	}	
+		
 	/**
 	 * 
 	 * Chama [4-cancelarPagamentoTotalCreditoAVista]
@@ -307,6 +308,15 @@ public class CieloController {
 		
 		return res;
 	}	
+	
+	//---------------------------------------------------------------------------------------------------------------------------------------------------	
+	//TODO - Atualizar Postman (1 método novo)	
+	//Novo método que utiliza transacaoId (registrando a Transação), verificando se existe um idPayment para tal	
+	/**
+	 * 
+	 * Chama [4.a-cancelarPagamentoTotalCreditoAVistaPorTransacaoId] - (HÍBRIDO)*
+	 * 
+	 * */	
 	@PUT
 	@Produces("application/json; charset=UTF-8")
 	@Path("/cancelar_pag_total_cred_a_vista_por_transacaoid")
@@ -360,7 +370,7 @@ public class CieloController {
 	
 	/**
 	 * 
-	 * Chama [5-gerarPagamentoCreditoAVistaRecProg]
+	 * Chama [5-gerarPagamentoCreditoAVistaRecProg] - (HÍBRIDO)*
 	 * 
 	 * */
 	@POST	
@@ -420,7 +430,7 @@ public class CieloController {
 
 	/**
 	 * 
-	 * Chama [6-gerarPagamentoCreditoAgendadoRecProg]
+	 * Chama [6-gerarPagamentoCreditoAgendadoRecProg] - (HÍBRIDO)*
 	 * 
 	 * */
 	@POST	
@@ -521,9 +531,6 @@ public class CieloController {
 		return res;
 	}
 	
-	//TODO - Atualizar Postman (1 método novo)
-	//---------------------------------------------------------------------------------------------------------------------------------------------------
-	//Criado um novo método que utiliza transacaoId (registrando a Transação), verificando se existe um idRecPayment para tal
 	/**
 	 * 
 	 * Chama [8-alterarPagamentoCreditoRecProgPorRecurrentPaymentId]
@@ -571,6 +578,15 @@ public class CieloController {
 		
 		return res;
 	}	
+	
+	//---------------------------------------------------------------------------------------------------------------------------------------------------	
+	//TODO - Atualizar Postman (1 método novo)	
+	//Novo método que utiliza transacaoId (registrando a Transação), verificando se existe um idRecPayment para tal	
+	/**
+	 * 
+	 * Chama [8.a-alterarPagamentoCreditoRecProgPorTransacaoId] - (HÍBRIDO)*
+	 * 
+	 * */	
 	@PUT
 	@Consumes("application/json; charset=UTF-8")
 	@Produces("application/json; charset=UTF-8")
@@ -626,10 +642,7 @@ public class CieloController {
 		return res;
 	}					
 	//---------------------------------------------------------------------------------------------------------------------------------------------------
-	
-	//TODO - Atualizar Postman (1 método novo)
-	//---------------------------------------------------------------------------------------------------------------------------------------------------
-	//Criado um novo método que utiliza transacaoId (registrando a Transação), verificando se existe um idRecPayment para tal	
+		
 	/**
 	 * 
 	 * Chama [9-alterarVendaCreditoRecProgDataFinalPorRecurrentPaymentId]
@@ -669,6 +682,15 @@ public class CieloController {
 		
 		return res;
 	}
+
+	//---------------------------------------------------------------------------------------------------------------------------------------------------
+	//TODO - Atualizar Postman (1 método novo)	
+	//Novo método que utiliza transacaoId (registrando a Transação), verificando se existe um idRecPayment para tal	
+	/**
+	 * 
+	 * Chama [9.a-alterarVendaCreditoRecProgDataFinalPorTransacaoId] - (HÍBRIDO)*
+	 * 
+	 * */
 	@PUT
 	@Produces("application/json; charset=UTF-8")
 	@Path("/alterar_venda_cred_rec_prog_data_final_por_transacaoid")	
@@ -716,10 +738,7 @@ public class CieloController {
 		return res;
 	}	
 	//---------------------------------------------------------------------------------------------------------------------------------------------------
-		
-	//TODO - Atualizar Postman (1 método novo)
-	//---------------------------------------------------------------------------------------------------------------------------------------------------
-	//Criado um novo método que utiliza transacaoId (registrando a Transação), verificando se existe um idRecPayment para tal	
+			
 	/**
 	 * 
 	 * Chama [10-alterarVendaCreditoRecProgDiaRecPorRecurrentPaymentId]
@@ -759,6 +778,15 @@ public class CieloController {
 		
 		return res;
 	}
+	
+	//---------------------------------------------------------------------------------------------------------------------------------------------------
+	//TODO - Atualizar Postman (1 método novo)
+	//Novo método que utiliza transacaoId (registrando a Transação), verificando se existe um idRecPayment para tal	
+	/**
+	 * 
+	 * Chama [10.a-alterarVendaCreditoRecProgDiaRecPorTransacaoId] - (HÍBRIDO)*
+	 * 
+	 * */	
 	@PUT
 	@Produces("application/json; charset=UTF-8")
 	@Path("/alterar_venda_cred_rec_prog_dia_rec_por_transacaoid")	
@@ -807,14 +835,11 @@ public class CieloController {
 	}	
 	//---------------------------------------------------------------------------------------------------------------------------------------------------
 	
-	//TODO - Atualizar Postman (1 método novo)
-	//---------------------------------------------------------------------------------------------------------------------------------------------------
-	//Criado um novo método que utiliza transacaoId (registrando a Transação), verificando se existe um idRecPayment para tal
 	/**
 	 * 
 	 * Chama [11-alterarVendaCreditoRecProgValorRecPorRecurrentPaymentId]
 	 * 
-	 * */
+	 * */	
 	@PUT
 	@Produces("application/json; charset=UTF-8")
 	@Path("/alterar_venda_cred_rec_prog_valor_rec_por_recpayid")	
@@ -849,6 +874,15 @@ public class CieloController {
 		
 		return res;
 	}
+	
+	//---------------------------------------------------------------------------------------------------------------------------------------------------	
+	//TODO - Atualizar Postman (1 método novo)	
+	//Novo método que utiliza transacaoId (registrando a Transação), verificando se existe um idRecPayment para tal		
+	/**
+	 * 
+	 * Chama [11.a-alterarVendaCreditoRecProgValorRecPorTransacaoId] - (HÍBRIDO)*
+	 * 
+	 * */	
 	@PUT
 	@Produces("application/json; charset=UTF-8")
 	@Path("/alterar_venda_cred_rec_prog_valor_rec_por_transacaoid")	
@@ -896,15 +930,12 @@ public class CieloController {
 		return res;
 	}	
 	//---------------------------------------------------------------------------------------------------------------------------------------------------	
-		
-	//TODO - Atualizar Postman (1 método novo)
-	//---------------------------------------------------------------------------------------------------------------------------------------------------
-	//Criado um novo método que utiliza transacaoId (registrando a Transação), verificando se existe um idRecPayment para tal
+
 	/**
 	 * 
 	 * Chama [12-alterarVendaCreditoRecProgDataProxRecPorRecurrentPaymentId]
 	 * 
-	 * */
+	 * */		
 	@PUT
 	@Produces("application/json; charset=UTF-8")
 	@Path("/alterar_venda_cred_rec_prog_data_prox_rec_por_recpayid")	
@@ -939,6 +970,16 @@ public class CieloController {
 		
 		return res;
 	}
+	
+	
+	//---------------------------------------------------------------------------------------------------------------------------------------------------
+	//TODO - Atualizar Postman (1 método novo)
+	//Novo método que utiliza transacaoId (registrando a Transação), verificando se existe um idRecPayment para tal		
+	/**
+	 * 
+	 * Chama [12.a-alterarVendaCreditoRecProgDataProxRecPorTransferenciaId] - (HÍBRIDO)*
+	 * 
+	 * */	
 	@PUT
 	@Produces("application/json; charset=UTF-8")
 	@Path("/alterar_venda_cred_rec_prog_data_prox_rec_por_transacaoid")	
@@ -986,14 +1027,12 @@ public class CieloController {
 		return res;
 	}	
 	//---------------------------------------------------------------------------------------------------------------------------------------------------	
-	
-	//TODO - Atualizar Postman (1 método novo)
-	//---------------------------------------------------------------------------------------------------------------------------------------------------
+
 	/**
 	 * 
 	 * Chama [13-alterarVendaCreditoRecProgIntervaloPorRecurrentPaymentId]
 	 * 
-	 * */
+	 * */		
 	@PUT
 	@Produces("application/json; charset=UTF-8")
 	@Path("/alterar_venda_cred_rec_prog_intervalo_por_recpayid")	
@@ -1028,6 +1067,15 @@ public class CieloController {
 		
 		return res;
 	}
+	
+	//---------------------------------------------------------------------------------------------------------------------------------------------------	
+	//TODO - Atualizar Postman (1 método novo)	
+	//Novo método que utiliza transacaoId (registrando a Transação), verificando se existe um idRecPayment para tal		
+	/**
+	 * 
+	 * Chama [13.a-alterarVendaCreditoRecProgIntervaloPorTransacaoId] - (HÍBRIDO)*
+	 * 
+	 * */	
 	@PUT
 	@Produces("application/json; charset=UTF-8")
 	@Path("/alterar_venda_cred_rec_prog_intervalo_por_transacaoid")	
@@ -1075,11 +1123,7 @@ public class CieloController {
 		return res;
 	}	
 	//---------------------------------------------------------------------------------------------------------------------------------------------------	
-	
-	
-	//TODO - Atualizar Postman (1 revertido mais 1 método novo)
-	//---------------------------------------------------------------------------------------------------------------------------------------------------
-	//Criado um novo método que utiliza transacaoId (registrando a Transação), verificando se existe um idRecPayment para tal
+		
 	/**
 	 * 
 	 * Chama [14-desabilitarVendaCreditoRecProgPorRecurrentPaymentId]
@@ -1118,6 +1162,15 @@ public class CieloController {
 		
 		return res;
 	}	
+	
+	//---------------------------------------------------------------------------------------------------------------------------------------------------	
+	//TODO - Atualizar Postman (1 método novo)
+	//Novo método que utiliza transacaoId (registrando a Transação), verificando se existe um idRecPayment para tal	
+	/**
+	 * 
+	 * Chama [14.a-desabilitarVendaCreditoRecProgPorTransacaoId] - (HÍBRIDO)*
+	 * 
+	 * */		
 	@PUT
 	@Produces("application/json; charset=UTF-8")
 	@Path("/desabilitar_venda_cred_rec_prog_por_transacaoid")	
@@ -1165,14 +1218,11 @@ public class CieloController {
 	}	
 	//---------------------------------------------------------------------------------------------------------------------------------------------------
 	
-	//TODO - Atualizar Postman (1 revertido mais 1 método novo)
-	//---------------------------------------------------------------------------------------------------------------------------------------------------
-	//Criado um novo método que utiliza transacaoId (registrando a Transação), verificando se existe um idRecPayment para tal
 	/**
 	 * 
 	 * Chama [15-reabilitarVendaCreditoRecProgPorRecurrentPaymentId]
 	 * 
-	 * */
+	 * */		
 	@PUT
 	@Produces("application/json; charset=UTF-8")
 	@Path("/reabilitar_venda_cred_rec_prog_por_recpayid")	
@@ -1206,6 +1256,15 @@ public class CieloController {
 		
 		return res;
 	}
+	
+	//TODO - Atualizar Postman (1 método novo)
+	//---------------------------------------------------------------------------------------------------------------------------------------------------
+	//Novo método que utiliza transacaoId (registrando a Transação), verificando se existe um idRecPayment para tal	
+	/**
+	 * 
+	 * Chama [15.a-reabilitarVendaCreditoRecProgPorTransacaoId] - (HÍBRIDO)*
+	 * 
+	 * */	
 	@PUT
 	@Produces("application/json; charset=UTF-8")
 	@Path("/reabilitar_venda_cred_rec_prog_por_transacaoid")	
@@ -1252,6 +1311,9 @@ public class CieloController {
 		return res;
 	}	
 	//---------------------------------------------------------------------------------------------------------------------------------------------------
+	
+	//*Os métodos híbridos manipulam dados da Cielo e do BD ecommerce
+	// Os não híbridos, apenas os dados da Cielo
 	
 	//***************************************
 	

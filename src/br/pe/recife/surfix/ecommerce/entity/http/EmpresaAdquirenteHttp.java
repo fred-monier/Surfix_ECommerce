@@ -81,5 +81,27 @@ public class EmpresaAdquirenteHttp {
 	
 		return empresasAdquirentesHttp;
 	}
+	
+	public static EmpresaAdquirenteNomeAdqHttp[] gerarArrayEmpresasAdquirentesNomeAdqHttp
+		(List<EmpresaAdquirente> empresasAdquirentes) {
+	
+		EmpresaAdquirenteNomeAdqHttp[] empresasAdquirentesNomeHttp = 
+				new EmpresaAdquirenteNomeAdqHttp[empresasAdquirentes.size()];			
+		
+		for (int i=0; i < empresasAdquirentes.size(); i++) {
+			
+			EmpresaAdquirente empresaAdquirente = empresasAdquirentes.get(i);
+			
+			EmpresaAdquirenteNomeAdqHttp empresaAdquirenteHttp = 
+					new EmpresaAdquirenteNomeAdqHttp();
+			
+			empresaAdquirenteHttp.setIdEmpresaAdquirente(empresaAdquirente.getId());
+			empresaAdquirenteHttp.setNomeAdquirente(empresaAdquirente.getAdquirente().getNome());
+			
+			empresasAdquirentesNomeHttp[i] = empresaAdquirenteHttp;
+		}
+
+		return empresasAdquirentesNomeHttp;
+	}	
         
 }

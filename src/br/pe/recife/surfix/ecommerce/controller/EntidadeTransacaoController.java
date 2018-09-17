@@ -3,6 +3,7 @@ package br.pe.recife.surfix.ecommerce.controller;
 import java.util.List;
 
 import javax.annotation.security.PermitAll;
+import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.Path;
@@ -26,16 +27,16 @@ public class EntidadeTransacaoController {
 	
 	@GET
 	@Produces("application/json; charset=UTF-8")
-	@Path("/listar")
+	@Path("/listar_pais")
 	@PermitAll
-	public RetornoTransacoesHttp listar() {
+	public RetornoTransacoesHttp listarPais() {
 	
 		RetornoTransacoesHttp res = new RetornoTransacoesHttp();
 		res.setResultado(RetornoHttp.SUCESSO);
 		
 		try { 
 		
-			List<Transacao> transacoes = transacaoService.listar();
+			List<Transacao> transacoes = transacaoService.listarPais();
 			
 			TransacaoHttp[] transacoesHttp = TransacaoHttp.gerarArrayTransacoesHttp(transacoes);	
 			
@@ -49,20 +50,21 @@ public class EntidadeTransacaoController {
 		return res;
 	}		
 	
-	//TODO - Atualizar Postman entidade (1 método novo)
 	//---------------------------------------------------------------------------------------------------------------------------------------------------	
 	@GET
 	@Produces("application/json; charset=UTF-8")
 	@Path("/listar_pais_por_pednum")
-	@PermitAll
-	public RetornoTransacoesHttp listarPaisPorNumPedidoVirtual(@HeaderParam("pedNum") String pedNum) {
+	@RolesAllowed("ADMIN")
+	public RetornoTransacoesHttp listarPaisPorNumPedidoVirtual(@HeaderParam("idComAdq") String idComAdq, 
+			@HeaderParam("pedNum") String pedNum) {
 	
 		RetornoTransacoesHttp res = new RetornoTransacoesHttp();
 		res.setResultado(RetornoHttp.SUCESSO);
 		
 		try { 
 		
-			List<Transacao> transacoes = transacaoService.listarPaisPorNumPedidoVirtual(pedNum);
+			List<Transacao> transacoes = transacaoService.
+					listarPaisPorEmpAdqENumPedidoVirtual(Integer.valueOf(idComAdq), pedNum);
 			
 			TransacaoHttp[] transacoesHttp = TransacaoHttp.gerarArrayTransacoesHttp(transacoes);	
 			
@@ -75,5 +77,6 @@ public class EntidadeTransacaoController {
 		
 		return res;
 	}			
+	//---------------------------------------------------------------------------------------------------------------------------------------------------	
 
 }

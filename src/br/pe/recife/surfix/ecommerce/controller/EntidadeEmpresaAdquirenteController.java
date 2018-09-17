@@ -3,6 +3,7 @@ package br.pe.recife.surfix.ecommerce.controller;
 import java.util.List;
 
 import javax.annotation.security.PermitAll;
+import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.Path;
@@ -13,7 +14,9 @@ import org.springframework.stereotype.Component;
 
 import br.pe.recife.surfix.ecommerce.entity.EmpresaAdquirente;
 import br.pe.recife.surfix.ecommerce.entity.http.EmpresaAdquirenteHttp;
+import br.pe.recife.surfix.ecommerce.entity.http.EmpresaAdquirenteNomeAdqHttp;
 import br.pe.recife.surfix.ecommerce.entity.http.RetornoEmpresasAdquirentesHttp;
+import br.pe.recife.surfix.ecommerce.entity.http.RetornoEmpresasAdquirentesNomeAdqHttp;
 import br.pe.recife.surfix.ecommerce.http.RetornoHttp;
 import br.pe.recife.surfix.ecommerce.service.EmpresaAdquirenteService;
 
@@ -50,28 +53,26 @@ public class EntidadeEmpresaAdquirenteController {
 		return res;
 	}	
 	
-	//TODO - Devolver no formato Id da EmpAdq e Nome Adquirente e validar senha de acesso para Empresa (nesse caso não haverá EmpAdquirente!!!)
-	//TODO - Atualizar Postman entidade (1 método novo)
 	//---------------------------------------------------------------------------------------------------------------------------------------------------
 	@GET
 	@Produces("application/json; charset=UTF-8")
-	@Path("/listarPorEmpresaId")
-	@PermitAll
-	public RetornoEmpresasAdquirentesHttp listarPorEmpresaId(@HeaderParam("idEmpresa") String idEmpresa) {
+	@Path("/listar_por_comercialid")
+	@RolesAllowed("ADMIN")
+	public RetornoEmpresasAdquirentesNomeAdqHttp listarPorEmpresaId(@HeaderParam("idComercial") String idComercial) {
 	
-		RetornoEmpresasAdquirentesHttp res = new RetornoEmpresasAdquirentesHttp();
+		RetornoEmpresasAdquirentesNomeAdqHttp res = new RetornoEmpresasAdquirentesNomeAdqHttp();
 		res.setResultado(RetornoHttp.SUCESSO);
 		
 		try { 
 		
-			Integer id = Integer.valueOf(idEmpresa);	
+			Integer id = Integer.valueOf(idComercial);	
 			
 			List<EmpresaAdquirente> empresasAdquirentes = empresaAdquirenteService.listarPorEmpresa(id);
+						
+			EmpresaAdquirenteNomeAdqHttp[] empresasAdquirentesNomeAdqHttp = 
+					EmpresaAdquirenteHttp.gerarArrayEmpresasAdquirentesNomeAdqHttp(empresasAdquirentes);	
 			
-			EmpresaAdquirenteHttp[] empresasAdquirentesHttp = 
-					EmpresaAdquirenteHttp.gerarArrayEmpresasAdquirentesHttp(empresasAdquirentes);	
-			
-			res.setEmpresasAdquirentes(empresasAdquirentesHttp);
+			res.setEmpresasAdquirentesNomeAdqHttp(empresasAdquirentesNomeAdqHttp);
 			
 		} catch (Exception e) {
 			
@@ -80,5 +81,6 @@ public class EntidadeEmpresaAdquirenteController {
 		
 		return res;
 	}		
+	//---------------------------------------------------------------------------------------------------------------------------------------------------	
 
 }

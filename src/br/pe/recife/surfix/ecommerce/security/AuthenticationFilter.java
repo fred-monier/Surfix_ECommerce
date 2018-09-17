@@ -29,6 +29,7 @@ import br.pe.recife.surfix.ecommerce.entity.EmpresaAdquirente;
 import br.pe.recife.surfix.ecommerce.exception.InfraException;
 import br.pe.recife.surfix.ecommerce.exception.NegocioException;
 import br.pe.recife.surfix.ecommerce.service.EmpresaAdquirenteService;
+import br.pe.recife.surfix.ecommerce.service.EmpresaService;
 
 /**
  * Este filtro verifica as permissões de acesso para um usuário
@@ -46,7 +47,11 @@ public class AuthenticationFilter implements ContainerRequestFilter {
     private static final String AUTHORIZATION_PROPERTY = "Authorization";
     private static final String AUTHENTICATION_SCHEME = "Basic";
     private static final String ID_COMERCIAL_ADQUIRENTE_PROPERTY =  "idComAdq";
+    private static final String ID_COMERCIAL_PROPERTY =  "idComercial";
         
+	@Autowired
+	private EmpresaService empresaService;      
+    
 	@Autowired
 	private EmpresaAdquirenteService empresaAdquirenteService;   
       
@@ -72,8 +77,23 @@ public class AuthenticationFilter implements ContainerRequestFilter {
             //Fetch authorization header
             final List<String> authorization = headers.get(AUTHORIZATION_PROPERTY);
                
+            //idComercial ou idComAdq
+            final List<String> idComercial = headers.get(ID_COMERCIAL_PROPERTY);
             final List<String> idComAdq = headers.get(ID_COMERCIAL_ADQUIRENTE_PROPERTY);
-            final String id = idComAdq.get(0);
+                        
+            final String idC;           
+            final String idCA;
+            if (idComercial == null || idComercial.isEmpty()) { 
+            	idC = "";
+            } else {
+            	idC = idComercial.get(0);
+            }
+            if (idComAdq == null || idComAdq.isEmpty()) { 
+            	idCA = "";
+            } else {
+            	idCA = idComAdq.get(0);
+            }            
+            //**************
               
             //If no authorization information present; block access
             if (authorization == null || authorization.isEmpty()) {                            
@@ -102,7 +122,7 @@ public class AuthenticationFilter implements ContainerRequestFilter {
                   
                 try {
 	                //Is user valid?
-	                if (!isUserAllowed(id, username, password, rolesSet)) {                
+	                if (!isUserAllowed(idC, idCA, username, password, rolesSet)) {                
 	                    requestContext.abortWith(Response.status(Response.Status.UNAUTHORIZED)
 	                            .entity("Acesso não autorizado").build());
 	                    return;
@@ -118,7 +138,7 @@ public class AuthenticationFilter implements ContainerRequestFilter {
         }
     }
     
-    private boolean isUserAllowed(final String id, final String username, 
+    private boolean isUserAllowed(final String idE, final String idEA, final String username, 
     		final String password, final Set<String> rolesSet) 
     				throws InfraException, NegocioException {
     
@@ -130,18 +150,27 @@ public class AuthenticationFilter implements ContainerRequestFilter {
         //Access the database and do this part yourself
         //String userRole = userMgr.getUserRole(username);
         
-        Integer idEmpAdq;
+        Empresa empresa = null;
         
         try {
-        	idEmpAdq = Integer.valueOf(id);
+        	
+        	int id;
+        	if (idE.equals("")) {
+        		id = Integer.valueOf(idEA);
+        		EmpresaAdquirente empresaAdq = empresaAdquirenteService.consultarPorId(id);
+        		if (empresaAdq != null && empresaAdq.getEmpresa() != null) {
+        			empresa = empresaAdq.getEmpresa();
+        		}
+        	} else {
+        		id = Integer.valueOf(idE);
+        		empresa = empresaService.consultarPorId(id);
+        	}        	        	
+        	
         } catch (Exception e) {
         	throw new NegocioException();
         }
-        
-        EmpresaAdquirente empresaAdq = empresaAdquirenteService.consultarPorId(idEmpAdq);
-        
-        if (empresaAdq != null && empresaAdq.getEmpresa() != null) {
-        	Empresa empresa = empresaAdq.getEmpresa();
+                        
+        if (empresa != null) {        	
 	        if(empresa.getUsuario().equals("usuario") 
 	        		&& empresa.getSenha().equals("senha")) {
 	        

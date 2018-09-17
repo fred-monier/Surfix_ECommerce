@@ -35,14 +35,13 @@ public class EmpresaAdquirenteDAO implements EmpresaAdquirenteDAOIntf {
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<EmpresaAdquirente> listarPorEmpresa(int idEmpresa) {
-				
-		Query query = manager
-	            .createQuery("select ea from \"EMPRESA_ADQUIRENTE\" as ea " +
-	    				"where ea.\"ID_EMPRESA\" = :paramIdEmpresa");
-	    query.setParameter("paramIdEmpresa", idEmpresa);
+
+		Query query = manager.createQuery("select distinct ea from EmpresaAdquirente ea " + 
+				"left join fetch ea.adquirente where ea.empresa.id = :idEmpresa");
 		
-	    List<EmpresaAdquirente> lista = query.getResultList();
-	
+		query.setParameter("idEmpresa", idEmpresa);
+		List<EmpresaAdquirente> lista = query.getResultList(); 
+
 	    return lista;					
 	}
 		
