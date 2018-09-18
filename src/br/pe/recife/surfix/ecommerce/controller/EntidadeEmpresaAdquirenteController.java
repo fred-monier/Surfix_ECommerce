@@ -21,7 +21,7 @@ import br.pe.recife.surfix.ecommerce.http.RetornoHttp;
 import br.pe.recife.surfix.ecommerce.service.EmpresaAdquirenteService;
 
 @Component
-@Path("/empresaAdquirente")
+@Path("/empresa_adquirente")
 public class EntidadeEmpresaAdquirenteController {
 	
 	@Autowired
