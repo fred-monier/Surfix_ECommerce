@@ -2,7 +2,7 @@ package br.pe.recife.surfix.ecommerce.controller;
 
 import java.util.List;
 
-import javax.annotation.security.PermitAll;
+import javax.annotation.security.DenyAll;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -26,7 +26,7 @@ public class EntidadeAdquirenteController {
 	@GET
 	@Produces("application/json; charset=UTF-8")
 	@Path("/listar")
-	@PermitAll
+	@DenyAll
 	public RetornoAdquirentesHttp listar() {
 	
 		RetornoAdquirentesHttp res = new RetornoAdquirentesHttp();

@@ -1,5 +1,6 @@
 package br.pe.recife.surfix.ecommerce.controller;
 
+import javax.annotation.security.DenyAll;
 import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -35,7 +36,7 @@ import cieloecommerce.sdk.ecommerce.Sale;
 import cieloecommerce.sdk.ecommerce.SaleResponse;
 
 @Component
-@Path("/cielo")
+@Path("/hib")
 public class CieloController {
 	
 	private static final String TESTE_PROPERTY = "prod";
@@ -132,7 +133,7 @@ public class CieloController {
 	@GET
 	@Produces("application/json; charset=UTF-8")
 	@Path("/consultar_vend_cred_a_vista_por_payid")
-	@RolesAllowed("ADMIN")
+	@DenyAll
 	public RetornoGeneralSaleHttp consultarVendaCreditoAVistaPorPaymentId(@HeaderParam("idComAdq") String idComAdq,
 			@HeaderParam("idPayment") String idPayment) {
  
@@ -166,7 +167,6 @@ public class CieloController {
 	}
 	
 	//---------------------------------------------------------------------------------------------------------------------------------------------------	
-	//TODO - Atualizar Postman (1 método novo)
 	//Novo método que utiliza transacaoId, verificando se existe idPayment ou idRecPayment 
 	//  para tal (serve tanto para pagamentos normais como recorrentes) 	
 	/**
@@ -235,7 +235,7 @@ public class CieloController {
 	@GET
 	@Produces("application/json; charset=UTF-8")
 	@Path("/consultar_vendas_por_pednum")	
-	@RolesAllowed("ADMIN")
+	@DenyAll
 	public RetornoPaymentsHttp consultarVendasPorNumPedidoVirtual(@HeaderParam("idComAdq") String idComAdq,
 			@HeaderParam("pedNum") String pedNum) {
 		
@@ -276,7 +276,7 @@ public class CieloController {
 	@PUT
 	@Produces("application/json; charset=UTF-8")
 	@Path("/cancelar_pag_total_cred_a_vista")
-	@RolesAllowed("ADMIN")
+	@DenyAll
 	public RetornoSaleResponseHttp cancelarPagamentoTotalCreditoAVista(@HeaderParam("idComAdq") String idComAdq,
 			@HeaderParam("idPayment") String idPayment) {
 		
@@ -309,8 +309,7 @@ public class CieloController {
 		return res;
 	}	
 	
-	//---------------------------------------------------------------------------------------------------------------------------------------------------	
-	//TODO - Atualizar Postman (1 método novo)	
+	//---------------------------------------------------------------------------------------------------------------------------------------------------		
 	//Novo método que utiliza transacaoId (registrando a Transação), verificando se existe um idPayment para tal	
 	/**
 	 * 
@@ -497,7 +496,7 @@ public class CieloController {
 	@GET
 	@Produces("application/json; charset=UTF-8")
 	@Path("/consultar_vend_cred_rec_prog_por_recpayid")
-	@RolesAllowed("ADMIN")
+	@DenyAll
 	public RetornoGeneralSaleHttp consultarVendaCreditoRecProgPorRecurrentPaymentId(@HeaderParam("idComAdq") String idComAdq,
 			@HeaderParam("idRecPayment") String idRecPayment) {
 		
@@ -540,7 +539,7 @@ public class CieloController {
 	@Consumes("application/json; charset=UTF-8")
 	@Produces("application/json; charset=UTF-8")
 	@Path("/alterar_pag_cred_rec_prog_por_recpayid")
-	@RolesAllowed("ADMIN")
+	@DenyAll
 	public RetornoHttp alterarPagamentoCreditoRecProgPorRecurrentPaymentId(@HeaderParam("idComAdq") String idComAdq,
 			@HeaderParam("idRecPayment") String idRecPayment, VendaCreditoHttp vendaCreditoHttp) {
 		
@@ -580,7 +579,6 @@ public class CieloController {
 	}	
 	
 	//---------------------------------------------------------------------------------------------------------------------------------------------------	
-	//TODO - Atualizar Postman (1 método novo)	
 	//Novo método que utiliza transacaoId (registrando a Transação), verificando se existe um idRecPayment para tal	
 	/**
 	 * 
@@ -643,6 +641,8 @@ public class CieloController {
 	}					
 	//---------------------------------------------------------------------------------------------------------------------------------------------------
 		
+	//TODO - Testar as chamadas abaixo
+	
 	/**
 	 * 
 	 * Chama [9-alterarVendaCreditoRecProgDataFinalPorRecurrentPaymentId]
@@ -651,7 +651,7 @@ public class CieloController {
 	@PUT
 	@Produces("application/json; charset=UTF-8")
 	@Path("/alterar_venda_cred_rec_prog_data_final_por_recpayid")	
-	@RolesAllowed("ADMIN")
+	@DenyAll
 	public RetornoHttp alterarVendaCreditoRecProgDataFinalPorRecurrentPaymentId(@HeaderParam("idRecPayment") String idRecPayment,
 		@HeaderParam("dataFinal") String dataFinal, @HeaderParam("idComAdq") String idComAdq) {
 		
@@ -684,7 +684,6 @@ public class CieloController {
 	}
 
 	//---------------------------------------------------------------------------------------------------------------------------------------------------
-	//TODO - Atualizar Postman (1 método novo)	
 	//Novo método que utiliza transacaoId (registrando a Transação), verificando se existe um idRecPayment para tal	
 	/**
 	 * 
@@ -747,7 +746,7 @@ public class CieloController {
 	@PUT
 	@Produces("application/json; charset=UTF-8")
 	@Path("/alterar_venda_cred_rec_prog_dia_rec_por_recpayid")	
-	@RolesAllowed("ADMIN")
+	@DenyAll
 	public RetornoHttp alterarVendaCreditoRecProgDiaRecPorRecurrentPaymentId(@HeaderParam("idRecPayment") String idRecPayment, 
 		@HeaderParam("diaRec") int diaRec, @HeaderParam("idComAdq") String idComAdq) {
 		
@@ -780,7 +779,6 @@ public class CieloController {
 	}
 	
 	//---------------------------------------------------------------------------------------------------------------------------------------------------
-	//TODO - Atualizar Postman (1 método novo)
 	//Novo método que utiliza transacaoId (registrando a Transação), verificando se existe um idRecPayment para tal	
 	/**
 	 * 
@@ -843,7 +841,7 @@ public class CieloController {
 	@PUT
 	@Produces("application/json; charset=UTF-8")
 	@Path("/alterar_venda_cred_rec_prog_valor_rec_por_recpayid")	
-	@RolesAllowed("ADMIN")
+	@DenyAll
 	public RetornoHttp alterarVendaCreditoRecProgValorRecPorRecurrentPaymentId(@HeaderParam("idRecPayment") String idRecPayment, 
 		@HeaderParam("valorRec") int valorRec, @HeaderParam("idComAdq") String idComAdq) {
 		
@@ -876,7 +874,6 @@ public class CieloController {
 	}
 	
 	//---------------------------------------------------------------------------------------------------------------------------------------------------	
-	//TODO - Atualizar Postman (1 método novo)	
 	//Novo método que utiliza transacaoId (registrando a Transação), verificando se existe um idRecPayment para tal		
 	/**
 	 * 
@@ -939,7 +936,7 @@ public class CieloController {
 	@PUT
 	@Produces("application/json; charset=UTF-8")
 	@Path("/alterar_venda_cred_rec_prog_data_prox_rec_por_recpayid")	
-	@RolesAllowed("ADMIN")
+	@DenyAll
 	public RetornoHttp alterarVendaCreditoRecProgDataProxRecPorRecurrentPaymentId(@HeaderParam("idRecPayment") String idRecPayment, 
 		@HeaderParam("dataProxRec") String dataProxRec, @HeaderParam("idComAdq") String idComAdq) {
 		
@@ -973,11 +970,10 @@ public class CieloController {
 	
 	
 	//---------------------------------------------------------------------------------------------------------------------------------------------------
-	//TODO - Atualizar Postman (1 método novo)
 	//Novo método que utiliza transacaoId (registrando a Transação), verificando se existe um idRecPayment para tal		
 	/**
 	 * 
-	 * Chama [12.a-alterarVendaCreditoRecProgDataProxRecPorTransferenciaId] - (HÍBRIDO)*
+	 * Chama [12.a-alterarVendaCreditoRecProgDataProxRecPorTransacaoId] - (HÍBRIDO)*
 	 * 
 	 * */	
 	@PUT
@@ -1036,7 +1032,7 @@ public class CieloController {
 	@PUT
 	@Produces("application/json; charset=UTF-8")
 	@Path("/alterar_venda_cred_rec_prog_intervalo_por_recpayid")	
-	@RolesAllowed("ADMIN")
+	@DenyAll
 	public RetornoHttp alterarVendaCreditoRecProgIntervaloPorRecurrentPaymentId(@HeaderParam("idRecPayment") String idRecPayment, 
 		@HeaderParam("intervalo") String intervalo, @HeaderParam("idComAdq") String idComAdq) {
 		
@@ -1069,7 +1065,6 @@ public class CieloController {
 	}
 	
 	//---------------------------------------------------------------------------------------------------------------------------------------------------	
-	//TODO - Atualizar Postman (1 método novo)	
 	//Novo método que utiliza transacaoId (registrando a Transação), verificando se existe um idRecPayment para tal		
 	/**
 	 * 
@@ -1132,7 +1127,7 @@ public class CieloController {
 	@PUT
 	@Produces("application/json; charset=UTF-8")
 	@Path("/desabilitar_venda_cred_rec_prog_por_recpayid")	
-	@RolesAllowed("ADMIN")
+	@DenyAll
 	public RetornoHttp desabilitarVendaCreditoRecProgPorRecurrentPaymentId(@HeaderParam("idRecPayment") String idRecPayment, 
 		@HeaderParam("idComAdq") String idComAdq) {
 		
@@ -1164,7 +1159,6 @@ public class CieloController {
 	}	
 	
 	//---------------------------------------------------------------------------------------------------------------------------------------------------	
-	//TODO - Atualizar Postman (1 método novo)
 	//Novo método que utiliza transacaoId (registrando a Transação), verificando se existe um idRecPayment para tal	
 	/**
 	 * 
@@ -1226,7 +1220,7 @@ public class CieloController {
 	@PUT
 	@Produces("application/json; charset=UTF-8")
 	@Path("/reabilitar_venda_cred_rec_prog_por_recpayid")	
-	@RolesAllowed("ADMIN")
+	@DenyAll
 	public RetornoHttp reabilitarVendaCreditoRecProgPorRecurrentPaymentId(@HeaderParam("idRecPayment") String idRecPayment, 
 			@HeaderParam("idComAdq") String idComAdq) {
 		
@@ -1257,7 +1251,6 @@ public class CieloController {
 		return res;
 	}
 	
-	//TODO - Atualizar Postman (1 método novo)
 	//---------------------------------------------------------------------------------------------------------------------------------------------------
 	//Novo método que utiliza transacaoId (registrando a Transação), verificando se existe um idRecPayment para tal	
 	/**
@@ -1406,7 +1399,18 @@ public class CieloController {
 	}		
 	
 	private void checarTransacaoEmpresaAdquirente(Transacao transacao, String idComAdq) throws FachadaCieloException {
-		if (!idComAdq.equals(transacao.getEmpresaAdquirente().getId())) {
+		
+		Integer i;
+		
+		try {
+			
+			i = Integer.parseInt(idComAdq);
+			
+			if (!i.equals(transacao.getEmpresaAdquirente().getId())) {
+				throw new FachadaCieloException(null, "Transação não encontrada para a Empresa-Adquirente informada");
+			}
+			
+		} catch (Exception e) {
 			throw new FachadaCieloException(null, "Transação não encontrada para a Empresa-Adquirente informada");
 		}		
 	}

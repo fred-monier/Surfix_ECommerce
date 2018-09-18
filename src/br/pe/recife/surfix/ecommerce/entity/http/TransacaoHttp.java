@@ -291,15 +291,23 @@ public class TransacaoHttp {
 			
 			if (transacao.getTransacaoPai() == null) {
 				
-				TransacaoHttp[] transacoesFilhas = new TransacaoHttp[transacao.getTransacoesFilhas().size()];
+				TransacaoHttp[] transacoesFilhas;
 				
-				int i =0;
-				for (Iterator<Transacao> iterator = transacao.getTransacoesFilhas().iterator(); iterator.hasNext();) {
+				if (transacao.getTransacoesFilhas() != null) {
+				
+					transacoesFilhas = new TransacaoHttp[transacao.getTransacoesFilhas().size()];
 					
-					Transacao transacaoFilha = iterator.next();					
-					TransacaoHttp transacaoFilhaHttp = TransacaoHttp.gerarTransacaoHttp(transacaoFilha);
+					int i =0;
+					for (Iterator<Transacao> iterator = transacao.getTransacoesFilhas().iterator(); iterator.hasNext();) {
+						
+						Transacao transacaoFilha = iterator.next();					
+						TransacaoHttp transacaoFilhaHttp = TransacaoHttp.gerarTransacaoHttp(transacaoFilha);
+						
+						transacoesFilhas[i++] = transacaoFilhaHttp;
+					}
+				} else {
 					
-					transacoesFilhas[i++] = transacaoFilhaHttp;
+					transacoesFilhas = new TransacaoHttp[0];
 				}
 				
 				transacaoHttp.setTransacoesFilhas(transacoesFilhas);				

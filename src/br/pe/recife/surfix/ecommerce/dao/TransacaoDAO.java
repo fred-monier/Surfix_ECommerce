@@ -10,7 +10,6 @@ import org.springframework.stereotype.Repository;
 
 import br.pe.recife.surfix.ecommerce.entity.Transacao;
 
-//TODO - Qual a melhor forma de gerar selects?
 @Repository
 public class TransacaoDAO implements TransacaoDAOIntf {
 	
@@ -55,7 +54,7 @@ public class TransacaoDAO implements TransacaoDAOIntf {
 	public List<Transacao> listarPaisPorEmpAdqENumPedidoVirtual(int idEmpAdq, String numPedVirtual) {
 		
 		Query query = manager
-	            .createQuery("select t from Transacao t left join fetch t.transacoesFilhas " +
+	            .createQuery("select distinct t from Transacao t left join fetch t.transacoesFilhas " +
 	            		"where t.empresaAdquirente.id = :idEmpAdq and " +
 	    				"t.numPedidoVirtual = :paramNumPedVirtual and t.transacaoPai = null");
 		
@@ -78,7 +77,14 @@ public class TransacaoDAO implements TransacaoDAOIntf {
 
 	@Override
 	public Transacao consultarPorId(int id) {
-		return manager.find(Transacao.class, id);
+		
+		//return manager.find(Transacao.class, id);
+		
+		Query q = manager.createQuery("select t from Transacao t left join fetch " + 
+				"t.transacoesFilhas WHERE t.id = :id");
+		q.setParameter("id", id);
+		
+		return (Transacao) q.getSingleResult();		
 	}
 
 	@Override
