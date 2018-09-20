@@ -178,7 +178,7 @@ public class CieloController {
 	@Produces("application/json; charset=UTF-8")
 	@Path("/consultar_vend_por_transacaoid")
 	@RolesAllowed("ADMIN")
-	public RetornoGeneralSaleHttp consultarVendaPorTransacaoId(@HeaderParam("idComAdq") String idComAdq,
+	public RetornoGeneralSaleHttp consultarVendaPorTransacaoId(@HeaderParam("idComercial") String idComercial,
 			@HeaderParam("idTransacao") String idTransacao) {
  
 		RetornoGeneralSaleHttp res = new RetornoGeneralSaleHttp();
@@ -188,10 +188,10 @@ public class CieloController {
 			
 			//Recuperando Transacao
 			Transacao transacaoPai = transacaoRequisitada(idTransacao);
-			this.checarTransacaoEmpresaAdquirente(transacaoPai, idComAdq);
+			this.checarTransacaoEmpresaAdquirente(transacaoPai, idComercial);
 			//					
 			
-			EmpresaAdquirente empresaAdquirente = this.empresaAdquirenteRequisitado(idComAdq);
+			EmpresaAdquirente empresaAdquirente = transacaoPai.getEmpresaAdquirente();
 
 			String mecId;
 			String mecKey;
@@ -320,7 +320,7 @@ public class CieloController {
 	@Produces("application/json; charset=UTF-8")
 	@Path("/cancelar_pag_total_cred_a_vista_por_transacaoid")
 	@RolesAllowed("ADMIN")
-	public RetornoSaleResponseHttp cancelarPagamentoTotalCreditoAVistaPorTransacaoId(@HeaderParam("idComAdq") String idComAdq,
+	public RetornoSaleResponseHttp cancelarPagamentoTotalCreditoAVistaPorTransacaoId(@HeaderParam("idComercial") String idComercial,
 			@HeaderParam("idTransacao") String idTransacao) {
 		
 		RetornoSaleResponseHttp res = new RetornoSaleResponseHttp();
@@ -330,10 +330,10 @@ public class CieloController {
 			
 			//Recuperando Transacao
 			Transacao transacaoPai = transacaoRequisitada(idTransacao, false);			
-			this.checarTransacaoEmpresaAdquirente(transacaoPai, idComAdq);
+			this.checarTransacaoEmpresaAdquirente(transacaoPai, idComercial);
 			//				
 			
-			EmpresaAdquirente empresaAdquirente = this.empresaAdquirenteRequisitado(idComAdq);
+			EmpresaAdquirente empresaAdquirente = transacaoPai.getEmpresaAdquirente();
 
 			String mecId;
 			String mecKey;
@@ -590,7 +590,7 @@ public class CieloController {
 	@Produces("application/json; charset=UTF-8")
 	@Path("/alterar_pag_cred_rec_prog_por_transacaoid")
 	@RolesAllowed("ADMIN")
-	public RetornoTransacaoHttp alterarPagamentoCreditoRecProgPorTransacaoId(@HeaderParam("idComAdq") String idComAdq,
+	public RetornoTransacaoHttp alterarPagamentoCreditoRecProgPorTransacaoId(@HeaderParam("idComercial") String idComercial,
 			@HeaderParam("idTransacao") String idTransacao, VendaCreditoHttp vendaCreditoHttp) {
 		
 		RetornoTransacaoHttp res = new RetornoTransacaoHttp();
@@ -600,10 +600,10 @@ public class CieloController {
 			
 			//Recuperando Transacao
 			Transacao transacaoPai = transacaoRequisitada(idTransacao, true);	
-			this.checarTransacaoEmpresaAdquirente(transacaoPai, idComAdq);
+			this.checarTransacaoEmpresaAdquirente(transacaoPai, idComercial);
 			//			
 			
-			EmpresaAdquirente empresaAdquirente = this.empresaAdquirenteRequisitado(idComAdq);
+			EmpresaAdquirente empresaAdquirente = transacaoPai.getEmpresaAdquirente();
 
 			String mecId;
 			String mecKey;
@@ -693,7 +693,7 @@ public class CieloController {
 	@Path("/alterar_venda_cred_rec_prog_data_final_por_transacaoid")	
 	@RolesAllowed("ADMIN")
 	public RetornoTransacaoHttp alterarVendaCreditoRecProgDataFinalPorTransacaoId(@HeaderParam("idTransacao") String idTransacao,
-		@HeaderParam("dataFinal") String dataFinal, @HeaderParam("idComAdq") String idComAdq) {
+		@HeaderParam("dataFinal") String dataFinal, @HeaderParam("idComercial") String idComercial) {
 		
 		RetornoTransacaoHttp res = new RetornoTransacaoHttp();
 		res.setResultado(RetornoHttp.SUCESSO);
@@ -702,10 +702,10 @@ public class CieloController {
 			
 			//Recuperando Transacao
 			Transacao transacaoPai = transacaoRequisitada(idTransacao, true);			
-			this.checarTransacaoEmpresaAdquirente(transacaoPai, idComAdq);
+			this.checarTransacaoEmpresaAdquirente(transacaoPai, idComercial);
 			//	
 			
-			EmpresaAdquirente empresaAdquirente = this.empresaAdquirenteRequisitado(idComAdq);
+			EmpresaAdquirente empresaAdquirente = transacaoPai.getEmpresaAdquirente();
 
 			String mecId;
 			String mecKey;
@@ -788,7 +788,7 @@ public class CieloController {
 	@Path("/alterar_venda_cred_rec_prog_dia_rec_por_transacaoid")	
 	@RolesAllowed("ADMIN")
 	public RetornoTransacaoHttp alterarVendaCreditoRecProgDiaRecPorTransacaoId(@HeaderParam("idTransacao") String idTransacao, 
-		@HeaderParam("diaRec") int diaRec, @HeaderParam("idComAdq") String idComAdq) {
+		@HeaderParam("diaRec") int diaRec, @HeaderParam("idComercial") String idComercial) {
 		
 		RetornoTransacaoHttp res = new RetornoTransacaoHttp();
 		res.setResultado(RetornoHttp.SUCESSO);
@@ -797,10 +797,10 @@ public class CieloController {
 			
 			//Recuperando Transacao
 			Transacao transacaoPai = transacaoRequisitada(idTransacao, true);	
-			this.checarTransacaoEmpresaAdquirente(transacaoPai, idComAdq);
+			this.checarTransacaoEmpresaAdquirente(transacaoPai, idComercial);
 			//				
 			
-			EmpresaAdquirente empresaAdquirente = this.empresaAdquirenteRequisitado(idComAdq);
+			EmpresaAdquirente empresaAdquirente = transacaoPai.getEmpresaAdquirente();
 
 			String mecId;
 			String mecKey;
@@ -883,7 +883,7 @@ public class CieloController {
 	@Path("/alterar_venda_cred_rec_prog_valor_rec_por_transacaoid")	
 	@RolesAllowed("ADMIN")
 	public RetornoTransacaoHttp alterarVendaCreditoRecProgValorRecPorTransacaoId(@HeaderParam("idTransacao") String idTransacao, 
-		@HeaderParam("valorRec") int valorRec, @HeaderParam("idComAdq") String idComAdq) {
+		@HeaderParam("valorRec") int valorRec, @HeaderParam("idComercial") String idComercial) {
 		
 		RetornoTransacaoHttp res = new RetornoTransacaoHttp();
 		res.setResultado(RetornoHttp.SUCESSO);
@@ -892,10 +892,10 @@ public class CieloController {
 			
 			//Recuperando Transacao
 			Transacao transacaoPai = transacaoRequisitada(idTransacao, true);	
-			this.checarTransacaoEmpresaAdquirente(transacaoPai, idComAdq);
+			this.checarTransacaoEmpresaAdquirente(transacaoPai, idComercial);
 			//	
 			
-			EmpresaAdquirente empresaAdquirente = this.empresaAdquirenteRequisitado(idComAdq);
+			EmpresaAdquirente empresaAdquirente = transacaoPai.getEmpresaAdquirente();
 
 			String mecId;
 			String mecKey;
@@ -979,7 +979,7 @@ public class CieloController {
 	@Path("/alterar_venda_cred_rec_prog_data_prox_rec_por_transacaoid")	
 	@RolesAllowed("ADMIN")
 	public RetornoTransacaoHttp alterarVendaCreditoRecProgDataProxRecPorTransferenciaId(@HeaderParam("idTransacao") String idTransacao, 
-		@HeaderParam("dataProxRec") String dataProxRec, @HeaderParam("idComAdq") String idComAdq) {
+		@HeaderParam("dataProxRec") String dataProxRec, @HeaderParam("idComercial") String idComercial) {
 		
 		RetornoTransacaoHttp res = new RetornoTransacaoHttp();
 		res.setResultado(RetornoHttp.SUCESSO);
@@ -988,10 +988,10 @@ public class CieloController {
 						
 			//Recuperando Transacao
 			Transacao transacaoPai = transacaoRequisitada(idTransacao, true);		
-			this.checarTransacaoEmpresaAdquirente(transacaoPai, idComAdq);
+			this.checarTransacaoEmpresaAdquirente(transacaoPai, idComercial);
 			//	
 						
-			EmpresaAdquirente empresaAdquirente = this.empresaAdquirenteRequisitado(idComAdq);
+			EmpresaAdquirente empresaAdquirente = transacaoPai.getEmpresaAdquirente();
 
 			String mecId;
 			String mecKey;
@@ -1074,7 +1074,7 @@ public class CieloController {
 	@Path("/alterar_venda_cred_rec_prog_intervalo_por_transacaoid")	
 	@RolesAllowed("ADMIN")
 	public RetornoTransacaoHttp alterarVendaCreditoRecProgIntervaloPorTransacaoId(@HeaderParam("idTransacao") String idTransacao, 
-		@HeaderParam("intervalo") String intervalo, @HeaderParam("idComAdq") String idComAdq) {
+		@HeaderParam("intervalo") String intervalo, @HeaderParam("idComercial") String idComercial) {
 		
 		RetornoTransacaoHttp res = new RetornoTransacaoHttp();
 		res.setResultado(RetornoHttp.SUCESSO);
@@ -1083,10 +1083,10 @@ public class CieloController {
 			
 			//Recuperando Transacao
 			Transacao transacaoPai = transacaoRequisitada(idTransacao, true);		
-			this.checarTransacaoEmpresaAdquirente(transacaoPai, idComAdq);
+			this.checarTransacaoEmpresaAdquirente(transacaoPai, idComercial);
 			//				
 			
-			EmpresaAdquirente empresaAdquirente = this.empresaAdquirenteRequisitado(idComAdq);
+			EmpresaAdquirente empresaAdquirente = transacaoPai.getEmpresaAdquirente();
 
 			String mecId;
 			String mecKey;
@@ -1168,7 +1168,7 @@ public class CieloController {
 	@Path("/desabilitar_venda_cred_rec_prog_por_transacaoid")	
 	@RolesAllowed("ADMIN")
 	public RetornoTransacaoHttp desabilitarVendaCreditoRecProgPorTransacaoId(@HeaderParam("idTransacao") String idTransacao, 
-		@HeaderParam("idComAdq") String idComAdq) {
+		@HeaderParam("idComercial") String idComercial) {
 		
 		RetornoTransacaoHttp res = new RetornoTransacaoHttp();
 		res.setResultado(RetornoHttp.SUCESSO);
@@ -1177,10 +1177,10 @@ public class CieloController {
 			
 			//Recuperando Transacao
 			Transacao transacaoPai = transacaoRequisitada(idTransacao, true);	
-			this.checarTransacaoEmpresaAdquirente(transacaoPai, idComAdq);
+			this.checarTransacaoEmpresaAdquirente(transacaoPai, idComercial);
 			//	
 			
-			EmpresaAdquirente empresaAdquirente = this.empresaAdquirenteRequisitado(idComAdq);
+			EmpresaAdquirente empresaAdquirente = transacaoPai.getEmpresaAdquirente();
 
 			String mecId;
 			String mecKey;
@@ -1261,7 +1261,7 @@ public class CieloController {
 	@Path("/reabilitar_venda_cred_rec_prog_por_transacaoid")	
 	@RolesAllowed("ADMIN")
 	public RetornoTransacaoHttp reabilitarVendaCreditoRecProgPorTransacaoId(@HeaderParam("idTransacao") String idTransacao, 
-			@HeaderParam("idComAdq") String idComAdq) {
+			@HeaderParam("idComercial") String idComercial) {
 		
 		RetornoTransacaoHttp res = new RetornoTransacaoHttp();
 		res.setResultado(RetornoHttp.SUCESSO);
@@ -1270,10 +1270,10 @@ public class CieloController {
 			
 			//Recuperando Transacao
 			Transacao transacaoPai = transacaoRequisitada(idTransacao, true);		
-			this.checarTransacaoEmpresaAdquirente(transacaoPai, idComAdq);
+			this.checarTransacaoEmpresaAdquirente(transacaoPai, idComercial);
 			//
 			
-			EmpresaAdquirente empresaAdquirente = this.empresaAdquirenteRequisitado(idComAdq);
+			EmpresaAdquirente empresaAdquirente = transacaoPai.getEmpresaAdquirente();
 
 			String mecId;
 			String mecKey;
@@ -1306,8 +1306,7 @@ public class CieloController {
 	//*Os métodos híbridos manipulam dados da Cielo e do BD ecommerce
 	// Os não híbridos, apenas os dados da Cielo
 	
-	//***************************************
-	
+	//***************************************		
 	private EmpresaAdquirente empresaAdquirenteRequisitado(String id) throws FachadaCieloException {
 				
 		EmpresaAdquirente empresaAdquirente = null;
@@ -1396,20 +1395,20 @@ public class CieloController {
 		}
 	}		
 	
-	private void checarTransacaoEmpresaAdquirente(Transacao transacao, String idComAdq) throws FachadaCieloException {
+	private void checarTransacaoEmpresaAdquirente(Transacao transacao, String idComercial) throws FachadaCieloException {
 		
 		Integer i;
 		
 		try {
 			
-			i = Integer.parseInt(idComAdq);
+			i = Integer.parseInt(idComercial);
 			
-			if (!i.equals(transacao.getEmpresaAdquirente().getId())) {
-				throw new FachadaCieloException(null, "Transação não encontrada para a Empresa-Adquirente informada");
+			if (!i.equals(transacao.getEmpresaAdquirente().getEmpresa().getId())) {
+				throw new FachadaCieloException(null, "Transação não encontrada para a Empresa informada");
 			}
 			
 		} catch (Exception e) {
-			throw new FachadaCieloException(null, "Transação não encontrada para a Empresa-Adquirente informada");
+			throw new FachadaCieloException(null, "Transação não encontrada para a Empresa informada");
 		}		
 	}
 		

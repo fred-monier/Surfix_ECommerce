@@ -442,7 +442,7 @@ public class Transacao implements EntidadeBase {
 
 	public void setNumPedidoVirtual(String numPedidoVirtual) {
 		this.numPedidoVirtual = numPedidoVirtual;
-	}
+	}	
 	
 	//***************************************
 	
@@ -474,7 +474,7 @@ public class Transacao implements EntidadeBase {
 			res.setCreditCardBrand(payment.getCreditCard().getBrand());
 			res.setCreditCardNumber(payment.getCreditCard().getCardNumber());
 		}		
-		res.setStatus(payment.getStatus() + "");
+		res.setStatus((payment.getStatus() == null ? null : payment.getStatus() + ""));
 		res.setPaymentId(payment.getPaymentId());
 		res.setPaymentAuthCode(payment.getAuthorizationCode());
 		res.setPaymentProofOfSale(payment.getProofOfSale());
@@ -496,8 +496,11 @@ public class Transacao implements EntidadeBase {
 			res.setRecPaymentEndDate(payment.getRecurrentPayment().getEndDate());
 			res.setRecPaymentNextRecurrency(payment.getRecurrentPayment().getNextRecurrency());
 			//res.setRecPaymentRecurrencyDay(null);
-			res.setRecPaymentMonthsInterval(payment.getRecurrentPayment().getInterval() + "");
-			res.setRecPaymentReasonCode(payment.getRecurrentPayment().getReasonCode() + "");
+			res.setRecPaymentMonthsInterval((payment.getRecurrentPayment().
+					getInterval() == null ? null : payment.getRecurrentPayment().getInterval() + ""));
+			res.setRecPaymentReasonCode((payment.getRecurrentPayment().
+					getReasonCode() == null ? null : payment.getRecurrentPayment().
+							getReasonCode() + ""));
 			res.setRecPaymentReasonMessage(payment.getRecurrentPayment().getReasonMessage());
 			res.setRecPaymentDesabilitado((Transacao.REC_PAYMENT_STATUS_DISABILITADO.
 					equals(payment.getRecurrentPayment().getStatus()) ? true : null));			
@@ -706,6 +709,6 @@ public class Transacao implements EntidadeBase {
 		//res.setRecPaymentDesabilitado(null);				
 					
 		return res;
-	}	
-
+	}
+	
 }

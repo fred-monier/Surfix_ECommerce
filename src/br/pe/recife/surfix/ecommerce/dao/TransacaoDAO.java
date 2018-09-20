@@ -1,5 +1,6 @@
 package br.pe.recife.surfix.ecommerce.dao;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -51,14 +52,14 @@ public class TransacaoDAO implements TransacaoDAOIntf {
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Transacao> listarPaisPorEmpAdqENumPedidoVirtual(int idEmpAdq, String numPedVirtual) {
+	public List<Transacao> listarPaisPorEmpresaENumPedidoVirtual(int idEmpresa, String numPedVirtual) {
 		
 		Query query = manager
 	            .createQuery("select distinct t from Transacao t left join fetch t.transacoesFilhas " +
-	            		"where t.empresaAdquirente.id = :idEmpAdq and " +
+	            		"where t.empresaAdquirente.empresa.id = :idEmpresa and " +
 	    				"t.numPedidoVirtual = :paramNumPedVirtual and t.transacaoPai = null");
 		
-		query.setParameter("idEmpAdq", idEmpAdq);
+		query.setParameter("idEmpresa", idEmpresa);
 	    query.setParameter("paramNumPedVirtual", numPedVirtual);
 	    
 	    /*
@@ -73,6 +74,57 @@ public class TransacaoDAO implements TransacaoDAOIntf {
 	    List<Transacao> lista = query.getResultList();
 	
 	    return lista;		
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Transacao> listarPaisPorEmpAdqEDataHoraEOperacao(int idEmp, int idEmpAdq, LocalDateTime dataHoraInicio, 
+			LocalDateTime dataHoraFim, String operacao) {
+		
+		boolean pEmp = false;
+		boolean pEmpAdq = false;
+		boolean pOper = false;;
+		
+		String sql = "select distinct t from Transacao t left join fetch t.transacoesFilhas " +
+        		"where t.dataHora >= :dataHoraInicio and t.dataHora <= :dataHoraFim " +
+				"and t.transacaoPai = null";
+		
+		if (idEmp > 0) {			
+			sql = sql + " and t.empresaAdquirente.empresa.id = :idEmp";
+			pEmp = true;
+		}
+		
+		if (idEmpAdq > 0) {
+			sql = sql + " and t.empresaAdquirente.id = :idEmpAdq";
+			pEmpAdq = true;
+		}
+			
+		if (operacao != null && !operacao.equals("")) {
+			sql = sql + " and t.operacao = :operacao";
+			pOper = true;
+		}			
+		
+		Query query = manager
+	            .createQuery(sql);
+		
+		query.setParameter("dataHoraInicio", dataHoraInicio);
+		query.setParameter("dataHoraFim", dataHoraFim);
+		
+		if(pEmp) {
+			query.setParameter("idEmp", idEmp);
+		}
+		
+		if (pEmpAdq) {
+			query.setParameter("idEmpAdq", idEmpAdq);
+		}
+		
+		if (pOper) {
+			query.setParameter("operacao", operacao);
+		}
+	    
+	    List<Transacao> lista = query.getResultList();
+		
+		return lista;
 	}
 
 	@Override

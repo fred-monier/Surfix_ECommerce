@@ -25,10 +25,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import br.pe.recife.surfix.ecommerce.entity.Empresa;
-import br.pe.recife.surfix.ecommerce.entity.EmpresaAdquirente;
-import br.pe.recife.surfix.ecommerce.exception.InfraException;
 import br.pe.recife.surfix.ecommerce.exception.NegocioException;
-import br.pe.recife.surfix.ecommerce.service.EmpresaAdquirenteService;
 import br.pe.recife.surfix.ecommerce.service.EmpresaService;
 
 /**
@@ -46,14 +43,15 @@ public class AuthenticationFilter implements ContainerRequestFilter {
      
     private static final String AUTHORIZATION_PROPERTY = "Authorization";
     private static final String AUTHENTICATION_SCHEME = "Basic";
-    private static final String ID_COMERCIAL_ADQUIRENTE_PROPERTY =  "idComAdq";
+    
+    //private static final String ID_COMERCIAL_ADQUIRENTE_PROPERTY =  "idComAdq";
     private static final String ID_COMERCIAL_PROPERTY =  "idComercial";
         
-	@Autowired
+    @Autowired
 	private EmpresaService empresaService;      
     
-	@Autowired
-	private EmpresaAdquirenteService empresaAdquirenteService;   
+	//@Autowired
+	//private EmpresaAdquirenteService empresaAdquirenteService;   
       
     @Override
     public void filter(ContainerRequestContext requestContext) {
@@ -77,6 +75,7 @@ public class AuthenticationFilter implements ContainerRequestFilter {
             //Fetch authorization header
             final List<String> authorization = headers.get(AUTHORIZATION_PROPERTY);
                
+            /*
             //idComercial ou idComAdq
             final List<String> idComercial = headers.get(ID_COMERCIAL_PROPERTY);
             final List<String> idComAdq = headers.get(ID_COMERCIAL_ADQUIRENTE_PROPERTY);
@@ -93,6 +92,7 @@ public class AuthenticationFilter implements ContainerRequestFilter {
             } else {
             	idCA = idComAdq.get(0);
             }            
+            */
             //**************
               
             //If no authorization information present; block access
@@ -122,14 +122,14 @@ public class AuthenticationFilter implements ContainerRequestFilter {
                   
                 try {
 	                //Is user valid?
-	                if (!isUserAllowed(idC, idCA, username, password, rolesSet)) {                
+	                if (!isUserAllowed(username, password, rolesSet, requestContext)) {                
 	                    requestContext.abortWith(Response.status(Response.Status.UNAUTHORIZED)
 	                            .entity("Acesso não autorizado").build());
 	                    return;
 	                }
                 } catch (NegocioException e) {
                 	requestContext.abortWith(Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-                            .entity("ID Empresa inválido").build());
+                            .entity("Erro manipulando credenciais de acesso").build());
                 } catch (Exception e) {
                 	requestContext.abortWith(Response.status(Response.Status.INTERNAL_SERVER_ERROR)
                             .entity("Erro acessando BD").build());
@@ -138,9 +138,9 @@ public class AuthenticationFilter implements ContainerRequestFilter {
         }
     }
     
-    private boolean isUserAllowed(final String idE, final String idEA, final String username, 
-    		final String password, final Set<String> rolesSet) 
-    				throws InfraException, NegocioException {
+    private boolean isUserAllowed(final String username, final String password, 
+    		final Set<String> rolesSet, ContainerRequestContext requestContext) 
+    				throws NegocioException {
     
         boolean isAllowed = false;
           
@@ -153,34 +153,23 @@ public class AuthenticationFilter implements ContainerRequestFilter {
         Empresa empresa = null;
         
         try {
-        	
-        	int id;
-        	if (idE.equals("")) {
-        		id = Integer.valueOf(idEA);
-        		EmpresaAdquirente empresaAdq = empresaAdquirenteService.consultarPorId(id);
-        		if (empresaAdq != null && empresaAdq.getEmpresa() != null) {
-        			empresa = empresaAdq.getEmpresa();
-        		}
-        	} else {
-        		id = Integer.valueOf(idE);
-        		empresa = empresaService.consultarPorId(id);
-        	}        	        	
-        	
+        	        	
+        	empresa = empresaService.consultarPorUsuarioSenha(username, password);
+        	        	        	        	
         } catch (Exception e) {
-        	throw new NegocioException();
+        	throw new NegocioException("Usuário/Senha não encontrado");
         }
                         
-        if (empresa != null) {        	
-	        if(empresa.getUsuario().equals("usuario") 
-	        		&& empresa.getSenha().equals("senha")) {
-	        
-	            String userRole = "ADMIN";
-	             
-	            //Step 2. Verify user role
-	            if(rolesSet.contains(userRole)) {            
-	                isAllowed = true;
-	            }
-	        }        
+        if (empresa != null) {  
+        	
+            String userRole = "ADMIN";
+             
+            //Step 2. Verify user role
+            if(rolesSet.contains(userRole)) {     
+            	
+            	requestContext.getHeaders().add(ID_COMERCIAL_PROPERTY, empresa.getId() + "");	            	
+                isAllowed = true;
+            }	          
         }
         
         return isAllowed;

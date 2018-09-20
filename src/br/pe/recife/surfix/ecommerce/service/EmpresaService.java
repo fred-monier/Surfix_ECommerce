@@ -27,6 +27,10 @@ public class EmpresaService {
 		return empresaDao.consultarPorId(id);		
 	}
 	
+	public Empresa consultarPorUsuarioSenha(String usuario, String senha) {
+		return empresaDao.consultarPorUsuarioSenha(usuario, senha);
+	}
+	
 	public void salvar(Empresa empresa) {
 
 		empresaDao.salvar(empresa);		

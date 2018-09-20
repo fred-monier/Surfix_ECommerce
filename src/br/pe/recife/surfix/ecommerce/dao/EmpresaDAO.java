@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -34,6 +35,18 @@ public class EmpresaDAO implements EmpresaDAOIntf {
 	@Override
 	public Empresa consultarPorId(int id) {
 		return manager.find(Empresa.class, id);
+	}
+	
+	@Override
+	public Empresa consultarPorUsuarioSenha(String usuario, String senha) {
+		
+		Query q = manager.createQuery("select e from Empresa e " + 
+				"where e.usuario = :usuario and e.senha = :senha");
+		
+		q.setParameter("usuario", usuario);
+		q.setParameter("senha", senha);
+		
+		return (Empresa) q.getSingleResult();	
 	}
 	
 	@Override

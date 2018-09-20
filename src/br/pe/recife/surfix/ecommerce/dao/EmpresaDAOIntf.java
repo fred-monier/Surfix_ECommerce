@@ -8,6 +8,7 @@ public interface EmpresaDAOIntf {
 	
 	public List<Empresa> listar();
 	public Empresa consultarPorId(int id);
+	public Empresa consultarPorUsuarioSenha(String usuario, String senha);
 	public void salvar(Empresa empresa);
 	public void excluir(int id);
 

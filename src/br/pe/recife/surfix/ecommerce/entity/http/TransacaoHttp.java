@@ -1,6 +1,7 @@
 package br.pe.recife.surfix.ecommerce.entity.http;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -248,6 +249,7 @@ public class TransacaoHttp {
 	public void setTransacoesFilhas(TransacaoHttp[] transacoesFilhas) {
 		this.transacoesFilhas = transacoesFilhas;
 	}
+		
 	public static TransacaoHttp gerarTransacaoHttp(Transacao transacao) {
 		
 		TransacaoHttp transacaoHttp = new TransacaoHttp();
@@ -340,6 +342,93 @@ public class TransacaoHttp {
 		}		
 		
 		return transacoesHttp;
+	}
+			
+	public static List<TransacaoHttp> gerarListaTransacoesHttp(List<Transacao> transacoes, 
+			boolean autorizada, boolean cancelada, boolean ativada, boolean desativada) {
+		
+		List<TransacaoHttp> listaTransacoesHttp = new ArrayList<TransacaoHttp>();
+		
+		if (transacoes != null) {						
+			
+			boolean inclui = true;
+			
+			for (int i=0; i < transacoes.size(); i++) {
+				
+				Transacao transacao = transacoes.get(i);
+							
+				TransacaoHttp transacaoHttp = TransacaoHttp.gerarTransacaoHttp(transacao);		
+				
+				if (!autorizada || !cancelada || !ativada || !desativada) {
+					
+					boolean paiRecorrente = false;
+					if (!transacaoHttp.getOperacao().equals(Transacao.OPERACAO_TRANSACAO_1)) {
+						paiRecorrente = true;
+					}
+					
+					int indiceMaior = TransacaoHttp.indiceMaior(transacaoHttp.transacoesFilhas, paiRecorrente);
+					
+					TransacaoHttp transacaoCompara;
+					
+					if (indiceMaior == -1) {
+						transacaoCompara = transacaoHttp;
+					} else {
+						transacaoCompara = transacaoHttp.getTransacoesFilhas()[indiceMaior];
+					}
+					
+					if (Transacao.OPERACAO_TRANSACAO_1.equals(transacaoCompara.getOperacao()) && !autorizada) {
+						inclui = false;
+					} else if (Transacao.OPERACAO_TRANSACAO_4.equals(transacaoCompara.getOperacao()) && !cancelada) {
+						inclui = false;
+					} else if ((Transacao.OPERACAO_TRANSACAO_2.equals(transacaoCompara.getOperacao()) || 
+							Transacao.OPERACAO_TRANSACAO_3.equals(transacaoCompara.getOperacao()) ||
+							Transacao.OPERACAO_TRANSACAO_6.equals(transacaoCompara.getOperacao())) && !ativada) {
+						inclui = false;
+					} else if (Transacao.OPERACAO_TRANSACAO_5.equals(transacaoCompara.getOperacao()) && !desativada) {
+						inclui = false;
+					}					
+				}
+				
+				if (inclui) {
+					listaTransacoesHttp.add(transacaoHttp);
+				} else {
+					inclui = true;
+				}
+			}
+		}		
+		
+		return listaTransacoesHttp;		
+	}
+	
+	private static int indiceMaior(TransacaoHttp[] transacoesHttp, boolean paiRecorrente) {
+	
+		int indMaior = -1;
+		int idMaior = -1;
+		
+		TransacaoHttp transacao;
+		
+		for (int i = 0; i < transacoesHttp.length; i++) {			
+			transacao = transacoesHttp[i];	
+			
+			//Uma Transação Recorrente pode ter seu primeiro pagamento cancelado. Nesse caso, apenas podemos
+			//decidir incluí-la ou não pelo status de ativada ou não.
+			//Uma Transação Recorrente pode ter várias alterações enquanto ativa ou não. Nesse caso,
+			//Os status de Alteração também não contam.			
+			if (!(paiRecorrente && (transacao.getOperacao().equals(Transacao.OPERACAO_TRANSACAO_4)
+					|| transacao.getOperacao().equals(Transacao.OPERACAO_TRANSACAO_7)
+					|| transacao.getOperacao().equals(Transacao.OPERACAO_TRANSACAO_8)
+					|| transacao.getOperacao().equals(Transacao.OPERACAO_TRANSACAO_9)
+					|| transacao.getOperacao().equals(Transacao.OPERACAO_TRANSACAO_10)
+					|| transacao.getOperacao().equals(Transacao.OPERACAO_TRANSACAO_11)
+					|| transacao.getOperacao().equals(Transacao.OPERACAO_TRANSACAO_12)))) {
+				if (transacao.getId() > idMaior) {
+					idMaior = transacao.getId();
+					indMaior = i;
+				}
+			}
+		}
+		
+		return indMaior;		
 	}
 	
 }
