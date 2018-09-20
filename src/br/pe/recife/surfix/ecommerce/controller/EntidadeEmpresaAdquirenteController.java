@@ -56,9 +56,9 @@ public class EntidadeEmpresaAdquirenteController {
 	//---------------------------------------------------------------------------------------------------------------------------------------------------
 	@GET
 	@Produces("application/json; charset=UTF-8")
-	@Path("/listar_por_comercialid")
+	@Path("/listar_por_empresa")
 	@RolesAllowed("ADMIN")
-	public RetornoEmpresasAdquirentesNomeAdqHttp listarPorEmpresaId(@HeaderParam("idComercial") String idComercial) {
+	public RetornoEmpresasAdquirentesNomeAdqHttp listarPorEmpresa(@HeaderParam("idComercial") String idComercial) {
 	
 		RetornoEmpresasAdquirentesNomeAdqHttp res = new RetornoEmpresasAdquirentesNomeAdqHttp();
 		res.setResultado(RetornoHttp.SUCESSO);
