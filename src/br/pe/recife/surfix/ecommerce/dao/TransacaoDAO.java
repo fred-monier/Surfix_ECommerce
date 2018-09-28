@@ -54,10 +54,14 @@ public class TransacaoDAO implements TransacaoDAOIntf {
 	@Override
 	public List<Transacao> listarPaisPorEmpresaENumPedidoVirtual(int idEmpresa, String numPedVirtual) {
 		
-		Query query = manager
-	            .createQuery("select distinct t from Transacao t left join fetch t.transacoesFilhas " +
-	            		"where t.empresaAdquirente.empresa.id = :idEmpresa and " +
-	    				"t.numPedidoVirtual = :paramNumPedVirtual and t.transacaoPai = null");
+		Query query = manager				
+	            //.createQuery("select distinct t from Transacao t left join fetch t.transacoesFilhas " + // <-- Originalmente em PostgreSql:
+	            //		"where t.empresaAdquirente.empresa.id = :idEmpresa and " +
+	    		//		"t.numPedidoVirtual = :paramNumPedVirtual and t.transacaoPai = null");		
+				.createQuery("select distinct t from Transacao t left join fetch t.transacoesFilhas " +
+						"join fetch t.empresaAdquirente ed " +
+						"where ed.empresa.id = :idEmpresa and " +
+						"t.numPedidoVirtual = :paramNumPedVirtual and t.transacaoPai = null");
 		
 		query.setParameter("idEmpresa", idEmpresa);
 	    query.setParameter("paramNumPedVirtual", numPedVirtual);
@@ -86,16 +90,17 @@ public class TransacaoDAO implements TransacaoDAOIntf {
 		boolean pOper = false;;
 		
 		String sql = "select distinct t from Transacao t left join fetch t.transacoesFilhas " +
-        		"where t.dataHora >= :dataHoraInicio and t.dataHora <= :dataHoraFim " +
-				"and t.transacaoPai = null";
+				"join fetch t.empresaAdquirente ed " +
+				"where t.dataHora >= :dataHoraInicio and t.dataHora <= :dataHoraFim " +
+        		"and t.transacaoPai = null";
 		
 		if (idEmp > 0) {			
-			sql = sql + " and t.empresaAdquirente.empresa.id = :idEmp";
+			sql = sql + " and ed.empresa.id = :idEmp";
 			pEmp = true;
 		}
 		
 		if (idEmpAdq > 0) {
-			sql = sql + " and t.empresaAdquirente.id = :idEmpAdq";
+			sql = sql + " and ed.id = :idEmpAdq";
 			pEmpAdq = true;
 		}
 			

@@ -1487,7 +1487,10 @@ public class CieloController {
 		Exception exc = null;			
 		try {				
 			transacaoService.salvar(transacao);				
-		} catch (Exception e) {				
+		} catch (Exception e) {		
+			
+			e.printStackTrace();
+			
 			erro = true;	
 			exc = e;
 		}			

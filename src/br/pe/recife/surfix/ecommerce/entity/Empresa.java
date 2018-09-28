@@ -19,7 +19,7 @@ public class Empresa implements EntidadeBase {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator="empresa_sequence")
-	@SequenceGenerator(name = "empresa_sequence", sequenceName = "\"EMPRESA_ID_seq\"")
+	@SequenceGenerator(name = "empresa_sequence", sequenceName = "\"EMPRESA_ID_SEQ\"") //Originalmente em PostgreSql: \"EMPRESA_ID_seq\"
     @Column(name = "\"ID\"", nullable = false)
 	private Integer id;
 			

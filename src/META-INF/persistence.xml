@@ -21,7 +21,11 @@
             <property name="javax.persistence.jdbc.password" value="admin" />
             <-->
             
-            <property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQLDialect"/>
+            
+            <!-- Dialect PostgreSQL -->
+            <!--  property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQLDialect"-->
+            <!-- Dialect Oracle -->
+            <property name="hibernate.dialect" value="org.hibernate.dialect.OracleDialect"/>
                         
             <property name="hibernate.show_sql" value="true" />
     		<!-- property name="hibernate.format_sql" value="true" -->

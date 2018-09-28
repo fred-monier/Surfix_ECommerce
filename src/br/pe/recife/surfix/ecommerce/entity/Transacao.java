@@ -44,7 +44,7 @@ public class Transacao implements EntidadeBase {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator="transacao_sequence")
-	@SequenceGenerator(name = "transacao_sequence", sequenceName = "\"TRANSACAO_ID_seq\"")	
+	@SequenceGenerator(name = "transacao_sequence", sequenceName = "\"TRANSACAO_ID_SEQ\"") //Originalmente em PostgreSql: \"TRANSACAO_ID_seq\"
     @Column(name = "\"ID\"", nullable = false)
 	private Integer id;
 	
@@ -117,7 +117,7 @@ public class Transacao implements EntidadeBase {
 	@Column(name = "\"PAYMENT_PROVIDER_RETURN_CODE\"")
 	private String paymentProviderReturnCode;
 	
-	@Column(name = "\"PAYMENT_PROVIDER_RETURN_MESSAGE\"")
+	@Column(name = "\"PAYMENT_PROVIDER_RETURN_MESSAG\"") //Originalmente em PostgreSql: PAYMENT_PROVIDER_RETURN_MESSAGE
 	private String paymentProviderReturnMessage;		
 
 	@Column(name = "\"PAYMENT_CANCELADO\"")
